@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Signin from './src/pages/Signin';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,8 +13,11 @@ const styles = StyleSheet.create({
 
 export default function App() {
   return (
+    // <Provider>
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
+      <Signin />
     </View>
+    // </Provider>
   );
 }
