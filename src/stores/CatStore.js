@@ -25,6 +25,7 @@ import { observable, action, computed } from 'mobx';
  * 10. inputComment = string (댓글 내용)
  * 11. album = [{해당 postId에 따른 사진 정보들}]
  * 12. followerList = [{해당 catId에 따른 follower들}]
+ * 13. reportInfo = {신고할 (postId || commentId || catId) && criminalId (userId?)}
  */
 export default class CatStore {
 
