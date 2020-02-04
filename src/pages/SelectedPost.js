@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddCat = () => (
+const SelectedPost = () => (
   <View style={styles.container}>
-    <Text>Add cat!</Text>
+    <Text>selected post</Text>
   </View>
 );
 
-export default AddCat;
+export default SelectedPost;

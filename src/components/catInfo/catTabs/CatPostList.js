@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import CatPost from './CatPost';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,7 +13,8 @@ const styles = StyleSheet.create({
 
 const CatPostList = () => (
   <View style={styles.container}>
-    <Text>cat post</Text>
+    <CatPost />
+    <CatPost />
   </View>
 );
 

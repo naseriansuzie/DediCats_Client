@@ -7,10 +7,12 @@ import Signup from './src/pages/Signup';
 import AuthLoadingScreen from './src/components/authInfo/AuthLoadingScreen';
 import Main from './src/pages/Main';
 import CatInfo from './src/pages/CatInfo';
-import AddCat from './src/pages/AddCat';
+import AddCatTab from './src/pages/AddCatTab';
+import AddCatModal from './src/pages/AddCatModal';
 import MyPage from './src/pages/MyPage';
 import EditMyProfile from './src/pages/EditMyProfile';
 import ChangePW from './src/pages/ChangePW';
+import SelectedPost from './src/pages/SelectedPost';
 
 const MyPageStack = createStackNavigator(
   {
@@ -23,42 +25,72 @@ const MyPageStack = createStackNavigator(
   },
 );
 
+MyPageStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const MainStack = createStackNavigator(
   {
     Main,
     CatInfo,
+    SelectedPost,
   },
   {
     initialRouteName: 'Main',
   },
 );
 
-const AddCatStack = createStackNavigator(
-  {
-    AddCat,
-  },
-  {
-    initialRouteName: 'AddCat',
-  },
-);
+MainStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
 
 const HomeTabs = createBottomTabNavigator(
   {
-    MyPageStack,
+    AddCatTab,
     MainStack,
-    AddCatStack,
+    MyPageStack,
   },
   {
     initialRouteName: 'MainStack',
+    defaultNavigationOptions: {
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        if (navigation.state.key === 'AddCatTab') {
+          navigation.navigate('AddCatModal');
+        } else {
+          defaultHandler();
+        }
+      },
+    },
   },
 );
 
 const AppStack = createStackNavigator(
   {
-    Home: HomeTabs,
+    Home: {
+      screen: HomeTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    AddCatModal,
   },
   {
     initialRouteName: 'Home',
+    modal: 'modal',
   },
 );
 

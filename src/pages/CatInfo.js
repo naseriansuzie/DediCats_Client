@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Tab, Tabs } from 'native-base';
+import { Container, Header, Content, Tab, Tabs, View, Text } from 'native-base';
 import CatBio from '../components/catInfo/catTabs/CatBio';
 import CatPostList from '../components/catInfo/catTabs/CatPostList';
 import CatAlbum from '../components/catInfo/catTabs/CatAlbum';
 import CatFollowerList from '../components/catInfo/catTabs/CatFollowerList';
 
-export default class TabsExample extends Component {
+export default class CatInfo extends Component {
   render() {
     return (
       <Container>
-        <Header hasTabs />
+        <View>
+          <Text>여기에 cat profile component</Text>
+        </View>
+        <Header hasTabs style={{ display: 'none' }} />
         <Tabs>
-          <Tab heading="Tab1">
+          <Tab heading="Bio">
             <CatBio />
           </Tab>
-          <Tab heading="Tab2">
+          <Tab heading="Posts">
             <CatPostList />
           </Tab>
-          <Tab heading="Tab3">
+          <Tab heading="Albums">
             <CatAlbum />
           </Tab>
-          <Tab heading="Tab4">
+          <Tab heading="Followers">
             <CatFollowerList />
           </Tab>
         </Tabs>
@@ -28,3 +31,9 @@ export default class TabsExample extends Component {
     );
   }
 }
+
+// CatInfo.navigationOptions = {
+//   title: '고양이 정보',
+// };
+
+// export default CatInfo;

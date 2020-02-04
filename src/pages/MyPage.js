@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,9 +10,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyPage = () => (
+const MyPage = props => (
   <View style={styles.container}>
     <Text>This is My Page!</Text>
+    <Button
+      title="회원정보 수정"
+      onPress={() => props.navigation.navigate('EditMyProfile')}
+    />
   </View>
 );
 
