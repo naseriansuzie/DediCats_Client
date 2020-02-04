@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const CatBio = () => (
+const SelectedPost = () => (
   <View style={styles.container}>
-    <Text>cat bio info!</Text>
+    <Text>selected post</Text>
   </View>
 );
 
-export default CatBio;
+export default SelectedPost;
