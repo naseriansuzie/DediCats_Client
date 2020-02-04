@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,9 +10,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const Main = () => (
+const Main = props => (
   <View style={styles.container}>
     <Text>This is Main Page!</Text>
+    <Button
+      title="Move to Cat Info"
+      onPress={() => props.navigation.navigate('CatInfo')}
+    />
   </View>
 );
 
