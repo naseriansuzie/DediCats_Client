@@ -1,41 +1,45 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Signin from './src/pages/Signin';
 import Signup from './src/pages/Signup';
+import AuthLoadingScreen from './src/components/authInfo/AuthLoadingScreen';
+import Main from './src/pages/Main';
 
-const AppNavigator = createStackNavigator({
-  Home: {
-    screen: Signin,
+const AppStack = createStackNavigator(
+  {
+    Main,
   },
-  Second: {
-    screen: Signup,
+  {
+    initialRouteName: 'Main',
   },
-},
-{
-  initialRouteName: 'Home',
-});
+);
 
-const AppContainer = createAppContainer(AppNavigator);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 50,
+const AuthStack = createStackNavigator(
+  {
+    Signin,
+    Signup,
   },
-});
+  {
+    initialRouteName: 'Signin',
+  },
+);
+
+const RootNavigator = createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: AppStack,
+    Auth: AuthStack,
+  },
+  { initialRouteName: 'AuthLoading' },
+);
+
+const AppContainer = createAppContainer(RootNavigator);
 
 export default function App() {
   return (
     // <Provider>
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
     <AppContainer />
-    // {/* </View> */}
     // </Provider>
   );
 }
