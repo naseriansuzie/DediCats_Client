@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'mobx-react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -13,6 +14,9 @@ import MyPage from './src/pages/MyPage';
 import EditMyProfile from './src/pages/EditMyProfile';
 import ChangePW from './src/pages/ChangePW';
 import SelectedPost from './src/pages/SelectedPost';
+import RootStore from './src/stores';
+
+const root = new RootStore();
 
 const MyPageStack = createStackNavigator(
   {
@@ -117,8 +121,8 @@ const AppContainer = createAppContainer(RootNavigator);
 
 export default function App() {
   return (
-    // <Provider>
-    <AppContainer />
-    // </Provider>
+    <Provider {...root}>
+      <AppContainer />
+    </Provider>
   );
 }
