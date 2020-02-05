@@ -39,6 +39,6 @@ const SignIn_Info = ({ navigation, email, updateInput, updateState }) => (
 
 export default inject(({ user }) => ({
   updateInput: user.updateInput,
-  email: user.user.email,
+  email: user.userInfo.email,
   updateState: user.updateState,
 }))(observer(withNavigation(SignIn_Info)));

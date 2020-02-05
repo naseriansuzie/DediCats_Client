@@ -27,7 +27,7 @@ class UserStore {
   }
 
   // observable
-  user = {
+  userInfo = {
     isSignUp: false,
     isSignIn: false,
     email: '',
@@ -50,7 +50,7 @@ class UserStore {
       .post(`${process.env.SERVER_URL}/user/signup`, info, defaultCredential)
       .then(res => {
         Alert.alert('회원가입에 성공했습니다!');
-        this.user.isSignUp = true;
+        this.userInfo.isSignUp = true;
       })
       .catch(err => {
         if (err.response.status === 401) {
@@ -65,7 +65,7 @@ class UserStore {
     axios
       .post(`${process.env.SERVER_URL}/user/signin`, info, defaultCredential)
       .then(res => {
-        this.user.isSignIn = true;
+        this.userInfo.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
       })
       .catch(err => {
@@ -84,8 +84,8 @@ class UserStore {
       .post(`${process.env.SERVER_URL}/user/signout`, id, defaultCredential)
       .then(res => {
         Alert.alert('로그아웃 되었습니다!');
-        this.user.signIn = false;
-        this.user.myInfo = null;
+        this.userInfo.signIn = false;
+        this.userInfo.myInfo = null;
       })
       .catch(err => console.log(err));
   };
@@ -93,16 +93,16 @@ class UserStore {
   updateState = field => {
     if (field === 'SignUp') {
       const signUpInfo = {
-        email: this.user.email,
-        password: this.user.confirmPW,
-        nickname: this.user.nickName,
+        email: this.userInfo.email,
+        password: this.userInfo.confirmPW,
+        nickname: this.userInfo.nickName,
       };
       this.signUp(signUpInfo);
       runInAction(() => this.clearInput(email, confirmPW, nickName));
     } else if (field === 'SignIn') {
       const signIpInfo = {
-        email: this.user.email,
-        password: this.user.PW,
+        email: this.userInfo.email,
+        password: this.userInfo.PW,
       };
       this.signIn(signIpInfo);
       runInAction(() => this.clearInput(email, PW));
@@ -112,12 +112,12 @@ class UserStore {
   };
 
   updateInput = (field, text) => {
-    this.user[field] = text;
+    this.userInfo[field] = text;
   };
 
   clearInput = (...types) => {
     types.forEach(function(type) {
-      this.user[type] = '';
+      this.userInfo[type] = '';
     });
   };
 
@@ -129,10 +129,10 @@ class UserStore {
   };
 
   uploadMyImg = () => {
-    if (this.user.myPhoto !== defaultPhotoUrl) {
+    if (this.userInfo.myPhoto !== defaultPhotoUrl) {
       const imgInfo = {
-        userId: this.user.myInfo.userId,
-        photoPath: this.user.myPhoto,
+        userId: this.userInfo.myInfo.userId,
+        photoPath: this.userInfo.myPhoto,
       };
       axios.post(
         `${process.env.SERVER_URL}/photo/profile`,
@@ -147,8 +147,8 @@ class UserStore {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
     } else {
       const updateInfo = {
-        userId: this.user.myInfo.userId,
-        password: this.confirmPW,
+        userId: this.userInfo.myInfo.userId,
+        password: this.userInfo.confirmPW,
       };
       axios
         .patch(
@@ -163,7 +163,7 @@ class UserStore {
 }
 
 decorate(UserStore, {
-  user: observable,
+  userInfo: observable,
   myCat: observable,
   signUp: action,
   signIn: action,
