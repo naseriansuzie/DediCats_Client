@@ -42,6 +42,6 @@ AddCatModal.navigationOptions = ({ navigation }) => {
 
   return {
     title: '길고양이 등록하기',
-    headerLeft: <HeaderBackButton onPress={() => onBack()} />,
+    headerLeft: () => <HeaderBackButton onPress={() => onBack()} />,
   };
 };

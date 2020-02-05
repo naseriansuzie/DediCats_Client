@@ -83,7 +83,7 @@ const AppStack = createStackNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: {
-        header: null,
+        headerShown: false,
       },
     },
     AddCatModal,
