@@ -28,8 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#677ef1',
     borderRadius: 5,
     marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     marginBottom: 10,
   },
   signUpBtn: {
@@ -37,8 +36,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#EDF1F5',
     borderRadius: 5,
-    marginLeft: 120,
-    marginRight: 120,
+    marginHorizontal: 120,
   },
   white: {
     color: 'white',
@@ -55,52 +53,55 @@ const SignIn_Info = ({
   validateSignIn,
   updateState,
   navigation,
-}) => (
-  <Container>
-    <Header />
-    <View style={styles.logo}>
-      <Text style={styles.logoTxt}>Dedicat</Text>
-    </View>
-    <Content style={{ paddingLeft: 10, paddingRight: 10 }}>
-      <Form>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="email-check-outline" size="16" />{' '}
-            hello@cat.com
-          </Label>
-          <Input
-            onChangeText={text => updateInput('email', text)}
-            value={email}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="lock-outline" size="16" /> Password
-          </Label>
-          <Input onChangeText={text => updateInput('PW', text)} value={PW} />
-        </Item>
-      </Form>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={async () => {
-          const validation = await validateSignIn();
-          if (validation) {
-            await updateState('SignIn');
-            navigation.navigate('AuthLoading');
-          }
-        }}
-      >
-        <Text style={styles.white}>Log In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.signUpBtn}
-        onPress={() => navigation.navigate('Sign Up')}
-      >
-        <Text style={styles.light}>Sign Up</Text>
-      </TouchableOpacity>
-    </Content>
-  </Container>
-);
+}) => {
+  console.log(updateState);
+  return (
+    <Container>
+      <Header />
+      <View style={styles.logo}>
+        <Text style={styles.logoTxt}>Dedicat</Text>
+      </View>
+      <Content style={{ paddingLeft: 10, paddingRight: 10 }}>
+        <Form>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons name="email-check-outline" size="16" />{' '}
+              hello@cat.com
+            </Label>
+            <Input
+              onChangeText={text => updateInput('email', text)}
+              value={email}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons name="lock-outline" size="16" /> Password
+            </Label>
+            <Input onChangeText={text => updateInput('PW', text)} value={PW} />
+          </Item>
+        </Form>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={async () => {
+            const validation = await validateSignIn();
+            if (validation) {
+              await updateState('SignIn');
+              navigation.navigate('AuthLoading');
+            }
+          }}
+        >
+          <Text style={styles.white}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.signUpBtn}
+          onPress={() => navigation.navigate('Sign Up')}
+        >
+          <Text style={styles.light}>Sign Up</Text>
+        </TouchableOpacity>
+      </Content>
+    </Container>
+  );
+};
 
 export default inject(({ user }) => ({
   email: user.userInfo.email,
