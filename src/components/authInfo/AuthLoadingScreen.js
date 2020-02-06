@@ -1,10 +1,8 @@
 import React from 'react';
 import {
-  withNavigation,
   ActivityIndicator,
   AsyncStorage,
   StatusBar,
-  StyleSheet,
   View,
   Text,
 } from 'react-native';

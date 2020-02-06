@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,18 +12,33 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignIn_Info = props => (
+const SignIn_Info = ({ navigation, email, updateInput, updateState }) => (
   <View style={styles.container}>
     <Text>Sign-In!</Text>
+    <TextInput
+      style={{
+        width: '80%',
+        backgroundColor: 'pink',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      placeholder="your email"
+      onChangeText={text => updateInput('email', text)}
+      value={email}
+    />
     <Button
       title="Sign in!"
-      onPress={() => props.navigation.navigate('AuthLoading')}
+      onPress={() => {
+        updateState('SignIn');
+        navigation.navigate('AuthLoading');
+      }}
     />
-    <Button
-      title="Sign up!"
-      onPress={() => props.navigation.navigate('Signup')}
-    />
+    <Button title="Sign up!" onPress={() => navigation.navigate('Signup')} />
   </View>
 );
 
-export default withNavigation(SignIn_Info);
+export default inject(({ user }) => ({
+  updateInput: user.updateInput,
+  email: user.userInfo.email,
+  updateState: user.updateState,
+}))(observer(withNavigation(SignIn_Info)));
