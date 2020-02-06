@@ -92,13 +92,27 @@ class UserStore {
 
   updateState = field => {
     if (field === 'SignUp') {
-      const signUpInfo = {
-        email: this.userInfo.email,
-        password: this.userInfo.confirmPW,
-        nickname: this.userInfo.nickName,
-      };
-      this.signUp(signUpInfo);
-      runInAction(() => this.clearInput(email, confirmPW, nickName));
+      if (this.userInfo.confirmPW !== this.userInfo.reConfirmPW) {
+        Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
+      } else {
+        const signUpInfo = {
+          email: this.userInfo.email,
+          password: this.userInfo.confirmPW,
+          nickname: this.userInfo.nickName,
+        };
+        if (
+          signUpInfo.email === '' ||
+          signUpInfo.password === '' ||
+          signUpInfo.nickName === ''
+        ) {
+          Alert.alert('모든 정보를 입력해주세요.');
+        } else {
+          this.signUp(signUpInfo);
+        }
+      }
+      runInAction(() => {
+        this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+      });
     } else if (field === 'SignIn') {
       const signIpInfo = {
         email: this.userInfo.email,

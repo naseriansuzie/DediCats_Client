@@ -1,47 +1,100 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Container,
+  Header,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label,
+} from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ececec',
+  logo: {
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: 50,
+  },
+  logoTxt: {
+    fontSize: 50,
+    fontWeight: '600',
+  },
+  btn: {
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#677ef1',
+    borderRadius: 5,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  signUpBtn: {
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#EDF1F5',
+    borderRadius: 5,
+    marginLeft: 120,
+    marginRight: 120,
+  },
+  white: {
+    color: 'white',
+  },
+  light: {
+    color: '#868e96',
   },
 });
 
-const SignIn_Info = ({ email, navigation, updateInput, updateState }) => {
-  console.log('프롭스는 = ', email);
-  return (
-    <View style={styles.container}>
-      <Text>Sign-In!</Text>
-      <TextInput
-        style={{
-          width: '80%',
-          backgroundColor: 'pink',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        placeholder="your email"
-        onChangeText={text => updateInput('email', text)}
-        value={email}
-      />
-      <Button
-        title="Sign in!"
+const SignIn_Info = ({ email, PW, updateInput, updateState, navigation }) => (
+  <Container>
+    <Header />
+    <View style={styles.logo}>
+      <Text style={styles.logoTxt}>Dedicat</Text>
+    </View>
+    <Content style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <Form>
+        <Item floatingLabel>
+          <Label>
+            <MaterialCommunityIcons name="email-check-outline" size="16" />{' '}
+            hello@cat.com
+          </Label>
+          <Input
+            onChangeText={text => updateInput('email', text)}
+            value={email}
+          />
+        </Item>
+        <Item floatingLabel>
+          <Label>
+            <MaterialCommunityIcons name="lock-outline" size="16" /> Password
+          </Label>
+          <Input onChangeText={text => updateInput('PW', text)} value={PW} />
+        </Item>
+      </Form>
+      <TouchableOpacity
+        style={styles.btn}
         onPress={async () => {
           await updateState('SignIn');
           navigation.navigate('AuthLoading');
         }}
-      />
-      <Button title="Sign up!" onPress={() => navigation.navigate('Signup')} />
-    </View>
-  );
-};
+      >
+        <Text style={styles.white}>Log In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.signUpBtn}
+        onPress={() => navigation.navigate('Sign Up')}
+      >
+        <Text style={styles.light}>Sign Up</Text>
+      </TouchableOpacity>
+    </Content>
+  </Container>
+);
 
 export default inject(({ user }) => ({
   updateInput: user.updateInput,
   email: user.userInfo.email,
+  PW: user.userInfo.PW,
   updateState: user.updateState,
 }))(observer(withNavigation(SignIn_Info)));
