@@ -100,7 +100,12 @@ const AppStack = createStackNavigator(
 
 const AuthStack = createStackNavigator(
   {
-    'Sign In': Signin,
+    'Sign In': {
+      screen: Signin,
+      navigationOptions: {
+        headerShown: false,
+      },
+    },
     'Sign Up': Signup,
   },
   {
