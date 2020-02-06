@@ -4,11 +4,7 @@
     "slug": "DediCats",
     "privacy": "public",
     "sdkVersion": "36.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,20 +16,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCMmo28x_XUyALoCz6LG97nYro6tRcByg8"
+          "apiKey": "`${process.env.GOOGLE_MAPS_API_KEY_ANDROID}`"
         }
       }
     },
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyAgb31iqqSg8GyjIcW1jRafe-XdfUVaYYI"
+        "googleMapsApiKey": "`${GOOGLE_MAPS_API_KEY_IOS}`"
       }
     }
   }
