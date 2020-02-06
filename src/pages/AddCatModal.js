@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { HeaderBackButton } from 'react-navigation-stack';
+import AddCatForm from '../components/addCat/AddCatForm';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ececec',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
 
 const AddCatModal = () => (
   <View style={styles.container}>
-    <Text>Add cat!</Text>
+    <AddCatForm />
   </View>
 );
 
@@ -41,7 +42,7 @@ AddCatModal.navigationOptions = ({ navigation }) => {
   };
 
   return {
-    title: '길고양이 등록하기',
+    title: 'Add Cat',
     headerLeft: () => <HeaderBackButton onPress={() => onBack()} />,
   };
 };

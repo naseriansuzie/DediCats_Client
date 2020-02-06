@@ -6,5 +6,5 @@ const AddCatTab = () => <View />;
 export default AddCatTab;
 
 AddCatTab.navigationOptions = {
-  title: '고양이 등록하기',
+  title: '길고양이 등록',
 };

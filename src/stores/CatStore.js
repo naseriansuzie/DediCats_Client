@@ -2,6 +2,9 @@ import { observable, action, computed, decorate, runInAction } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 import { Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 /**
  * 1. spot 관련
@@ -106,6 +109,29 @@ class CatStore {
     this.addCatBio.catTag = '';
   };
 
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        Alert.alert('사진을 올리기 위해 접근 권한이 필요합니다.');
+      }
+    }
+  };
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log('고른 이미지', result);
+
+    if (!result.cancelled) {
+      this.addCatBio.photoPath = result.uri;
+    }
+  };
+
   addCat = () => {
     const {
       location,
@@ -131,7 +157,16 @@ class CatStore {
         defaultCredential,
       )
       .then(res => {
-        // 페이지 main으로 이동시키기
+        this.addCatBio = {
+          location: null,
+          photoPath: null,
+          catNickname: '',
+          catDescription: '',
+          catSpecies: '',
+          catTag: '',
+          catTags: null,
+          catCut: { Y: 0, N: 0, unknown: 0 },
+        };
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -153,12 +188,9 @@ class CatStore {
   };
 
   updateCut = type => {
-    const {
-      selectedCat: { catCut },
-    } = this.catInfo;
-    const willChangeCut = catCut;
-    willChangeCut[type] += willChangeCut[type];
-    // axios로 cut post하기, req.body는 willChangeCut
+    const request = { Y: 0, N: 0, unknown: 0 };
+    request[type] = 1;
+    // axios로 cut post하기, req.body는 request
     // res => catCut : res.data
     // err => console
   };
@@ -233,6 +265,8 @@ decorate(CatStore, {
   getSelectedCatInfo: action,
   followCat: action,
   createTagBeforeAddCat: action,
+  getPermissionAsync: action,
+  pickImage: action,
   addCat: action,
   reportRainbow: action,
   updateCut: action,
