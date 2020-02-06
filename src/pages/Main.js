@@ -1,5 +1,5 @@
 import React from 'react';
-import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions'
@@ -30,20 +30,20 @@ class Main extends React.Component {
             latitude: 37.78597,
             longitude: -122.40697,
           },
-          title: "Best Place",
-          description: "This is the best place in Portland",
+          title: 'Best Place',
+          description: 'This is the best place in Portland',
         },
         {
           coordinate: {
             latitude: 37.78552,
             longitude: -122.40612,
           },
-          title: "Best Place2222",
-          description: "This is the best place in Portland2222",
-        }
+          title: 'Best Place2222',
+          description: 'This is the best place in Portland2222',
+        },
       ],
     };
-  } 
+  }
 
   componentDidMount() {
     this._getLocation();
@@ -62,17 +62,17 @@ class Main extends React.Component {
         region: {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta:  0.00922*0.8,
-          longitudeDelta: 0.00421*0.8,
-        }
+          latitudeDelta: 0.00922 * 0.8,
+          longitudeDelta: 0.00421 * 0.8,
+        },
       });
-      console.log(this.state.region);
+      // console.log(this.state.region);
     }, (error) => {
-      alert(JSON.stringify(error))
+      alert(JSON.stringify(error));
     }, {
       enableHighAccuracy: true,
       timeout: 20000,
-      maximumAge: 1000
+      maximumAge: 1000,
     });
   }
 
@@ -92,17 +92,17 @@ class Main extends React.Component {
             showsUserLocation={true}
           >
             {this.state.markers.map(marker => (
-              <Marker 
+              <Marker
                 key={marker.coordinate.latitude}
                 coordinate={marker.coordinate}
                 title={marker.title}
                 description={marker.description}
               >
-                {/* <View style={{backgroundColor: "red", padding: 10}}>
-                  <Text>SF</Text>
-                </View> */}
+                <View style={{backgroundColor: 'red', padding: 10}}>
+                  <Text>{marker.title}</Text>
+                </View>
               </Marker>
-            ))}  
+            ))}
           </MapView>
           <Text>This is Main Page!</Text>
           <Button
