@@ -105,7 +105,7 @@ class UserStore {
         password: this.userInfo.PW,
       };
       this.signIn(signIpInfo);
-      runInAction(() => this.clearInput(email, PW));
+      runInAction(() => this.clearInput('email', 'PW'));
     } else {
       this.signOut();
     }
@@ -116,8 +116,10 @@ class UserStore {
   };
 
   clearInput = (...types) => {
-    types.forEach(function(type) {
-      this.userInfo[type] = '';
+    types.forEach(type => {
+      runInAction(() => {
+        this.userInfo[type] = '';
+      });
     });
   };
 
