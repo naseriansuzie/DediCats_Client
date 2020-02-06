@@ -100,19 +100,19 @@ const AppStack = createStackNavigator(
 
 const AuthStack = createStackNavigator(
   {
-    Signin,
-    Signup,
+    'Sign In': Signin,
+    'Sign Up': Signup,
   },
   {
-    initialRouteName: 'Signin',
+    initialRouteName: 'Sign In',
   },
 );
 
 const RootNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
-    App: AppStack,
     Auth: AuthStack,
+    App: AppStack,
   },
   { initialRouteName: 'AuthLoading' },
 );
