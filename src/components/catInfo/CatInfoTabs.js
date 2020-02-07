@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Tab, Tabs } from 'native-base';
+import { Container, Header, Tab, Tabs, TabHeading, Text } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
 import CatAlbum from './catTabs/CatAlbum';
@@ -17,7 +17,14 @@ const styles = StyleSheet.create({
 const CatInfoTabs = () => (
   <Container style={styles.container}>
     <Header hasTabs style={{ display: 'none' }} />
-    <Tabs>
+    <Tabs
+      tabBarUnderlineStyle={{
+        paddingHorizontal: 10,
+        borderRadius: 100,
+        backgroundColor: '#e0e2e8',
+      }}
+      tabBarActiveTextColor="#6772f1"
+    >
       <Tab heading="Bio">
         <CatBio />
       </Tab>
