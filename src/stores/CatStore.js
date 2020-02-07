@@ -47,7 +47,7 @@ class CatStore {
   };
 
   addCatBio = {
-    location: 'hello',
+    location: { latitude: 0, longitude: 0 },
     photoPath: null,
     catNickname: '',
     catDescription: '',
@@ -111,6 +111,12 @@ class CatStore {
   //   this.addCatBio.catTag = '';
   //  };
 
+  // {latitude: Number, longitude: Number}
+  onDragEnd = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    this.addCatBio.location = { latitude, longitude };
+  }
+
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -124,11 +130,10 @@ class CatStore {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
-    console.log('고른 이미지', result);
-
+    
     if (!result.cancelled) {
       this.addCatBio.photoPath = result.uri;
     }
@@ -312,6 +317,7 @@ decorate(CatStore, {
   getSelectedCatInfo: action,
   followCat: action,
   // createTagBeforeAddCat: action, -> 고양이 등록 시 태그는 1개만
+  onDragEnd: action,
   getPermissionAsync: action,
   pickImage: action,
   selectCut: action,
