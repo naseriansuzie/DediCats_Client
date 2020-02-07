@@ -1,9 +1,8 @@
 /* eslint-disable react/state-in-constructor */
 import React from 'react';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import {
   StyleSheet,
-  Text,
   View,
   Dimensions,
   Platform,
@@ -84,6 +83,13 @@ class Main extends React.Component {
         content: 'This is the best place in Portland4444',
         img: require('../../img3.jpg')
       },
+      {
+        latitude: 37.503528,
+        longitude: 127.049784,
+        name: '위워크',
+        content: 'This is the best place in Portland4444',
+        img: require('../../img3.jpg')
+      },
     ],
     currentPosition: {},
     currentBoundingBox: {},
@@ -111,8 +117,8 @@ class Main extends React.Component {
         let currentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.035,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
         };
         let currentBoundingBox = this.getBoundingBox(currentPosition);
         this.setState({
@@ -132,8 +138,8 @@ class Main extends React.Component {
   getBoundingBox = (region) => ({
     NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
     NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
-    SElatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
-    SElongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
+    SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
+    SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
   });
 
   renderCarouselItem = ({ item }) => {
@@ -157,8 +163,8 @@ class Main extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.09,
-      longitudeDelta: 0.035,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
     };
     const currentBoundingBox = this.getBoundingBox(currentPosition);
     if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
@@ -175,8 +181,8 @@ class Main extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.09,
-      longitudeDelta: 0.035,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.025,
     };
     const currentBoundingBox = this.getBoundingBox(currentPosition);
     if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
@@ -221,6 +227,7 @@ class Main extends React.Component {
                 marker={marker}
                 index={index}
                 onMarkerPressed={this.onMarkerPressed}
+                currentPosition={currentPosition}
               />
             ))
           }
