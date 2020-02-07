@@ -47,7 +47,7 @@ class CatStore {
   };
 
   addCatBio = {
-    location: 'hello',
+    location: { latitude: 0, longitude: 0 },
     photoPath: null,
     catNickname: '',
     catDescription: '',
@@ -110,6 +110,12 @@ class CatStore {
   //   this.addCatBio.catTags = [...this.addCatBio.catTags, this.addCatBio.catTag];
   //   this.addCatBio.catTag = '';
   //  };
+
+  // {latitude: Number, longitude: Number}
+  onDragEnd = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    this.addCatBio.location = { latitude, longitude };
+  }
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -312,6 +318,7 @@ decorate(CatStore, {
   getSelectedCatInfo: action,
   followCat: action,
   // createTagBeforeAddCat: action, -> 고양이 등록 시 태그는 1개만
+  onDragEnd: action,
   getPermissionAsync: action,
   pickImage: action,
   selectCut: action,
