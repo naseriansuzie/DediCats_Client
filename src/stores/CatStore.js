@@ -1,7 +1,10 @@
 import { observable, action, computed, decorate, runInAction } from 'mobx';
+import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
-import { Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 /**
  * 1. spot 관련
@@ -44,13 +47,14 @@ class CatStore {
   };
 
   addCatBio = {
-    location: null,
+    location: 'hello',
     photoPath: null,
     catNickname: '',
     catDescription: '',
     catSpecies: '',
     catTag: '',
-    catTags: null,
+    // catTags: null, -> 고양이 등록 시 태그 등록은 1개만
+    cutClicked: { Y: false, N: false, unknown: false },
     catCut: { Y: 0, N: 0, unknown: 0 },
   };
 
@@ -101,9 +105,71 @@ class CatStore {
     // res => this.catInfo.selectedCat.isFollowing을 true로
   };
 
-  createTagBeforeAddCat = () => {
-    this.addCatBio.catTags = [...this.addCatBio.catTags, this.addCatBio.catTag];
-    this.addCatBio.catTag = '';
+  // 고양이 등록 시 태그 여러 개 등록할 때 사용, 태그 1개만 등록하는 것으로 바뀜, 주석처리
+  // createTagBeforeAddCat = () => {
+  //   this.addCatBio.catTags = [...this.addCatBio.catTags, this.addCatBio.catTag];
+  //   this.addCatBio.catTag = '';
+  //  };
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        Alert.alert('사진을 올리기 위해 접근 권한이 필요합니다.');
+      }
+    }
+  };
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log('고른 이미지', result);
+
+    if (!result.cancelled) {
+      this.addCatBio.photoPath = result.uri;
+    }
+  };
+
+  selectCut = type => {
+    const keys = Object.keys(this.addCatBio.cutClicked);
+    const values = Object.values(this.addCatBio.cutClicked);
+    keys.forEach((key, idx) => {
+      if (key === type) {
+        values.splice(idx, 1, true);
+      } else values.splice(idx, 1, false);
+    });
+    this.addCatBio.cutClicked = {
+      Y: values[0],
+      N: values[1],
+      unknown: values[2],
+    };
+  };
+
+  validateAddCat = () => {
+    let isValidated = false;
+    const {
+      location,
+      catNickname,
+      catDescription,
+      catSpecies,
+      catTag,
+      cutClicked,
+    } = this.addCatBio;
+    if (
+      location &&
+      catNickname.length &&
+      catDescription.length &&
+      catSpecies.length &&
+      catTag &&
+      (cutClicked.Y || cutClicked.N || cutClicked.unknown)
+    ) {
+      isValidated = true;
+    } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
+    return isValidated;
   };
 
   addCat = () => {
@@ -113,8 +179,8 @@ class CatStore {
       catNickname,
       catDescription,
       catSpecies,
-      catTags,
       catCut,
+      catTag,
     } = this.addCatBio;
     axios
       .post(
@@ -125,13 +191,14 @@ class CatStore {
           catNickname,
           catDescription,
           catSpecies,
-          catTags,
           catCut,
+          catTag,
         },
         defaultCredential,
       )
       .then(res => {
-        // 페이지 main으로 이동시키기
+        Alert.alert('등록에 성공하였습니다!');
+        this.clearAllInput('addCatBio');
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -153,13 +220,10 @@ class CatStore {
   };
 
   updateCut = type => {
-    const {
-      selectedCat: { catCut },
-    } = this.catInfo;
-    const willChangeCut = catCut;
-    willChangeCut[type] += willChangeCut[type];
-    // axios로 cut post하기, req.body는 willChangeCut
-    // res => catCut : res.data
+    const request = { Y: 0, N: 0, unknown: 0 };
+    request[type] = 1;
+    // axios로 cut post하기, req.body는 request
+    // res => CatInfo.selectedCat.cut : res.data
     // err => console
   };
 
@@ -222,6 +286,21 @@ class CatStore {
       this[group][key] = '';
     });
   };
+
+  clearAllInput = type => {
+    if (type === 'addCatBio') {
+      this.addCatBio = {
+        location: null,
+        photoPath: null,
+        catNickname: '',
+        catDescription: '',
+        catSpecies: '',
+        catTag: '',
+        cutClicked: { Y: false, N: false, unknown: false },
+        catCut: { Y: 0, N: 0, unknown: 0 },
+      };
+    }
+  };
 }
 
 decorate(CatStore, {
@@ -232,7 +311,11 @@ decorate(CatStore, {
   getSelectedSpotInfo: action,
   getSelectedCatInfo: action,
   followCat: action,
-  createTagBeforeAddCat: action,
+  // createTagBeforeAddCat: action, -> 고양이 등록 시 태그는 1개만
+  getPermissionAsync: action,
+  pickImage: action,
+  selectCut: action,
+  validateAddCat: action,
   addCat: action,
   reportRainbow: action,
   updateCut: action,
@@ -247,6 +330,7 @@ decorate(CatStore, {
   makeDateTime: action,
   updateInput: action,
   clearInput: action,
+  clearAllInput: action,
 });
 
 export default CatStore;

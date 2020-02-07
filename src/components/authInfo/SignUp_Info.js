@@ -48,6 +48,7 @@ const SignUp_Info = ({
   confirmPW,
   reConfirmPW,
   updateInput,
+  validateSignUp,
   updateState,
   navigation,
 }) => (
@@ -106,8 +107,11 @@ const SignUp_Info = ({
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          await updateState('SignUp');
-          navigation.navigate('Sign In');
+          const validation = await validateSignUp();
+          if (validation) {
+            await updateState('SignUp');
+            navigation.navigate('Sign In');
+          }
         }}
       >
         <Text style={styles.white}>Submit</Text>
@@ -115,16 +119,16 @@ const SignUp_Info = ({
     </Content>
   </Container>
 );
-
 SignUp_Info.navigationOptions = {
   title: '회원가입',
 };
 
 export default inject(({ user }) => ({
-  updateInput: user.updateInput,
   email: user.userInfo.email,
   nickName: user.userInfo.nickName,
   confirmPW: user.userInfo.confirmPW,
   reConfirmPW: user.userInfo.reConfirmPW,
+  updateInput: user.updateInput,
+  validateSignUp: user.validateSignUp,
   updateState: user.updateState,
 }))(observer(withNavigation(SignUp_Info)));

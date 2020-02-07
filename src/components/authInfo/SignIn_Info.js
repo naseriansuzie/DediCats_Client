@@ -28,8 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#677ef1',
     borderRadius: 5,
     marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     marginBottom: 10,
   },
   signUpBtn: {
@@ -37,8 +36,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#EDF1F5',
     borderRadius: 5,
-    marginLeft: 120,
-    marginRight: 120,
+    marginHorizontal: 120,
   },
   white: {
     color: 'white',
@@ -48,7 +46,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignIn_Info = ({ email, PW, updateInput, updateState, navigation }) => (
+const SignIn_Info = ({
+  email,
+  PW,
+  updateInput,
+  validateSignIn,
+  updateState,
+  navigation,
+}) => (
   <Container>
     <Header />
     <View style={styles.logo}>
@@ -62,7 +67,9 @@ const SignIn_Info = ({ email, PW, updateInput, updateState, navigation }) => (
             hello@cat.com
           </Label>
           <Input
-            onChangeText={text => updateInput('email', text)}
+            onChangeText={text => {
+              updateInput('email', text);
+            }}
             value={email}
           />
         </Item>
@@ -76,8 +83,11 @@ const SignIn_Info = ({ email, PW, updateInput, updateState, navigation }) => (
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          await updateState('SignIn');
-          navigation.navigate('AuthLoading');
+          const validation = await validateSignIn();
+          if (validation) {
+            await updateState('SignIn');
+            navigation.navigate('AuthLoading');
+          }
         }}
       >
         <Text style={styles.white}>Log In</Text>
@@ -93,8 +103,9 @@ const SignIn_Info = ({ email, PW, updateInput, updateState, navigation }) => (
 );
 
 export default inject(({ user }) => ({
-  updateInput: user.updateInput,
   email: user.userInfo.email,
   PW: user.userInfo.PW,
+  updateInput: user.updateInput,
+  validateSignIn: user.validateSignIn,
   updateState: user.updateState,
 }))(observer(withNavigation(SignIn_Info)));

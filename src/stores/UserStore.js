@@ -90,26 +90,40 @@ class UserStore {
       .catch(err => console.log(err));
   };
 
+  validateSignUp = () => {
+    let isValidated = false;
+    if (this.userInfo.confirmPW !== this.userInfo.reConfirmPW) {
+      Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
+    } else if (
+      this.userInfo.email &&
+      this.userInfo.confirmPW &&
+      this.userInfo.nickName
+    ) {
+      isValidated = true;
+    } else {
+      Alert.alert('모든 정보를 입력해주세요.');
+    }
+    return isValidated;
+  };
+
+  validateSignIn = () => {
+    let isValidated = false;
+    if (this.userInfo.email && this.userInfo.PW) {
+      isValidated = true;
+    } else {
+      Alert.alert('모든 정보를 입력해주세요.');
+    }
+    return isValidated;
+  };
+
   updateState = field => {
     if (field === 'SignUp') {
-      if (this.userInfo.confirmPW !== this.userInfo.reConfirmPW) {
-        Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
-      } else {
-        const signUpInfo = {
-          email: this.userInfo.email,
-          password: this.userInfo.confirmPW,
-          nickname: this.userInfo.nickName,
-        };
-        if (
-          signUpInfo.email === '' ||
-          signUpInfo.password === '' ||
-          signUpInfo.nickName === ''
-        ) {
-          Alert.alert('모든 정보를 입력해주세요.');
-        } else {
-          this.signUp(signUpInfo);
-        }
-      }
+      const signUpInfo = {
+        email: this.userInfo.email,
+        password: this.userInfo.confirmPW,
+        nickname: this.userInfo.nickName,
+      };
+      this.signUp(signUpInfo);
       runInAction(() => {
         this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
       });
@@ -126,6 +140,7 @@ class UserStore {
   };
 
   updateInput = (field, text) => {
+    console.log(text);
     this.userInfo[field] = text;
   };
 
@@ -184,6 +199,8 @@ decorate(UserStore, {
   signUp: action,
   signIn: action,
   signOut: action,
+  validateSignUp: action,
+  validateSignIn: action,
   updateState: action,
   updateInput: action,
   clearInput: action,
