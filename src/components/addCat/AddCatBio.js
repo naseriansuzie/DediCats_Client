@@ -1,12 +1,19 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { Content, Item, Label, Input, Textarea } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 3,
     width: '100%',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -47,7 +54,12 @@ const styles = StyleSheet.create({
   },
   uploading: { flex: 1, alignItems: 'center', marginTop: 10 },
   uploadBtn: { color: '#767577' },
-  bioView: { flex: 1, width: '100%', paddingTop: 10 },
+  bioView: {
+    flex: 1,
+    width: '100%',
+    paddingTop: 10,
+    fontSize: 14,
+  },
   intro: { borderRadius: 10, marginVertical: 10 },
   peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 15 },
   peanutF: {
@@ -72,12 +84,12 @@ const styles = StyleSheet.create({
   cutTxtF: { color: '#767577', fontWeight: 'bold' },
   submit: {
     alignItems: 'center',
-    padding: 25,
+    padding: 15,
     backgroundColor: '#677ef1',
-    borderRadius: 20,
+    borderRadius: 14,
     marginTop: 20,
-    // marginHorizontal: 10,
-    // marginBottom: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
   submitTxt: {
     color: 'white',
@@ -100,11 +112,14 @@ const AddCatBio = ({
   validateAddCat,
   addCat,
   navigation,
-}) => {
-  console.log(catTag);
-  return (
-    <View style={styles.container}>
-      <View sytle={styles.flex1}>
+}) => (
+  <View style={styles.container}>
+    <View style={styles.flex1}>
+      <KeyboardAvoidingView
+        style={{ width: '100%' }}
+        behavior="padding"
+        enabled
+      >
         <View style={styles.row}>
           <View style={styles.photoView}>
             <View style={styles.photo}>
@@ -219,10 +234,10 @@ const AddCatBio = ({
             <Text style={styles.submitTxt}>Finish</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
-  );
-};
+  </View>
+);
 
 export default inject(({ cat }) => ({
   photoPath: cat.addCatBio.photoPath,
