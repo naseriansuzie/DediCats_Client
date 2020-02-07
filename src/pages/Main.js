@@ -85,6 +85,8 @@ class Main extends React.Component {
         img: require('../../img3.jpg')
       },
     ],
+    currentPosition: {},
+    currentBoundingBox: {},
     isShowingCarousel: false,
   };
 
@@ -106,15 +108,17 @@ class Main extends React.Component {
   getWatchPosition = () => {
     navigator.geolocation.watchPosition(
       (position) => {
-        console.log(position);
         let currentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: 0.09,
           longitudeDelta: 0.035,
         };
-        this.setState({ currentPosition });
-        console.log(this.state.currentPosition);
+        let currentBoundingBox = this.getBoundingBox(currentPosition);
+        this.setState({
+          currentPosition,
+          currentBoundingBox,
+        });
       },
       (error) => { Alert.alert(error.code, error.message); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
@@ -125,48 +129,81 @@ class Main extends React.Component {
     this.getWatchPosition();
   }
 
-  renderCarouselItem = ({ item }) => (
-    <BriefCatInfo
-      item={item}
-      isShowingCarousel={this.state.isShowingCarousel}
-      hideCarousel={this.hideCarousel}
-    />
-  );
+  getBoundingBox = (region) => ({
+    NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
+    NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
+    SElatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
+    SElongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
+  });
+
+  renderCarouselItem = ({ item }) => {
+    const { isShowingCarousel } = this.state;
+    return (
+      <BriefCatInfo
+        item={item}
+        isShowingCarousel={isShowingCarousel}
+        hideCarousel={this.hideCarousel}
+      />
+    );
+  };
 
   hideCarousel = () => {
     this.setState({ isShowingCarousel: false });
   }
 
   onCarouselItemChange = (index) => {
-    let location = this.state.markers[index];
-    let region = {
+    const { markers, currentPosition } = this.state;
+    const location = markers[index];
+    const region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    this.setState({ currentPosition: region });
+    const currentBoundingBox = this.getBoundingBox(currentPosition);
+    if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
+      this.setState({
+        currentPosition: region,
+        currentBoundingBox,
+      });
+    }
     this._map.animateToRegion(region);
   }
 
   onMarkerPressed = (location, index) => {
-    let region = {
+    const { currentPosition, isShowingCarousel } = this.state;
+    const region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    this.setState({ currentPosition: region });
+    const currentBoundingBox = this.getBoundingBox(currentPosition);
+    if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
+      this.setState({
+        currentPosition: region,
+        currentBoundingBox,
+      });
+    }
     this._map.animateToRegion(region);
-    if (!this.state.isShowingCarousel) {
+    if (!isShowingCarousel) {
       this.setState({ isShowingCarousel: true });
     }
     this._carousel.snapToItem(index);
   }
 
+  onRegionChangeComplete = (region) => {
+    const { currentPosition } = this.state;
+    if (region.latitude !== 0
+      && region.latitude.toFixed(3) !== currentPosition.latitude.toFixed(3)) {
+      this.setState({ currentPosition: region });
+    }
+    console.log('currentRegion', currentPosition);
+  }
+
   render() {
     console.disableYellowBox = 'true';
-
+    const { markers, currentPosition } = this.state;
     return (
       <View style={styles.container}>
         <MapView
@@ -174,10 +211,11 @@ class Main extends React.Component {
           ref={(map) => this._map = map}
           style={styles.map}
           showsUserLocation={true}
-          region={this.state.currentPosition}
+          region={currentPosition}
+          onRegionChangeComplete={this.onRegionChangeComplete}
         >
           {
-            this.state.markers.map((marker, index) => (
+            markers.map((marker, index) => (
               <MainMarker
                 key={marker.name}
                 marker={marker}
@@ -189,7 +227,7 @@ class Main extends React.Component {
         </MapView>
         <Carousel
           ref={(c) => { this._carousel = c; }}
-          data={this.state.markers}
+          data={markers}
           renderItem={this.renderCarouselItem}
           onSnapToItem={(index) => this.onCarouselItemChange(index)}
           removeClippedSubviews={false}
