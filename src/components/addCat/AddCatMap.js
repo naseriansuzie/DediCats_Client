@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
 const AddCatMap = () => (
   <View style={styles.container}>
-    <Text>Map Map Map Map Map Map Map Map Map Map Map Map </Text>
+    <Text>Map Map Map Map Map Map Map Map Map Map Map Map Map </Text>
   </View>
 );
 

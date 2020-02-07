@@ -1,4 +1,5 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
 import { StyleSheet, View, Alert } from 'react-native';
 import { HeaderBackButton } from 'react-navigation-stack';
 import AddCatForm from '../components/addCat/AddCatForm';
@@ -12,13 +13,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddCatModal = () => (
-  <View style={styles.container}>
-    <AddCatForm />
-  </View>
-);
+class AddCatModal extends React.Component {
+  // lifecycle
+  componentDidMount() {
+    this.props.clearAllInput('addCatBio');
+  }
 
-export default AddCatModal;
+  render() {
+    return (
+      <View style={styles.container}>
+        <AddCatForm />
+      </View>
+    );
+  }
+}
 
 AddCatModal.navigationOptions = ({ navigation }) => {
   const onBack = () => {
@@ -46,3 +54,8 @@ AddCatModal.navigationOptions = ({ navigation }) => {
     headerLeft: () => <HeaderBackButton onPress={() => onBack()} />,
   };
 };
+
+export default inject(({ cat }) => ({
+  clearAllInput: cat.clearAllInput,
+  location: cat.addCatBio.location,
+}))(observer(AddCatModal));

@@ -1,14 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TouchableHighlight,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Content, Item, Label, Input, Textarea } from 'native-base';
+import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -55,8 +49,8 @@ const styles = StyleSheet.create({
   uploadBtn: { color: '#767577' },
   bioView: { flex: 1, width: '100%', paddingTop: 10 },
   intro: { borderRadius: 10, marginVertical: 10 },
-  peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 5 },
-  peanut: {
+  peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 15 },
+  peanutF: {
     width: 50,
     height: 40,
     marginRight: 10,
@@ -65,16 +59,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cutTxt: { color: '#767577', fontWeight: 'bold' },
-  submit: {
-    flex: 1,
+  peanutT: {
+    width: 50,
+    height: 40,
+    marginRight: 10,
+    backgroundColor: '#f38847',
+    borderRadius: 10,
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+  },
+  cutTxtT: { color: 'white', fontWeight: 'bold' },
+  cutTxtF: { color: '#767577', fontWeight: 'bold' },
+  submit: {
+    alignItems: 'center',
+    padding: 25,
     backgroundColor: '#677ef1',
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 20,
-    marginHorizontal: 10,
-    marginBottom: 10,
+    // marginHorizontal: 10,
+    // marginBottom: 10,
   },
   submitTxt: {
     color: 'white',
@@ -85,100 +88,153 @@ const styles = StyleSheet.create({
 
 const AddCatBio = ({
   photoPath,
-  catCut,
+  catNickname,
+  catSpecies,
+  catDescription,
+  cutClicked,
+  catTag,
   getPermissionAsync,
   pickImage,
-  updateCut,
+  updateInput,
+  selectCut,
+  validateAddCat,
   addCat,
-}) => (
-  <View style={styles.container}>
-    <View sytle={styles.flex1}>
-      <View style={styles.row}>
-        <View style={styles.photoView}>
-          <View style={styles.photo}>
-            {photoPath ? (
-              <Image style={styles.catPhoto} source={{ uri: photoPath }} />
-            ) : (
-              <Image
-                style={styles.defaultPhoto}
-                source={{
-                  uri:
-                    'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png',
+  navigation,
+}) => {
+  console.log(catTag);
+  return (
+    <View style={styles.container}>
+      <View sytle={styles.flex1}>
+        <View style={styles.row}>
+          <View style={styles.photoView}>
+            <View style={styles.photo}>
+              {photoPath ? (
+                <Image style={styles.catPhoto} source={{ uri: photoPath }} />
+              ) : (
+                <Image
+                  style={styles.defaultPhoto}
+                  source={{
+                    uri:
+                      'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png',
+                  }}
+                />
+              )}
+            </View>
+            <View style={styles.uploading}>
+              <TouchableOpacity
+                onPress={async () => {
+                  await getPermissionAsync();
+                  pickImage();
+                }}
+              >
+                <Text style={styles.uploadBtn}>Upload photo</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Content style={styles.bioView}>
+            <Item stackedLabel last>
+              <Label>별명</Label>
+              <Input
+                value={catNickname}
+                maxLength={10}
+                onChangeText={text => {
+                  updateInput('addCatBio', 'catNickname', text);
                 }}
               />
-            )}
-          </View>
-          <View style={styles.uploading}>
-            <TouchableOpacity
-              onPress={async () => {
-                await getPermissionAsync();
-                pickImage();
+            </Item>
+            <Item stackedLabel last>
+              <Label>추정 종(예: 코숏)</Label>
+              <Input
+                value={catSpecies}
+                maxLength={12}
+                onChangeText={text => {
+                  updateInput('addCatBio', 'catSpecies', text);
+                }}
+              />
+            </Item>
+            <Item stackedLabel last>
+              <Label>대표 태그(예: 소심, 귀염)</Label>
+              <Input
+                value={catTag}
+                maxLength={12}
+                onChangeText={text => {
+                  updateInput('addCatBio', 'catTag', text);
+                }}
+              />
+            </Item>
+            <Textarea
+              rowSpan={3}
+              maxLength={30}
+              bordered
+              placeholder="간략한 고양이 소개(30자 이내)"
+              style={styles.intro}
+              value={catDescription}
+              onChangeText={text => {
+                updateInput('addCatBio', 'catDescription', text);
               }}
-            >
-              <Text style={styles.uploadBtn}>Upload photo</Text>
-            </TouchableOpacity>
-          </View>
+            />
+            <Item stackedLabel last>
+              <Label>중성화</Label>
+              <View style={styles.peanuts}>
+                <TouchableOpacity
+                  style={cutClicked.Y ? styles.peanutT : styles.peanutF}
+                  onPress={() => selectCut('Y')}
+                >
+                  <Text style={cutClicked.Y ? styles.cutTxtT : styles.cutTxtF}>
+                    Yes
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={cutClicked.N ? styles.peanutT : styles.peanutF}
+                  onPress={() => selectCut('N')}
+                >
+                  <Text style={cutClicked.N ? styles.cutTxtT : styles.cutTxtF}>
+                    No
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={cutClicked.unknown ? styles.peanutT : styles.peanutF}
+                  onPress={() => selectCut('unknown')}
+                >
+                  <Text
+                    style={cutClicked.unknown ? styles.cutTxtT : styles.cutTxtF}
+                  >
+                    몰라요
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Item>
+          </Content>
         </View>
-        <Content style={styles.bioView}>
-          <Item stackedLabel last>
-            <Label>별명</Label>
-            <Input />
-          </Item>
-          <Item stackedLabel last>
-            <Label>추정 종(예: 코숏)</Label>
-            <Input />
-          </Item>
-          <Textarea
-            rowSpan={3}
-            bordered
-            placeholder="간략히 고양이를 소개해주세요(20자 이내)"
-            style={styles.intro}
-          />
-          <Item stackedLabel last>
-            <Label>중성화</Label>
-            <View style={styles.peanuts}>
-              <TouchableHighlight
-                style={styles.peanut}
-                underlayColor="#f38847"
-                onPress={() => updateCut('Y')}
-              >
-                <Text style={styles.cutTxt}>Yes {catCut.Y}</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.peanut}
-                underlayColor="#f38847"
-                onPress={() => updateCut('N')}
-              >
-                <Text style={styles.cutTxt}>No {catCut.Y}</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.peanut}
-                underlayColor="#f38847"
-                onPress={() => updateCut('unknown')}
-              >
-                <Text style={styles.cutTxt}>몰라요 {catCut.unknown} </Text>
-              </TouchableHighlight>
-            </View>
-          </Item>
-          <Item stackedLabel last>
-            <Label>상태</Label>
-          </Item>
-        </Content>
-      </View>
-      <View style={styles.submit}>
-        <TouchableOpacity onPress={addCat}>
-          <Text style={styles.submitTxt}>Finish</Text>
-        </TouchableOpacity>
+        <View style={styles.submit}>
+          <TouchableOpacity
+            onPress={async () => {
+              const validation = await validateAddCat();
+              if (validation) {
+                await addCat();
+                navigation.goBack();
+              }
+            }}
+          >
+            <Text style={styles.submitTxt}>Finish</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+};
 
 export default inject(({ cat }) => ({
   photoPath: cat.addCatBio.photoPath,
-  catCut: cat.addCatBio.catCut,
+  catNickname: cat.addCatBio.catNickname,
+  catSpecies: cat.addCatBio.catSpecies,
+  catDescription: cat.addCatBio.catDescription,
+  cutClicked: cat.addCatBio.cutClicked,
+  catTag: cat.addCatBio.catTag,
   getPermissionAsync: cat.getPermissionAsync,
   pickImage: cat.pickImage,
-  updateCut: cat.updateCut,
+  updateInput: cat.updateInput,
+  selectCut: cat.selectCut,
+  validateAddCat: cat.validateAddCat,
   addCat: cat.addCat,
-}))(observer(AddCatBio));
+}))(observer(withNavigation(AddCatBio)));
