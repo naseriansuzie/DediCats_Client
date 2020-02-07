@@ -13,6 +13,7 @@ import Carousel from 'react-native-snap-carousel';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import BriefCatInfo from '../components/main/BriefCatInfo';
+import MainMarker from '../components/main/MainMarker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -76,7 +77,15 @@ class Main extends React.Component {
         content: 'This is the best place in Portland3333',
         img: require('../../img3.jpg')
       },
+      {
+        latitude: 37.766552,
+        longitude: 127.416128,
+        name: 'Best Place4444',
+        content: 'This is the best place in Portland4444',
+        img: require('../../img3.jpg')
+      },
     ],
+    isShowingCarousel: false,
   };
 
   componentDidMount() {
@@ -94,47 +103,64 @@ class Main extends React.Component {
     }
   };
 
-  locateCurrentPosition = () => {
-    // Instead of navigator.geolocation, just use Geolocation.
-    navigator.geolocation.getCurrentPosition(
+  getWatchPosition = () => {
+    navigator.geolocation.watchPosition(
       (position) => {
         console.log(position);
-        let initialPosition = {
+        let currentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: 0.09,
           longitudeDelta: 0.035,
         };
-        this.setState({ initialPosition });
+        this.setState({ currentPosition });
+        console.log(this.state.currentPosition);
       },
       (error) => { Alert.alert(error.code, error.message); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   }
 
+  locateCurrentPosition = () => {
+    this.getWatchPosition();
+  }
+
   renderCarouselItem = ({ item }) => (
-    <BriefCatInfo item={item} />
+    <BriefCatInfo
+      item={item}
+      isShowingCarousel={this.state.isShowingCarousel}
+      hideCarousel={this.hideCarousel}
+    />
   );
+
+  hideCarousel = () => {
+    this.setState({ isShowingCarousel: false });
+  }
 
   onCarouselItemChange = (index) => {
     let location = this.state.markers[index];
-
-    this._map.animateToRegion({
+    let region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
-    });
+    };
+    this.setState({ currentPosition: region });
+    this._map.animateToRegion(region);
   }
 
   onMarkerPressed = (location, index) => {
-    this._map.animateToRegion({
+    let region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
-    });
-
+    };
+    this.setState({ currentPosition: region });
+    this._map.animateToRegion(region);
+    if (!this.state.isShowingCarousel) {
+      this.setState({ isShowingCarousel: true });
+    }
     this._carousel.snapToItem(index);
   }
 
@@ -148,23 +174,16 @@ class Main extends React.Component {
           ref={(map) => this._map = map}
           style={styles.map}
           showsUserLocation={true}
-          region={this.state.initialPosition}
+          region={this.state.currentPosition}
         >
           {
             this.state.markers.map((marker, index) => (
-              <Marker
+              <MainMarker
                 key={marker.name}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                }}
-                onPress={() => this.onMarkerPressed(marker, index)}
-              >
-                {/* <Callout>
-                  <Text>{marker.name}</Text>
-                  <Text>{marker.content}</Text>
-                </Callout> */}
-              </Marker>
+                marker={marker}
+                index={index}
+                onMarkerPressed={this.onMarkerPressed}
+              />
             ))
           }
         </MapView>

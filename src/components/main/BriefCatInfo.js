@@ -6,6 +6,7 @@ import {
   Button,
   Image,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,21 +37,29 @@ const styles = StyleSheet.create({
 
 class BriefCatInfo extends React.Component {
   render() {
-    return (
-      <View style={styles.card}>
-        <Image
-          style={styles.cardImg}
-          source={this.props.item.img}
-        />
-        <Text style={styles.cardtitle}>{this.props.item.name}</Text>
-        <Text style={styles.cardDescription}>{this.props.item.content}</Text>
-        <Button
-          title="Move to Cat Info"
-          onPress={() => this.props.navigation.navigate('CatInfo')}
-        />
-      </View>
-    );
+    if (this.props.isShowingCarousel) {
+      return (
+        <View style={styles.card}>
+          <Button
+            title="X"
+            onPress={() => this.props.hideCarousel()}
+          />
+          <Image
+            style={styles.cardImg}
+            source={this.props.item.img}
+          />
+          <Text style={styles.cardtitle}>{this.props.item.name}</Text>
+          <Text style={styles.cardDescription}>{this.props.item.content}</Text>
+          <Button
+            title="Move to Cat Info"
+            onPress={() => this.props.navigation.navigate('CatInfo')}
+          />
+        </View>
+      );
+    } else {
+      return <View></View>;
+    }
   }
 }
 
-export default BriefCatInfo;
+export default withNavigation(BriefCatInfo);
