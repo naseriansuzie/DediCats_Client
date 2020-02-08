@@ -39,14 +39,14 @@ const styles = StyleSheet.create({
   defaultPhoto: {
     width: 180,
     height: 180,
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
   },
   catPhoto: {
     width: 180,
     height: 180,
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
     borderColor: '#edf1f5',
@@ -97,9 +97,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+const DEFAULT_CAT =
+  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
-  photoPath,
+  uri,
   catNickname,
   catSpecies,
   catDescription,
@@ -123,14 +125,13 @@ const AddCatBio = ({
         <View style={styles.row}>
           <View style={styles.photoView}>
             <View style={styles.photo}>
-              {photoPath ? (
-                <Image style={styles.catPhoto} source={{ uri: photoPath }} />
+              {uri ? (
+                <Image style={styles.catPhoto} source={{ uri }} />
               ) : (
                 <Image
                   style={styles.defaultPhoto}
                   source={{
-                    uri:
-                      'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png',
+                    uri: DEFAULT_CAT,
                   }}
                 />
               )}
@@ -240,7 +241,7 @@ const AddCatBio = ({
 );
 
 export default inject(({ cat }) => ({
-  photoPath: cat.addCatBio.photoPath,
+  uri: cat.addCatBio.uri,
   catNickname: cat.addCatBio.catNickname,
   catSpecies: cat.addCatBio.catSpecies,
   catDescription: cat.addCatBio.catDescription,
