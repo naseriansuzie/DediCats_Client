@@ -35,7 +35,9 @@ class UserStore {
     confirmPW: '',
     reConfirmPW: '',
     PW: '',
-    myInfo: null,
+    myInfo:
+      // null,
+      { userId: 1 },
     myPhoto: defaultPhotoUrl,
   };
 
@@ -152,10 +154,16 @@ class UserStore {
     });
   };
 
-  unFollowCat = catId => {
+  unFollowCat = () => {
+    const { userId } = this.userInfo.myInfo;
+    const catId = this.root.cat.catInfo.selectedCat[0].id;
     axios
-      .post(`${process.env.SERVER_URL}/cat/unfollow`, catId, defaultCredential)
-      .then(res => res)
+      .post(
+        `${process.env.SERVER_URL}/cat/unfollow`,
+        { userId, catId },
+        defaultCredential,
+      )
+      .then(res => (this.myCat.unFollowedCat = catId))
       .catch(err => console.log(err));
   };
 

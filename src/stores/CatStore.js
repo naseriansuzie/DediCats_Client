@@ -49,6 +49,8 @@ class CatStore {
   addCatBio = {
     location: { latitude: 0, longitude: 0 },
     photoPath: null,
+    address: '',
+    uri: null,
     catNickname: '',
     catDescription: '',
     catSpecies: '',
@@ -59,7 +61,40 @@ class CatStore {
   };
 
   catInfo = {
-    selectedCat: null,
+    selectedCat:
+      // null,
+      [
+        {
+          id: 1,
+          description: '완전 귀염이 넘치는 아이에요.',
+          location: 'POINT(1 2)',
+          address: '서울시 강남구 대치동',
+          nickname: '애옹이',
+          cut: "{ 'Y':5, 'N': 0, 'unknown': 0 }",
+          rainbow:
+            "{ 'Y': 2, 'YDate': 2020-02-01, 'N': 3, 'NDate': 2020-02-06 }",
+          species: null,
+          today: '건강해요:+1:',
+          todayTime: '2020-02-06T05:50:43.000Z',
+          status: 'Y',
+          createAt: '2020-02-05T03:26:25.561Z',
+          updateAt: '2020-02-06T11:30:24.000Z',
+        },
+        {
+          isFollowing: false,
+        },
+        [
+          {
+            id: 7,
+            tag: {
+              content: '초큐트',
+            },
+          },
+        ],
+        {
+          path: 'https://source.unsplash.com/hGMvqCyRM9U',
+        },
+      ],
     newTag: '',
     postList: null,
     selectedPost: null,
@@ -86,36 +121,39 @@ class CatStore {
     this.spot.selectedSpot = selectedSpotCats;
   };
 
-  getSelectedCatInfo = catId => {
-    // axios로 해당 cat 정보 get
-    // res => this.catInfo.selectedCat = res.data
-    // err => console
+  getSelectedCatInfo = () => {
+    const { userId } = this.root.user.userInfo.myInfo;
+    const catId = this.catInfo.selectedPost[0].id;
+    axios
+      .get(
+        `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
+        defaultCredential,
+      )
+      .then(res => (this.catInfo.selectedCat = res.data))
+      .catch(err => console.log(err));
   };
 
-  followCat = catId => {
-    const {
-      user: {
-        userInfo: {
-          myInfo: { userId },
-        },
-      },
-    } = this.root;
-    const followingInfo = { catId, userId };
-    // axios로 follow cat post, followingInfo 담아서 req.body로 보내기
-    // res => this.catInfo.selectedCat.isFollowing을 true로
+  followCat = () => {
+    const { userId } = this.root.user.userInfo.myInfo;
+    const catId = this.catInfo.selectedCat[0].id;
+    // console.log(userId, catId);
+    this.catInfo.selectedCat[1].isFollowing = true;
+    // console.log(this.catInfo.selectedCat[1].isFollowing);
+    axios
+      .post(
+        `${process.env.SERVER_URL}/cat/follow/`,
+        { catId, userId },
+        defaultCredential,
+      )
+      .then(res => this.getSelectedCatInfo())
+      .catch(err => console.log(err));
   };
-
-  // 고양이 등록 시 태그 여러 개 등록할 때 사용, 태그 1개만 등록하는 것으로 바뀜, 주석처리
-  // createTagBeforeAddCat = () => {
-  //   this.addCatBio.catTags = [...this.addCatBio.catTags, this.addCatBio.catTag];
-  //   this.addCatBio.catTag = '';
-  //  };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = (e) => {
+  onDragEnd = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.addCatBio.location = { latitude, longitude };
-  }
+  };
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -132,10 +170,11 @@ class CatStore {
       allowsEditing: true,
       aspect: [4, 4],
       quality: 1,
+      base64: true,
     });
-    
     if (!result.cancelled) {
-      this.addCatBio.photoPath = result.uri;
+      this.addCatBio.uri = result.uri;
+      this.addCatBio.photoPath = result.base64;
     }
   };
 
@@ -297,6 +336,7 @@ class CatStore {
       this.addCatBio = {
         location: null,
         photoPath: null,
+        uri: null,
         catNickname: '',
         catDescription: '',
         catSpecies: '',
@@ -316,7 +356,6 @@ decorate(CatStore, {
   getSelectedSpotInfo: action,
   getSelectedCatInfo: action,
   followCat: action,
-  // createTagBeforeAddCat: action, -> 고양이 등록 시 태그는 1개만
   onDragEnd: action,
   getPermissionAsync: action,
   pickImage: action,
