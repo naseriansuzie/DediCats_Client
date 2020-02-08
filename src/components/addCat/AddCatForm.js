@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
     width: '100%',
-    marginTop: Constants.statusBarHeight,
+    marginTop: 10,
+    // marginTop: Constants.statusBarHeight,
   },
   guide: {
     paddingBottom: 10,
