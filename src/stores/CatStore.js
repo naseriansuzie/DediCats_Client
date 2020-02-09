@@ -9,7 +9,7 @@ import * as Permissions from 'expo-permissions';
 /**
  * 1. spot 관련
  *  - 팔로우하는 고양이 수
- *  - spotList = [ {bounds 안 고양이 위치정보} ]
+ *  - list = [ {bounds 안 고양이 위치정보} ]
  * 2. addCatBio = {
  *   img: fileName,
  *   name: string,
@@ -34,6 +34,7 @@ import * as Permissions from 'expo-permissions';
  */
 
 const defaultCredential = { withCredentials: true };
+
 class CatStore {
   constructor(root) {
     this.root = root;
@@ -43,24 +44,23 @@ class CatStore {
   spot = {
     followCatNum: 0, // 어디다 쓰지?
     list: null,
-    selectedSpot: null,
+    selected: null,
   };
 
   addCatBio = {
+    address: '',
     location: { latitude: 0, longitude: 0 },
     photoPath: null,
-    address: '',
-    uri: null,
     catNickname: '',
     catDescription: '',
     catSpecies: '',
     catTag: '',
-    // catTags: null, -> 고양이 등록 시 태그 등록은 1개만
-    cutClicked: { Y: false, N: false, unknown: false },
     catCut: { Y: 0, N: 0, unknown: 0 },
+    uri: null,
+    cutClicked: { Y: false, N: false, unknown: false },
   };
 
-  catInfo = {
+  info = {
     selectedCat:
       // null,
       [
@@ -103,7 +103,60 @@ class CatStore {
     commentList: null,
     inputComment: '',
     album: null,
-    followerList: null,
+    followerList:
+      // null,
+      [
+        {
+          id: 1,
+          users: [
+            {
+              id: 1,
+              nickname: 'testUser',
+              photoPath: null,
+            },
+            {
+              id: 2,
+              nickname: 'Joshua',
+              photoPath: null,
+            },
+            {
+              id: 3,
+              nickname: 'perry',
+              photoPath: null,
+            },
+            {
+              id: 4,
+              nickname: 'testUser',
+              photoPath: null,
+            },
+            {
+              id: 5,
+              nickname: 'Joshua',
+              photoPath: null,
+            },
+            {
+              id: 6,
+              nickname: 'perry',
+              photoPath: null,
+            },
+            {
+              id: 7,
+              nickname: 'testUser',
+              photoPath: null,
+            },
+            {
+              id: 8,
+              nickname: 'Joshua',
+              photoPath: null,
+            },
+            {
+              id: 9,
+              nickname: 'perry',
+              photoPath: null,
+            },
+          ],
+        },
+      ],
     reportInfo: null,
   };
 
@@ -118,27 +171,25 @@ class CatStore {
     const selectedSpotCats = this.spot.list.filter(
       cat => cat.location[0] === lat && cat.location[1] === long,
     );
-    this.spot.selectedSpot = selectedSpotCats;
+    this.spot.selected = selectedSpotCats;
   };
 
   getSelectedCatInfo = () => {
-    const { userId } = this.root.user.userInfo.myInfo;
-    const catId = this.catInfo.selectedPost[0].id;
-    axios
-      .get(
-        `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
-        defaultCredential,
-      )
-      .then(res => (this.catInfo.selectedCat = res.data))
-      .catch(err => console.log(err));
+    const { userId } = this.root.user.info.myInfo;
+    const catId = this.info.selectedPost[0].id;
+    console.log('고양이 정보 가져오기', userId, catId);
+    // axios
+    //   .get(
+    //     `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
+    //     defaultCredential,
+    //   )
+    //   .then(res => (this.info.selectedCat = res.data))
+    //   .catch(err => console.log(err));
   };
 
   followCat = () => {
-    const { userId } = this.root.user.userInfo.myInfo;
-    const catId = this.catInfo.selectedCat[0].id;
-    // console.log(userId, catId);
-    this.catInfo.selectedCat[1].isFollowing = true;
-    // console.log(this.catInfo.selectedCat[1].isFollowing);
+    const { userId } = this.root.user.info.myInfo;
+    const catId = this.info.selectedCat[0].id;
     axios
       .post(
         `${process.env.SERVER_URL}/cat/follow/`,
@@ -147,6 +198,8 @@ class CatStore {
       )
       .then(res => this.getSelectedCatInfo())
       .catch(err => console.log(err));
+    // test용으로 넣은 코드
+    this.info.selectedCat[1].isFollowing = true;
   };
 
   // {latitude: Number, longitude: Number}
@@ -196,6 +249,7 @@ class CatStore {
   validateAddCat = () => {
     let isValidated = false;
     const {
+      address,
       location,
       catNickname,
       catDescription,
@@ -204,6 +258,7 @@ class CatStore {
       cutClicked,
     } = this.addCatBio;
     if (
+      address &&
       location &&
       catNickname.length &&
       catDescription.length &&
@@ -254,7 +309,7 @@ class CatStore {
   reportRainbow = type => {
     const {
       selectedCat: { rainbow },
-    } = this.catInfo;
+    } = this.info;
     const willChangeRainbow = rainbow;
     willChangeRainbow[type] += willChangeRainbow[type];
     willChangeRainbow[`${type}_Date`] = this.makeDateTime();
@@ -272,7 +327,7 @@ class CatStore {
   };
 
   createTag = () => {
-    // axios로 this.catInfo.newTag와 this.catInfo.selectedCat.catId를 post 보냄
+    // axios로 this.info.newTag와 this.info.selectedCat.catId를 post 보냄
     // res => clearInput({group: "cat", key: "newTag"}) 실행
     // err => alert 처리
     // 근데 지금 api에서 안 찾아짐 -> 확인 필요
@@ -280,7 +335,7 @@ class CatStore {
 
   getPostList = catId => {
     // 탭 렌더 시 포스트를 받아오는 함수
-    // axios로 catPost들을 get해서 this.catInfo.postList 업데이트
+    // axios로 catPost들을 get해서 this.info.postList 업데이트
   };
 
   addPost = () => {
@@ -304,7 +359,11 @@ class CatStore {
   };
 
   getFollowerList = catId => {
-    // 탭 렌더 시 팔로워 리스트를 받아오는 함수
+    console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
+    axios
+      .get(`${process.env.SERVER_URL}/cat/follower/${catId}`, defaultCredential)
+      .then(res => (this.info.followerList = res.data))
+      .catch(err => console.log(err));
   };
 
   makeDateTime = () => {
@@ -351,7 +410,7 @@ class CatStore {
 decorate(CatStore, {
   spot: observable,
   addCatBio: observable,
-  catInfo: observable,
+  info: observable,
   getMapInfo: action,
   getSelectedSpotInfo: action,
   getSelectedCatInfo: action,
