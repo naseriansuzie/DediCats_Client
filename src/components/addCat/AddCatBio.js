@@ -112,6 +112,7 @@ const AddCatBio = ({
   updateInput,
   selectCut,
   validateAddCat,
+  getAddress,
   addCat,
   navigation,
 }) => (
@@ -227,8 +228,13 @@ const AddCatBio = ({
             onPress={async () => {
               const validation = await validateAddCat();
               if (validation) {
-                await addCat();
-                navigation.goBack();
+                const addressResult = await getAddress();
+                if (addressResult) {
+                  const addCatResult = await addCat();
+                  if (addCatResult) {
+                    navigation.goBack();
+                  }
+                }
               }
             }}
           >
@@ -252,5 +258,6 @@ export default inject(({ cat }) => ({
   updateInput: cat.updateInput,
   selectCut: cat.selectCut,
   validateAddCat: cat.validateAddCat,
+  getAddress: cat.getAddress,
   addCat: cat.addCat,
 }))(observer(withNavigation(AddCatBio)));

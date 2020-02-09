@@ -1,7 +1,7 @@
 import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL } from 'react-native-dotenv';
+import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -49,7 +49,7 @@ class CatStore {
 
   addCatBio = {
     address: '',
-    location: { latitude: 0, longitude: 0 },
+    location: { latitude: 127.049784, longitude: 127.049784 },
     photoPath: null,
     catNickname: '',
     catDescription: '',
@@ -179,10 +179,7 @@ class CatStore {
     const catId = this.info.selectedPost[0].id;
     console.log('고양이 정보 가져오기', userId, catId);
     axios
-      .get(
-        `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
-        defaultCredential,
-      )
+      .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
       .then(res => (this.info.selectedCat = res.data))
       .catch(err => console.log(err));
   };
@@ -191,11 +188,7 @@ class CatStore {
     const { userId } = this.root.user.info.myInfo;
     const catId = this.info.selectedCat[0].id;
     axios
-      .post(
-        `${process.env.SERVER_URL}/cat/follow/`,
-        { catId, userId },
-        defaultCredential,
-      )
+      .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
       .then(res => this.getSelectedCatInfo())
       .catch(err => console.log(err));
     // test용으로 넣은 코드
@@ -249,7 +242,6 @@ class CatStore {
   validateAddCat = () => {
     let isValidated = false;
     const {
-      address,
       location,
       catNickname,
       catDescription,
@@ -257,9 +249,7 @@ class CatStore {
       catTag,
       cutClicked,
     } = this.addCatBio;
-    console.log('카카오로 변환한 주소', address);
     if (
-      address &&
       location &&
       catNickname.length &&
       catDescription.length &&
@@ -272,8 +262,38 @@ class CatStore {
     return isValidated;
   };
 
+  getAddress = () => {
+    const { latitude, longitude } = this.addCatBio.location;
+    console.log(latitude, longitude);
+    /* API 제한 때문에 실제로 서버 연동 후에 주석 풀 예정 */
+    // axios
+    //   .get(
+    //     `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
+    //     {
+    //       headers: {
+    //         Authorization: `KakaoAK ${KAKAO_MAPS_API_KEY}`,
+    //       },
+    //     },
+    //   )
+    //   .then(res => {
+    //     const {
+    //       region_1depth_name,
+    //       region_2depth_name,
+    //       region_3depth_name,
+    //     } = res.data.documents[0].address;
+    //     console.log(region_1depth_name, region_2depth_name, region_3depth_name);
+    //     this.addCatBio.address = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
+    //     return true;
+    //   })
+    //   .catch(err => {
+    //     console.dir(err);
+    //     Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
+    //   });
+  };
+
   addCat = () => {
     const {
+      address,
       location,
       photoPath,
       catNickname,
@@ -284,8 +304,9 @@ class CatStore {
     } = this.addCatBio;
     axios
       .post(
-        `${process.env.SERVER_URL}/cat/addcat`,
+        `${SERVER_URL}/cat/addcat`,
         {
+          address,
           location,
           photoPath,
           catNickname,
@@ -299,6 +320,7 @@ class CatStore {
       .then(res => {
         Alert.alert('등록에 성공하였습니다!');
         this.clearAllInput('addCatBio');
+        return true;
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -318,7 +340,7 @@ class CatStore {
     report[`${type}Date`] = this.makeDateTime();
 
     axios
-      .post(`${process.env.SERVER_URL}/cat/rainbow`, report, defaultCredential)
+      .post(`${SERVER_URL}/cat/rainbow`, report, defaultCredential)
       .then(res => {
         if (res.status === 201) {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
@@ -372,7 +394,7 @@ class CatStore {
   getFollowerList = catId => {
     console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
-      .get(`${process.env.SERVER_URL}/cat/follower/${catId}`, defaultCredential)
+      .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => (this.info.followerList = res.data))
       .catch(err => console.log(err));
   };
@@ -431,6 +453,7 @@ decorate(CatStore, {
   pickImage: action,
   selectCut: action,
   validateAddCat: action,
+  getAddress: action,
   addCat: action,
   reportRainbow: action,
   updateCut: action,
