@@ -57,5 +57,4 @@ AddCatModal.navigationOptions = ({ navigation }) => {
 
 export default inject(({ cat }) => ({
   clearAllInput: cat.clearAllInput,
-  location: cat.addCatBio.location,
 }))(observer(AddCatModal));

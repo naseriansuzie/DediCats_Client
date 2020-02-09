@@ -24,8 +24,4 @@ const CatInfo = () => (
   </Container>
 );
 
-// CatInfo.navigationOptions = {
-//   title: '고양이 정보',
-// };
-
 export default CatInfo;
