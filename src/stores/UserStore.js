@@ -8,13 +8,13 @@ import { SERVER_URL } from 'react-native-dotenv';
  * 1. user 관련 정보
  *  - isSignUp, email, nickName, confirmPW, reConfirmPW
  *  - isSignIn, email, PW
- *  - myInfo = {userId:user_id, nickname: nickname, created_at:Date, user_photo: url}
+ *  - info = {userId:user_id, nickname: nickname, created_at:Date, user_photo: url}
  *    myInfo는 로그인할 때 응답으로 오는 데이터 객체
  *  - myPhoto = 업로드할 이미지 파일(기본이 defaultPhotoUrl)
  *
  * 2. my cat 관련 정보
  *  - myCatList = [{내가 팔로우하는 고양이 정보}]
- *  - unfollowedCat = {고양이정보(catID)}
+ *  - unfollowed = {고양이정보(catID)}
  */
 const defaultCredential = { withCredentials: true };
 const defaultPhotoUrl = [
@@ -27,7 +27,7 @@ class UserStore {
   }
 
   // observable
-  userInfo = {
+  info = {
     isSignUp: false,
     isSignIn: false,
     email: '',
@@ -37,13 +37,13 @@ class UserStore {
     PW: '',
     myInfo:
       // null,
-      { userId: 1 },
+      { userId: 1, nickname: '김집사', created_at: '2020-02-09' },
     myPhoto: defaultPhotoUrl,
   };
 
   myCat = {
     list: null,
-    unFollowedCat: null,
+    unFollowed: null,
   };
 
   // actions
@@ -52,7 +52,11 @@ class UserStore {
       .post(`${process.env.SERVER_URL}/user/signup`, info, defaultCredential)
       .then(res => {
         Alert.alert('회원가입에 성공했습니다!');
-        this.userInfo.isSignUp = true;
+        this.info.isSignUp = true;
+        runInAction(() => {
+          this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+        });
+        return true;
       })
       .catch(err => {
         if (err.response.status === 401) {
@@ -67,8 +71,10 @@ class UserStore {
     axios
       .post(`${process.env.SERVER_URL}/user/signin`, info, defaultCredential)
       .then(res => {
-        this.userInfo.isSignIn = true;
+        this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
+        runInAction(() => this.clearInput('email', 'PW'));
+        return true;
       })
       .catch(err => {
         if (err.response.status === 401) {
@@ -84,23 +90,20 @@ class UserStore {
   signOut = id => {
     axios
       .post(`${process.env.SERVER_URL}/user/signout`, id, defaultCredential)
-      .then(res => {
+      .then(async res => {
+        await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
-        this.userInfo.signIn = false;
-        this.userInfo.myInfo = null;
+        this.info.signIn = false;
+        this.info.myInfo = null;
       })
       .catch(err => console.log(err));
   };
 
   validateSignUp = () => {
     let isValidated = false;
-    if (this.userInfo.confirmPW !== this.userInfo.reConfirmPW) {
+    if (this.info.confirmPW !== this.info.reConfirmPW) {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
-    } else if (
-      this.userInfo.email &&
-      this.userInfo.confirmPW &&
-      this.userInfo.nickName
-    ) {
+    } else if (this.info.email && this.info.confirmPW && this.info.nickName) {
       isValidated = true;
     } else {
       Alert.alert('모든 정보를 입력해주세요.');
@@ -110,7 +113,7 @@ class UserStore {
 
   validateSignIn = () => {
     let isValidated = false;
-    if (this.userInfo.email && this.userInfo.PW) {
+    if (this.info.email && this.info.PW) {
       isValidated = true;
     } else {
       Alert.alert('모든 정보를 입력해주세요.');
@@ -121,57 +124,61 @@ class UserStore {
   updateState = field => {
     if (field === 'SignUp') {
       const signUpInfo = {
-        email: this.userInfo.email,
-        password: this.userInfo.confirmPW,
-        nickname: this.userInfo.nickName,
+        email: this.info.email,
+        password: this.info.confirmPW,
+        nickname: this.info.nickName,
       };
-      this.signUp(signUpInfo);
-      runInAction(() => {
-        this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
-      });
-    } else if (field === 'SignIn') {
-      const signIpInfo = {
-        email: this.userInfo.email,
-        password: this.userInfo.PW,
-      };
-      this.signIn(signIpInfo);
-      runInAction(() => this.clearInput('email', 'PW'));
-    } else {
-      this.signOut();
+      return this.signUp(signUpInfo);
     }
+    if (field === 'SignIn') {
+      const signIpInfo = {
+        email: this.info.email,
+        password: this.info.PW,
+      };
+      return this.signIn(signIpInfo);
+    }
+    this.signOut();
   };
 
   updateInput = (field, text) => {
-    console.log(text);
-    this.userInfo[field] = text;
+    console.log('text ', text);
+    this.info[field] = text;
+    console.log(this.info[field]);
   };
 
   clearInput = (...types) => {
     types.forEach(type => {
       runInAction(() => {
-        this.userInfo[type] = '';
+        this.info[type] = '';
       });
     });
   };
 
   unFollowCat = () => {
-    const { userId } = this.userInfo.myInfo;
-    const catId = this.root.cat.catInfo.selectedCat[0].id;
+    const { userId } = this.info.myInfo;
+    const catId = this.root.cat.info.selectedCat[0].id;
     axios
       .post(
         `${process.env.SERVER_URL}/cat/unfollow`,
         { userId, catId },
         defaultCredential,
       )
-      .then(res => (this.myCat.unFollowedCat = catId))
+      .then(res => {
+        this.myCat.unFollowed = catId;
+        runInAction(() => {
+          this.root.getSelectedCatInfo();
+        });
+      })
       .catch(err => console.log(err));
+    // test용으로 넣은 코드
+    this.root.cat.info.selectedCat[1].isFollowing = false;
   };
 
   uploadMyImg = () => {
-    if (this.userInfo.myPhoto !== defaultPhotoUrl) {
+    if (this.info.myPhoto !== defaultPhotoUrl) {
       const imgInfo = {
-        userId: this.userInfo.myInfo.userId,
-        photoPath: this.userInfo.myPhoto,
+        userId: this.info.myInfo.userId,
+        photoPath: this.info.myPhoto,
       };
       axios.post(
         `${process.env.SERVER_URL}/photo/profile`,
@@ -186,8 +193,8 @@ class UserStore {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
     } else {
       const updateInfo = {
-        userId: this.userInfo.myInfo.userId,
-        password: this.userInfo.confirmPW,
+        userId: this.info.myInfo.userId,
+        password: this.info.confirmPW,
       };
       axios
         .patch(
@@ -202,7 +209,7 @@ class UserStore {
 }
 
 decorate(UserStore, {
-  userInfo: observable,
+  info: observable,
   myCat: observable,
   signUp: action,
   signIn: action,
