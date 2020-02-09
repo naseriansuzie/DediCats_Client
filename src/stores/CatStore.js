@@ -178,13 +178,13 @@ class CatStore {
     const { userId } = this.root.user.info.myInfo;
     const catId = this.info.selectedPost[0].id;
     console.log('고양이 정보 가져오기', userId, catId);
-    // axios
-    //   .get(
-    //     `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
-    //     defaultCredential,
-    //   )
-    //   .then(res => (this.info.selectedCat = res.data))
-    //   .catch(err => console.log(err));
+    axios
+      .get(
+        `${process.env.SERVER_URL}/cat/${catId}/${userId}`,
+        defaultCredential,
+      )
+      .then(res => (this.info.selectedCat = res.data))
+      .catch(err => console.log(err));
   };
 
   followCat = () => {
@@ -257,6 +257,7 @@ class CatStore {
       catTag,
       cutClicked,
     } = this.addCatBio;
+    console.log('카카오로 변환한 주소', address);
     if (
       address &&
       location &&
@@ -307,15 +308,25 @@ class CatStore {
   };
 
   reportRainbow = type => {
-    const {
-      selectedCat: { rainbow },
-    } = this.info;
-    const willChangeRainbow = rainbow;
-    willChangeRainbow[type] += willChangeRainbow[type];
-    willChangeRainbow[`${type}_Date`] = this.makeDateTime();
-    // axios로 report Rainbow post하기, req.body는 willChangeRainbow
-    // res => rainbow: res.data
-    // err => console
+    const report = {
+      Y: 0,
+      YDate: null,
+      N: 0,
+      NDate: null,
+    };
+    report[type] += report[type];
+    report[`${type}Date`] = this.makeDateTime();
+
+    axios
+      .post(`${process.env.SERVER_URL}/cat/rainbow`, report, defaultCredential)
+      .then(res => {
+        if (res.status === 201) {
+          this.info.selectedCat[0].rainbow = JSON.parse(res.data);
+        } else if (res.status === 200) {
+          Alert.alert('신고가 불가능합니다?');
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   updateCut = type => {
