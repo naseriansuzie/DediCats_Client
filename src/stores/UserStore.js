@@ -49,7 +49,7 @@ class UserStore {
   // actions
   signUp = info => {
     axios
-      .post(`${process.env.SERVER_URL}/user/signup`, info, defaultCredential)
+      .post(`${SERVER_URL}/user/signup`, info, defaultCredential)
       .then(res => {
         Alert.alert('회원가입에 성공했습니다!');
         this.info.isSignUp = true;
@@ -69,7 +69,7 @@ class UserStore {
 
   signIn = info => {
     axios
-      .post(`${process.env.SERVER_URL}/user/signin`, info, defaultCredential)
+      .post(`${SERVER_URL}/user/signin`, info, defaultCredential)
       .then(res => {
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
@@ -89,7 +89,7 @@ class UserStore {
 
   signOut = id => {
     axios
-      .post(`${process.env.SERVER_URL}/user/signout`, id, defaultCredential)
+      .post(`${SERVER_URL}/user/signout`, id, defaultCredential)
       .then(async res => {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
@@ -158,11 +158,7 @@ class UserStore {
     const { userId } = this.info.myInfo;
     const catId = this.root.cat.info.selectedCat[0].id;
     axios
-      .post(
-        `${process.env.SERVER_URL}/cat/unfollow`,
-        { userId, catId },
-        defaultCredential,
-      )
+      .post(`${SERVER_URL}/cat/unfollow`, { userId, catId }, defaultCredential)
       .then(res => {
         this.myCat.unFollowed = catId;
         runInAction(() => {
@@ -180,11 +176,7 @@ class UserStore {
         userId: this.info.myInfo.userId,
         photoPath: this.info.myPhoto,
       };
-      axios.post(
-        `${process.env.SERVER_URL}/photo/profile`,
-        imgInfo,
-        defaultPhotoUrl,
-      );
+      axios.post(`${SERVER_URL}/photo/profile`, imgInfo, defaultPhotoUrl);
     }
   };
 
@@ -197,11 +189,7 @@ class UserStore {
         password: this.info.confirmPW,
       };
       axios
-        .patch(
-          `${process.env.SERVER_URL}/user/changepw`,
-          updateInfo,
-          defaultCredential,
-        )
+        .patch(`${SERVER_URL}/user/changepw`, updateInfo, defaultCredential)
         .then(res => res)
         .catch(err => console.log(err));
     }
