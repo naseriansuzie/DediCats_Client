@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  AsyncStorage,
-  StatusBar,
-  View,
-  Text,
-} from 'react-native';
+import { ActivityIndicator, AsyncStorage, StatusBar, View } from 'react-native';
 
 class AuthLoadingScreen extends React.Component {
   // lifecycle
@@ -20,6 +14,7 @@ class AuthLoadingScreen extends React.Component {
   }
 
   render() {
+    console.disableYellowBox = 'true';
     return (
       <View>
         <ActivityIndicator />

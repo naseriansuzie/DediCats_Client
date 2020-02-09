@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Tab, Tabs, TabHeading, Text } from 'native-base';
+import { Container, Header, Tab, Tabs } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
 import CatAlbum from './catTabs/CatAlbum';

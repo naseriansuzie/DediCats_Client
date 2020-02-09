@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, View, Text } from 'react-native';
-import Constants from 'expo-constants';
 import AddCatMap from './AddCatMap';
 import AddCatBio from './AddCatBio';
 
@@ -14,7 +13,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     marginTop: 10,
-    // marginTop: Constants.statusBarHeight,
   },
   guide: {
     paddingBottom: 10,
