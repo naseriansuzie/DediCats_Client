@@ -13,16 +13,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  tabBarUnderline: {
+    paddingHorizontal: 10,
+    borderRadius: 100,
+    backgroundColor: '#e0e2e8',
+  },
 });
 const CatInfoTabs = () => (
   <Container style={styles.container}>
     <Header hasTabs style={{ display: 'none' }} />
     <Tabs
-      tabBarUnderlineStyle={{
-        paddingHorizontal: 10,
-        borderRadius: 100,
-        backgroundColor: '#e0e2e8',
-      }}
+      tabBarUnderlineStyle={styles.tabBarUnderline}
       tabBarActiveTextColor="#6772f1"
     >
       <Tab heading="Bio">
