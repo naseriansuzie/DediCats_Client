@@ -109,8 +109,10 @@ const SignUp_Info = ({
         onPress={async () => {
           const validation = await validateSignUp();
           if (validation) {
-            await updateState('SignUp');
-            navigation.navigate('Sign In');
+            const signUpResult = await updateState('SignUp');
+            if (signUpResult) {
+              navigation.navigate('Sign In');
+            }
           }
         }}
       >
@@ -124,10 +126,10 @@ SignUp_Info.navigationOptions = {
 };
 
 export default inject(({ user }) => ({
-  email: user.userInfo.email,
-  nickName: user.userInfo.nickName,
-  confirmPW: user.userInfo.confirmPW,
-  reConfirmPW: user.userInfo.reConfirmPW,
+  email: user.info.email,
+  nickName: user.info.nickName,
+  confirmPW: user.info.confirmPW,
+  reConfirmPW: user.info.reConfirmPW,
   updateInput: user.updateInput,
   validateSignUp: user.validateSignUp,
   updateState: user.updateState,
