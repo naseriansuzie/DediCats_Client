@@ -9,8 +9,6 @@ import {
   Alert
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
 import MainMarker from './MainMarker';
@@ -55,56 +53,12 @@ const styles = StyleSheet.create({
 
 class MainMap extends React.Component {
   state = {
-    currentPosition: {},
-    currentBoundingBox: {},
     isShowingCarousel: false,
   };
 
   componentDidMount() {
-    this.getLocationPermission();
+    this.props.getLocationPermission();
   }
-
-  getLocationPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-    if (status !== 'granted') {
-      console.log('Not granted');
-      Alert.alert('위치 정보 사용을 허용해주세요!');
-    } else {
-      this.locateCurrentPosition();
-    }
-  };
-
-  getWatchPosition = () => {
-    navigator.geolocation.watchPosition(
-      (position) => {
-        let currentPosition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        };
-        let currentBoundingBox = this.getBoundingBox(currentPosition);
-        this.setState({
-          currentPosition,
-          currentBoundingBox,
-        });
-      },
-      (error) => { Alert.alert(error.code, error.message); },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-    );
-  }
-
-  locateCurrentPosition = () => {
-    this.getWatchPosition();
-  }
-
-  getBoundingBox = (region) => ({
-    NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
-    NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
-    SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
-    SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
-  });
 
   renderCarouselItem = ({ item }) => {
     const { isShowingCarousel } = this.state;
@@ -122,59 +76,38 @@ class MainMap extends React.Component {
   }
 
   onCarouselItemChange = (index) => {
-    const { currentPosition } = this.state;
-    const location = this.props.markers[index];
+    const { onRegionChangeComplete, markers, getBoundingBox } = this.props;
+    const location = markers[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.006,
       longitudeDelta: 0.006,
     };
-    const currentBoundingBox = this.getBoundingBox(currentPosition);
-    if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
-      this.setState({
-        currentPosition: region,
-        currentBoundingBox,
-      });
-    }
+    onRegionChangeComplete(region);
     this._map.animateToRegion(region);
   }
 
   onMarkerPressed = (location, index) => {
-    const { currentPosition, isShowingCarousel } = this.state;
+    const { isShowingCarousel } = this.state;
+    const { onRegionChangeComplete, getBoundingBox } = this.props;
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
       latitudeDelta: 0.006,
       longitudeDelta: 0.006,
     };
-    const currentBoundingBox = this.getBoundingBox(currentPosition);
-    if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
-      this.setState({
-        currentPosition: region,
-        currentBoundingBox,
-      });
-    }
+    onRegionChangeComplete(region);
     this._map.animateToRegion(region);
+    this._carousel.snapToItem(index);
     if (!isShowingCarousel) {
       this.setState({ isShowingCarousel: true });
     }
-    this._carousel.snapToItem(index);
-  }
-
-  onRegionChangeComplete = (region) => {
-    const { currentPosition } = this.state;
-    if (region.latitude !== 0
-      && region.latitude.toFixed(3) !== currentPosition.latitude.toFixed(3)) {
-      this.setState({ currentPosition: region });
-    }
-    console.log('currentRegion', currentPosition);
   }
 
   render() {
     console.disableYellowBox = 'true';
-    const { currentPosition } = this.state;
-    const { markers } = this.props;
+    const { markers, currentRegion, onRegionChangeComplete } = this.props;
     return (
       <View style={styles.container}>
         <MapView
@@ -182,8 +115,8 @@ class MainMap extends React.Component {
           ref={(map) => this._map = map}
           style={styles.map}
           showsUserLocation={true}
-          region={currentPosition}
-          onRegionChangeComplete={this.onRegionChangeComplete}
+          region={currentRegion}
+          onRegionChangeComplete={onRegionChangeComplete}
         >
           {
             markers.map((marker, index) => (
@@ -192,7 +125,7 @@ class MainMap extends React.Component {
                 marker={marker}
                 index={index}
                 onMarkerPressed={this.onMarkerPressed}
-                currentPosition={currentPosition}
+                currentRegion={currentRegion}
               />
             ))
           }
@@ -212,6 +145,13 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ cat }) => ({ markers: cat.markers }))(
+export default inject(({ cat, user }) => ({
+  markers: cat.markers,
+  currentPosition: user.currentPosition,
+  currentRegion: user.currentRegion,
+  currentBoundingBox: user.currentBoundingBox,
+  getLocationPermission: user.getLocationPermission,
+  onRegionChangeComplete: user.onRegionChangeComplete,
+}))(
   observer(MainMap),
 );
