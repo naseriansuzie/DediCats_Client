@@ -63,14 +63,14 @@ class AddCatMap extends React.Component {
   render() {
     const { currentPosition, markerData } = this.state;
     return (
-      <View>
+      <View style={{ flex: 1, width: '100%' }}>
         <Text style={styles.spotTxt}>자주 만나는 장소</Text>
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation
             region={currentPosition}
-            onRegionChangeComplete={this.onRegionChangeComplete}
+            // onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
           >
             <Marker

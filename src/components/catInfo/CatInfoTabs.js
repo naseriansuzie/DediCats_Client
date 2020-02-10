@@ -9,7 +9,6 @@ import CatFollowerList from './catTabs/CatFollowerList';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -23,19 +22,61 @@ const CatInfoTabs = () => (
   <Container style={styles.container}>
     <Header hasTabs style={{ display: 'none' }} />
     <Tabs
-      tabBarUnderlineStyle={styles.tabBarUnderline}
-      tabBarActiveTextColor="#6772f1"
+      tabBarUnderlineStyle={{ display: 'none' }}
+      // tabBarActiveTextColor="#6772f1"
     >
-      <Tab heading="Bio">
+      <Tab
+        heading="Bio"
+        tabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        textStyle={{ color: '#e0e2e8' }}
+        activeTabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        activeTextStyle={{ color: 'white', fontSize: 20 }}
+      >
         <CatBio />
       </Tab>
-      <Tab heading="Posts">
+      <Tab
+        heading="Posts"
+        tabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        textStyle={{ color: '#e0e2e8' }}
+        activeTabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        activeTextStyle={{ color: 'white', fontSize: 20 }}
+      >
         <CatPostList />
       </Tab>
-      <Tab heading="Albums">
+      <Tab
+        heading="Albums"
+        tabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        textStyle={{ color: '#e0e2e8' }}
+        activeTabStyle={{
+          backgroundColor: '#6772f1',
+        }}
+        activeTextStyle={{ color: 'white', fontSize: 20 }}
+      >
         <CatAlbum />
       </Tab>
-      <Tab heading="Followers">
+      <Tab
+        heading="Followers"
+        tabStyle={{
+          // borderTopRightRadius: 15,
+          backgroundColor: '#6772f1',
+        }}
+        textStyle={{ color: '#e0e2e8' }}
+        activeTabStyle={{
+          // borderTopRightRadius: 15,
+          backgroundColor: '#6772f1',
+        }}
+        activeTextStyle={{ color: 'white', fontSize: 20 }}
+      >
         <CatFollowerList />
       </Tab>
     </Tabs>
