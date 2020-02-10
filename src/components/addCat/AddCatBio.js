@@ -191,7 +191,7 @@ const AddCatBio = ({
               <View style={styles.peanuts}>
                 <TouchableOpacity
                   style={cutClicked.Y ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('Y')}
+                  onPress={() => selectCut('addCatBio', 'Y')}
                 >
                   <Text style={cutClicked.Y ? styles.cutTxtT : styles.cutTxtF}>
                     Yes
@@ -199,7 +199,7 @@ const AddCatBio = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={cutClicked.N ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('N')}
+                  onPress={() => selectCut('addCatBio', 'N')}
                 >
                   <Text style={cutClicked.N ? styles.cutTxtT : styles.cutTxtF}>
                     No
@@ -207,7 +207,7 @@ const AddCatBio = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={cutClicked.unknown ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('unknown')}
+                  onPress={() => selectCut('addCatBio', 'unknown')}
                 >
                   <Text
                     style={cutClicked.unknown ? styles.cutTxtT : styles.cutTxtF}
