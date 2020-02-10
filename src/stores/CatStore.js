@@ -438,12 +438,51 @@ class CatStore {
       };
     }
   };
+
+  markers= [
+    {
+      latitude: 37.802597,
+      longitude: -122.435197,
+      name: 'Best Place',
+      content: 'This is the best place in Portland',
+      img: require('../../img1.jpg'),
+    },
+    {
+      latitude: 37.79552,
+      longitude: -122.41612,
+      name: 'Best Place2222',
+      content: 'This is the best place in Portland2222',
+      img: require('../../img2.jpg'),
+    },
+    {
+      latitude: 37.766552,
+      longitude: -122.416128,
+      name: 'Best Place3333',
+      content: 'This is the best place in Portland3333',
+      img: require('../../img3.jpg'),
+    },
+    {
+      latitude: 37.766552,
+      longitude: 127.416128,
+      name: 'Best Place4444',
+      content: 'This is the best place in Portland4444',
+      img: require('../../img3.jpg'),
+    },
+    {
+      latitude: 37.503528,
+      longitude: 127.049784,
+      name: '위워크',
+      content: 'This is the best place in Portland4444',
+      img: require('../../img3.jpg'),
+    },
+  ];
 }
 
 decorate(CatStore, {
   spot: observable,
   addCatBio: observable,
   info: observable,
+  markers: observable,
   getMapInfo: action,
   getSelectedSpotInfo: action,
   getSelectedCatInfo: action,
