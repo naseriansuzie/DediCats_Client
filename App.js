@@ -43,7 +43,16 @@ MyPageStack.navigationOptions = ({ navigation }) => {
 const MainStack = createStackNavigator(
   {
     Main,
-    CatInfo,
+    CatInfo: {
+      screen: CatInfo,
+      navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#6772f1',
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: { display: 'none' },
+      },
+    },
     SelectedPost,
   },
   {

@@ -5,9 +5,12 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f7fa',
   },
-  profileView: { flex: 1, flexDirection: 'row' },
+  profileView: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#6772f1',
+  },
   photoView: {
     width: '50%',
     height: '100%',
@@ -27,7 +30,8 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    borderColor: '#edf1f5',
+    // borderColor: '#edf1f5',
+    borderColor: '#6772f1',
     borderWidth: 1,
   },
   infoView: {
@@ -39,12 +43,14 @@ const styles = StyleSheet.create({
   nickName: {
     fontSize: 25,
     fontWeight: '600',
-    color: '#080811',
+    // color: '#080811',
+    color: 'white',
     marginVertical: 5,
   },
   address: {
     fontSize: 15,
-    color: '#7f8296',
+    // color: '#7f8296',
+    color: 'white',
     marginBottom: 10,
   },
   btn: {
@@ -52,9 +58,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 15,
-    backgroundColor: '#677ef1',
+    // backgroundColor: '#677ef1',
+    backgroundColor: 'white',
   },
-  btnTxt: { color: 'white', fontWeight: 'bold' },
+  btnTxt: {
+    // color: 'white',
+    color: '#677ef1',
+    fontWeight: 'bold',
+  },
 });
 
 const DEFAULT_CAT =

@@ -13,7 +13,7 @@ import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
+    flex: 1,
     width: '100%',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -21,15 +21,16 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
+    width: '100%',
+    alignItems: 'center',
   },
   row: {
-    flex: 2,
-    width: '100%',
+    height: '85%',
     flexDirection: 'row',
   },
   photoView: {
     width: '50%',
-    flex: 1,
+    // flex: 1,
   },
   photo: {
     width: '100%',
@@ -55,8 +56,9 @@ const styles = StyleSheet.create({
   uploading: { flex: 1, alignItems: 'center', marginTop: 10 },
   uploadBtn: { color: '#767577' },
   bioView: {
-    flex: 1,
+    // flex: 1,
     width: '100%',
+    // height: '100%',
     paddingTop: 10,
     fontSize: 14,
   },
@@ -87,9 +89,9 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#677ef1',
     borderRadius: 14,
-    marginTop: 20,
     marginHorizontal: 10,
-    marginBottom: 10,
+    // marginTop: 20,
+    // marginBottom: 10,
   },
   submitTxt: {
     color: 'white',
