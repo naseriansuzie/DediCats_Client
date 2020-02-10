@@ -9,17 +9,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#6772f1',
   },
-  listView: {
-    paddingTop: 10,
-    marginVertical: 5,
-    marginHorizontal: 20,
-  },
   radiusView: {
     flex: 1,
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: 'white',
+  },
+  listView: {
+    paddingTop: 10,
+    marginVertical: 5,
+    marginHorizontal: 20,
   },
   noFollowerView: {
     flex: 1,
