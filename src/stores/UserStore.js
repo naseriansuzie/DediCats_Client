@@ -235,30 +235,31 @@ class UserStore {
           latitude,
           longitude,
         };
-        const region = {
+        this.currentRegion = {
           latitude,
           longitude,
           latitudeDelta: 0.02,
           longitudeDelta: 0.02,
         };
-        this.currentRegion = region;
-        this.currentBoundingBox = this.getBoundingBox(region);
+        this.getBoundingBox(this.currentRegion);
       },
       (error) => { Alert.alert(error.code, error.message); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   }
 
-  getBoundingBox = (region) => ({
-    NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
-    NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
-    SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
-    SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
-  });
+  getBoundingBox = (region) => {
+    this.currentBoundingBox = {
+      NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
+      NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
+      SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
+      SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
+    };
+  };
 
   onRegionChangeComplete = (region) => {
     this.currentRegion = region;
-    this.currentBoundingBox = this.getBoundingBox(region);
+    this.getBoundingBox(region);
     console.log('currentRegion', this.currentRegion);
   }
 }

@@ -76,7 +76,7 @@ class MainMap extends React.Component {
   }
 
   onCarouselItemChange = (index) => {
-    const { onRegionChangeComplete, markers, getBoundingBox } = this.props;
+    const { onRegionChangeComplete, markers } = this.props;
     const location = markers[index];
     const region = {
       latitude: location.latitude,
@@ -90,7 +90,7 @@ class MainMap extends React.Component {
 
   onMarkerPressed = (location, index) => {
     const { isShowingCarousel } = this.state;
-    const { onRegionChangeComplete, getBoundingBox } = this.props;
+    const { onRegionChangeComplete } = this.props;
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -115,7 +115,7 @@ class MainMap extends React.Component {
           ref={(map) => this._map = map}
           style={styles.map}
           showsUserLocation={true}
-          region={currentRegion}
+          region={{...currentRegion}}
           onRegionChangeComplete={onRegionChangeComplete}
         >
           {
