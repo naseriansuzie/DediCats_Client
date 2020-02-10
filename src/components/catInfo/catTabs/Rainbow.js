@@ -6,7 +6,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
-  list: { marginTop: 10, paddingHorizontal: 10 },
+  list: {
+    marginTop: 10,
+    paddingHorizontal: 5,
+  },
   guideList: {
     marginLeft: 0,
     paddingTop: 0,
@@ -17,6 +20,11 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     fontSize: 18,
   },
+  subGuideMsg: {
+    color: '#f38847',
+    paddingLeft: 0,
+  },
+  height100: { height: '100%' },
   abledReportBtn: {
     backgroundColor: '#edf1f5',
     borderRadius: 10,
@@ -40,12 +48,7 @@ const Rainbow = ({
     <ListItem style={styles.guideList}>
       <Body>
         <Text style={styles.guideMsg}>{nickName} 근황</Text>
-        <Text
-          style={{
-            color: '#f38847',
-            paddingLeft: 0,
-          }}
-        >
+        <Text style={styles.subGuideMsg}>
           사라졌거나 돌아왔을 때 신고해주세요!
         </Text>
       </Body>
@@ -60,7 +63,7 @@ const Rainbow = ({
           <Text note>{`최근 신고일 ${rainbow.YDate}`}</Text>
         </Body>
       ) : (
-        <Body>
+        <Body style={styles.height100}>
           <Text>보이지 않아요: 신고 내역 없음</Text>
         </Body>
       )}
@@ -109,11 +112,10 @@ const Rainbow = ({
           </View>
         </Body>
       ) : (
-        <Body>
+        <Body style={styles.height100}>
           <Text>다시 돌아왔어요: 신고 내역 없음</Text>
         </Body>
       )}
-
       <Right>
         {rainbowNReported ? (
           <TouchableOpacity

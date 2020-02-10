@@ -16,7 +16,6 @@ import * as Permissions from 'expo-permissions';
  *   desc: string,
  *   species: string,
  *   tagInput: string,
- *   tags: array,
  *   cut: {Y: number, N: number, unknown: number}
  * }
  * 3. cat 관련
@@ -77,7 +76,7 @@ class CatStore {
             NDate: null,
           },
           species: '코숏',
-          today: '건강해요:+1:',
+          today: '건강해요😸',
           todayTime: '2020-02-06T05:50:43.000Z',
           status: 'Y',
           createAt: '2020-02-05T03:26:25.561Z',
@@ -426,6 +425,7 @@ class CatStore {
 
   updateInput = (group, key, text) => {
     this[group][key] = text;
+    console.log(this[group][key]);
   };
 
   clearInput = (...pairs) => {
