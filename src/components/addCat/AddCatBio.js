@@ -1,12 +1,19 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { Content, Item, Label, Input, Textarea } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 3,
     width: '100%',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -32,14 +39,14 @@ const styles = StyleSheet.create({
   defaultPhoto: {
     width: 180,
     height: 180,
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
   },
   catPhoto: {
     width: 180,
     height: 180,
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
     borderColor: '#edf1f5',
@@ -47,7 +54,12 @@ const styles = StyleSheet.create({
   },
   uploading: { flex: 1, alignItems: 'center', marginTop: 10 },
   uploadBtn: { color: '#767577' },
-  bioView: { flex: 1, width: '100%', paddingTop: 10 },
+  bioView: {
+    flex: 1,
+    width: '100%',
+    paddingTop: 10,
+    fontSize: 14,
+  },
   intro: { borderRadius: 10, marginVertical: 10 },
   peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 15 },
   peanutF: {
@@ -72,12 +84,12 @@ const styles = StyleSheet.create({
   cutTxtF: { color: '#767577', fontWeight: 'bold' },
   submit: {
     alignItems: 'center',
-    padding: 25,
+    padding: 15,
     backgroundColor: '#677ef1',
-    borderRadius: 20,
+    borderRadius: 14,
     marginTop: 20,
-    // marginHorizontal: 10,
-    // marginBottom: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
   submitTxt: {
     color: 'white',
@@ -85,9 +97,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+const DEFAULT_CAT =
+  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
-  photoPath,
+  uri,
   catNickname,
   catSpecies,
   catDescription,
@@ -98,24 +112,27 @@ const AddCatBio = ({
   updateInput,
   selectCut,
   validateAddCat,
+  getAddress,
   addCat,
   navigation,
-}) => {
-  console.log(catTag);
-  return (
-    <View style={styles.container}>
-      <View sytle={styles.flex1}>
+}) => (
+  <View style={styles.container}>
+    <View style={styles.flex1}>
+      <KeyboardAvoidingView
+        style={{ width: '100%' }}
+        behavior="padding"
+        enabled
+      >
         <View style={styles.row}>
           <View style={styles.photoView}>
             <View style={styles.photo}>
-              {photoPath ? (
-                <Image style={styles.catPhoto} source={{ uri: photoPath }} />
+              {uri ? (
+                <Image style={styles.catPhoto} source={{ uri }} />
               ) : (
                 <Image
                   style={styles.defaultPhoto}
                   source={{
-                    uri:
-                      'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png',
+                    uri: DEFAULT_CAT,
                   }}
                 />
               )}
@@ -211,21 +228,26 @@ const AddCatBio = ({
             onPress={async () => {
               const validation = await validateAddCat();
               if (validation) {
-                await addCat();
-                navigation.goBack();
+                const addressResult = await getAddress();
+                if (addressResult) {
+                  const addCatResult = await addCat();
+                  if (addCatResult) {
+                    navigation.goBack();
+                  }
+                }
               }
             }}
           >
             <Text style={styles.submitTxt}>Finish</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
-  );
-};
+  </View>
+);
 
 export default inject(({ cat }) => ({
-  photoPath: cat.addCatBio.photoPath,
+  uri: cat.addCatBio.uri,
   catNickname: cat.addCatBio.catNickname,
   catSpecies: cat.addCatBio.catSpecies,
   catDescription: cat.addCatBio.catDescription,
@@ -236,5 +258,6 @@ export default inject(({ cat }) => ({
   updateInput: cat.updateInput,
   selectCut: cat.selectCut,
   validateAddCat: cat.validateAddCat,
+  getAddress: cat.getAddress,
   addCat: cat.addCat,
 }))(observer(withNavigation(AddCatBio)));

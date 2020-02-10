@@ -85,8 +85,10 @@ const SignIn_Info = ({
         onPress={async () => {
           const validation = await validateSignIn();
           if (validation) {
-            await updateState('SignIn');
-            navigation.navigate('AuthLoading');
+            const signInResult = updateState('SignIn');
+            if (signInResult) {
+              navigation.navigate('AuthLoading');
+            }
           }
         }}
       >
@@ -103,8 +105,8 @@ const SignIn_Info = ({
 );
 
 export default inject(({ user }) => ({
-  email: user.userInfo.email,
-  PW: user.userInfo.PW,
+  email: user.info.email,
+  PW: user.info.PW,
   updateInput: user.updateInput,
   validateSignIn: user.validateSignIn,
   updateState: user.updateState,

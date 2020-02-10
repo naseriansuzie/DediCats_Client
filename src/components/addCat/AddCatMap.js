@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-
   },
+  spotTxt: { color: '#767577', fontSize: 16, paddingVertical: 10 },
 });
 
 class AddCatMap extends React.Component {
@@ -33,7 +33,7 @@ class AddCatMap extends React.Component {
 
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         const currentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -49,40 +49,45 @@ class AddCatMap extends React.Component {
           markerData,
         });
       },
-      (error) => { Alert.alert(error.code, error.message); },
+      error => {
+        Alert.alert(error.code, error.message);
+      },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   }
 
-  onRegionChangeComplete = (region) => {
+  onRegionChangeComplete = region => {
     this.setState({ currentPosition: region });
-  }
+  };
 
   render() {
-    // console.log(this.props.onDragEnd);
     const { currentPosition, markerData } = this.state;
     return (
-      <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          // ref={(map) => this._map = map}
-          showsUserLocation={true}
-          region={currentPosition}
-          onRegionChangeComplete={this.onRegionChangeComplete}
-          style={styles.map}
-        >
-          <Marker
-            draggable
-            onDragEnd={this.props.onDragEnd}
-            coordinate={{
-              latitude: markerData.latitude,
-              longitude: markerData.longitude,
-            }}
-           />
-        </MapView>
+      <View>
+        <Text style={styles.spotTxt}>자주 만나는 장소</Text>
+        <View style={styles.container}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            showsUserLocation
+            region={currentPosition}
+            onRegionChangeComplete={this.onRegionChangeComplete}
+            style={styles.map}
+          >
+            <Marker
+              draggable
+              onDragEnd={this.props.onDragEnd}
+              coordinate={{
+                latitude: markerData.latitude,
+                longitude: markerData.longitude,
+              }}
+            />
+          </MapView>
+        </View>
       </View>
     );
   }
-};
+}
 
-export default inject(({ cat }) => ({ onDragEnd: cat.onDragEnd }))(observer(AddCatMap));
+export default inject(({ cat }) => ({ onDragEnd: cat.onDragEnd }))(
+  observer(AddCatMap),
+);
