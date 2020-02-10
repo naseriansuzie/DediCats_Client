@@ -8,20 +8,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  radiusView: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+  },
 });
 
 const CatBio = () => (
   <View style={styles.container}>
-    <View
-      style={{
-        flex: 1,
-        width: '100%',
-        backgroundColor: 'white',
-        alignItems: 'center',
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
-      }}
-    >
+    <View style={styles.radiusView}>
       <Text>cat bio info!</Text>
     </View>
   </View>

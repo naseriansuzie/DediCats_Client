@@ -5,15 +5,36 @@ import { inject, observer } from 'mobx-react';
 import CatFollower from './CatFollower';
 
 const styles = StyleSheet.create({
-  flex1: {
+  container: {
     flex: 1,
+    backgroundColor: '#6772f1',
   },
   listView: {
+    paddingTop: 10,
     marginVertical: 5,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
-  noFollowerView: { alignItems: 'center', paddingTop: 50 },
-  noFollowerTxt: { color: '#7f8296' },
+  radiusView: {
+    flex: 1,
+    width: '100%',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    backgroundColor: 'white',
+  },
+  noFollowerView: {
+    flex: 1,
+    backgroundColor: '#6772f1',
+  },
+  noFollowerRadiusView: {
+    flex: 1,
+    width: '100%',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    backgroundColor: 'white',
+    paddingTop: 50,
+    alignItems: 'center',
+  },
+  noFollowerTxt: { color: '#7f8296', fontSize: 18, paddingBottom: 15 },
 });
 
 class CatFollowerList extends React.Component {
@@ -26,32 +47,36 @@ class CatFollowerList extends React.Component {
     const { myInfo, followerList, nickname } = this.props;
     if (myInfo && followerList) {
       return (
-        <Container style={styles.flex1}>
-          <Content>
-            <Header style={{ display: 'none' }} />
-            <List style={styles.listView}>
-              {followerList[0].users.map((follower, idx) => (
-                <CatFollower
-                  key={`${follower.id}_${follower.nickname}`}
-                  idx={idx}
-                  myPhoto={follower.photoPath}
-                  userNickName={follower.nickname}
-                  catName={nickname}
-                />
-              ))}
-              <CatFollower />
-            </List>
-          </Content>
-        </Container>
+        <View style={styles.container}>
+          <Container style={styles.radiusView}>
+            <Content>
+              <Header style={{ display: 'none' }} />
+              <List style={styles.listView}>
+                {followerList[0].users.map((follower, idx) => (
+                  <CatFollower
+                    key={`${follower.id}_${follower.nickname}`}
+                    idx={idx}
+                    myPhoto={follower.photoPath}
+                    userNickName={follower.nickname}
+                    catName={nickname}
+                  />
+                ))}
+                <CatFollower />
+              </List>
+            </Content>
+          </Container>
+        </View>
       );
     }
     if (myInfo) {
       return (
         <View style={styles.noFollowerView}>
-          <Text style={styles.noFollowerTxt}>
-            {`There's no follower for ${nickname} now.`}
-          </Text>
-          <Text>Be the First Follower!</Text>
+          <View style={styles.noFollowerRadiusView}>
+            <Text style={styles.noFollowerTxt}>
+              {`There's no follower for ${nickname} now.`}
+            </Text>
+            <Text>Be the First Follower!</Text>
+          </View>
         </View>
       );
     }
