@@ -163,8 +163,8 @@ class Main extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02,
+      latitudeDelta: 0.006,
+      longitudeDelta: 0.006,
     };
     const currentBoundingBox = this.getBoundingBox(currentPosition);
     if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
@@ -181,8 +181,8 @@ class Main extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.025,
+      latitudeDelta: 0.006,
+      longitudeDelta: 0.006,
     };
     const currentBoundingBox = this.getBoundingBox(currentPosition);
     if (region.latitude.toFixed(5) !== currentPosition.latitude.toFixed(5)) {
