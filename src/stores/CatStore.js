@@ -180,10 +180,9 @@ class CatStore {
     this.spot.selected = selectedSpotCats;
   };
 
-  getSelectedCatInfo = () => {
+  getSelectedCatInfo = catId => {
     const { userId } = this.root.user.info.myInfo;
-    const catId = this.info.selectedPost[0].id;
-    console.log('고양이 정보 가져오기', userId, catId);
+
     axios
       .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
       .then(res => {
