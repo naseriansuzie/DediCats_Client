@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { inject, observer } from 'mobx-react';
+import { StyleSheet, View } from 'react-native';
 import { Container, Header, Tab, Tabs } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
@@ -24,48 +25,56 @@ const styles = StyleSheet.create({
   },
   activeText: { color: 'white', fontSize: 18 },
 });
-const CatInfoTabs = () => (
+const CatInfoTabs = ({ selectedCat }) => (
   <Container style={styles.container}>
-    <Header hasTabs style={styles.hide} />
-    <Tabs tabBarUnderlineStyle={styles.hide}>
-      <Tab
-        heading="Bio"
-        tabStyle={styles.tab}
-        textStyle={styles.textColor}
-        activeTabStyle={styles.activeTab}
-        activeTextStyle={styles.activeText}
-      >
-        <CatBio />
-      </Tab>
-      <Tab
-        heading="Posts"
-        tabStyle={styles.tab}
-        textStyle={styles.textColor}
-        activeTabStyle={styles.activeTab}
-        activeTextStyle={styles.activeText}
-      >
-        <CatPostList />
-      </Tab>
-      <Tab
-        heading="Albums"
-        tabStyle={styles.tab}
-        textStyle={styles.textColor}
-        activeTabStyle={styles.activeTab}
-        activeTextStyle={styles.activeText}
-      >
-        <CatAlbum />
-      </Tab>
-      <Tab
-        heading="Followers"
-        tabStyle={styles.tab}
-        textStyle={styles.textColor}
-        activeTabStyle={styles.activeTab}
-        activeTextStyle={styles.activeText}
-      >
-        <CatFollowerList />
-      </Tab>
-    </Tabs>
+    {selectedCat && selectedCat.length > 0 ? (
+      <View>
+        <Header hasTabs style={styles.hide} />
+        <Tabs tabBarUnderlineStyle={styles.hide}>
+          <Tab
+            heading="Bio"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatBio />
+          </Tab>
+          <Tab
+            heading="Posts"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatPostList />
+          </Tab>
+          <Tab
+            heading="Albums"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatAlbum />
+          </Tab>
+          <Tab
+            heading="Followers"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatFollowerList />
+          </Tab>
+        </Tabs>
+      </View>
+    ) : (
+      <View />
+    )}
   </Container>
 );
 
-export default CatInfoTabs;
+export default inject(({ cat }) => ({
+  selectedCat: cat.info.selectedCat,
+}))(observer(CatInfoTabs));
