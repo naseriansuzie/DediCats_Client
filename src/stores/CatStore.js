@@ -69,14 +69,14 @@ class CatStore {
           location: 'POINT(1 2)',
           address: '서울시 강남구 대치동',
           nickname: '애옹이',
-          cut: "{ 'Y':5, 'N': 0, 'unknown': 0 }",
+          cut: { Y: 5, N: 0, unknown: 0 },
           rainbow: {
             Y: 17,
             YDate: '2020-02-05',
             N: 0,
             NDate: null,
           },
-          species: null,
+          species: '코숏',
           today: '건강해요:+1:',
           todayTime: '2020-02-06T05:50:43.000Z',
           status: 'Y',
@@ -163,6 +163,7 @@ class CatStore {
     rainbowOpen: false,
     rainbowYReported: false,
     rainbowNReported: false,
+    cutClicked: { Y: false, N: false, unknown: false },
     reportInfo: null,
   };
 
@@ -187,6 +188,7 @@ class CatStore {
       .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
       .then(res => {
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+        res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
       })
       .catch(err => console.log(err));
@@ -232,15 +234,15 @@ class CatStore {
     }
   };
 
-  selectCut = type => {
-    const keys = Object.keys(this.addCatBio.cutClicked);
-    const values = Object.values(this.addCatBio.cutClicked);
+  selectCut = (observable, type) => {
+    const keys = Object.keys(this[observable].cutClicked);
+    const values = Object.values(this[observable].cutClicked);
     keys.forEach((key, idx) => {
       if (key === type) {
         values.splice(idx, 1, true);
       } else values.splice(idx, 1, false);
     });
-    this.addCatBio.cutClicked = {
+    this[observable].cutClicked = {
       Y: values[0],
       N: values[1],
       unknown: values[2],
@@ -361,7 +363,7 @@ class CatStore {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
   };
 
-  updateCut = type => {
+  postCut = type => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     // axios로 cut post하기, req.body는 request
@@ -467,7 +469,7 @@ decorate(CatStore, {
   toggleRainbowOpen: action,
   reportRainbow: action,
   disableReportBtn: action,
-  updateCut: action,
+  postCut: action,
   createTag: action,
   getPostList: action,
   addPost: action,
