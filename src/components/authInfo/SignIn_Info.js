@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
   light: {
     color: '#868e96',
   },
+  font16: {
+    fontSize: 16,
+  },
 });
 
 const SignIn_Info = ({
@@ -63,7 +66,10 @@ const SignIn_Info = ({
       <Form>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="email-check-outline" size="16" />{' '}
+            <MaterialCommunityIcons
+              style={styles.font16}
+              name="email-check-outline"
+            />{' '}
             hello@cat.com
           </Label>
           <Input
@@ -75,7 +81,8 @@ const SignIn_Info = ({
         </Item>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="lock-outline" size="16" /> Password
+            <MaterialCommunityIcons style={styles.font16} name="lock-outline" />{' '}
+            Password
           </Label>
           <Input onChangeText={text => updateInput('PW', text)} value={PW} />
         </Item>
