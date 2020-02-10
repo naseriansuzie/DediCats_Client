@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 20,
   },
+  txt: {
+    color: '#767577',
+    paddingTop: 15,
+    paddingBottom: 10,
+    paddingLeft: 15,
+  },
   noFollowerView: {
     flex: 1,
     backgroundColor: '#6772f1',
@@ -52,6 +58,11 @@ class CatFollowerList extends React.Component {
             <Content>
               <Header style={{ display: 'none' }} />
               <List style={styles.listView}>
+                <Text style={styles.txt}>
+                  {followerList[0].users.length === 1
+                    ? `${followerList[0].users.length} follower`
+                    : `${followerList[0].users.length} followers`}
+                </Text>
                 {followerList[0].users.map((follower, idx) => (
                   <CatFollower
                     key={`${follower.id}_${follower.nickname}`}
