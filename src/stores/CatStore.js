@@ -112,7 +112,7 @@ class CatStore {
           },
         ],
         {
-          path: 'https://source.unsplash.com/hGMvqCyRM9U',
+          path: 'https://source.unsplash.com/nKC772R_qog',
         },
       ],
     today: undefined,
@@ -123,7 +123,23 @@ class CatStore {
     inputPhoto: null,
     commentList: null,
     inputComment: '',
-    album: null,
+    album:
+      // null,
+      [
+        {
+          id: 4,
+          path: 'https://source.unsplash.com/hGMvqCyRM9U',
+        },
+        {
+          id: 6,
+          path: 'https://source.unsplash.com/nKC772R_qog',
+        },
+        {
+          id: 7,
+          path: 'https://source.unsplash.com/hGMvqCyRM9U',
+        },
+      ],
+    selectedPhoto: null,
     followerList:
       // null,
       [
@@ -469,12 +485,25 @@ class CatStore {
     // 댓글 인풋 메시지를 등록하는 함수
   };
 
-  getAlbums = catId => {
-    // 탭 렌더 시 앨범 리스트를 받아오는 함수
+  getAlbums = () => {
+    const catId = this.info.selectedCat[0].id;
+    axios
+      .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
+      .then(res => {
+        console.log('서버에서 받은 앨범', res.data);
+        const photos = res.data.filter(
+          photo => photo.path !== this.info.selectedCat[3].path,
+        );
+        console.log('필터한 앨범', photos);
+        this.info.album = photos;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
-  selectPhoto = photoId => {
-    // 앨범에서 선택한 포토를 기준으로 모달에 띄우는 함수
+  selectPhoto = photo => {
+    this.info.selectedPhoto = photo;
   };
 
   getFollowerList = catId => {
