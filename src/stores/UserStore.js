@@ -3,6 +3,8 @@ import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 /**
  * 1. user 관련 정보
@@ -194,11 +196,86 @@ class UserStore {
         .catch(err => console.log(err));
     }
   };
+
+  // 현재 나의 위치
+  currentPosition = {
+    latitude: 0,
+    longitude: 0,
+  };
+
+  // 현재 화면의 위치
+  currentRegion = {
+    latitude: 0,
+    latitudeDelta: 0,
+    longitude: 0,
+    longitudeDelta: 0,
+  }
+
+  // 현재 화면의 범위
+  currentBoundingBox = {
+    NElatitude: 0,
+    NElongitude: 0,
+    SWlatitude: 0,
+    SWlongitude: 0,
+  };
+
+  getLocationPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status !== 'granted') {
+      console.log('Not granted');
+      Alert.alert('위치 정보 사용을 허용해주세요!');
+    } else {
+      this.getWatchPosition();
+    }
+  };
+
+  getWatchPosition = () => {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        this.currentPosition = {
+          latitude,
+          longitude,
+        };
+        this.onRegionChangeComplete({
+          latitude,
+          longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        });
+      },
+      (error) => { Alert.alert(error.code, error.message); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
+  }
+
+  getBoundingBox = (region) => {
+    this.currentBoundingBox = {
+      NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
+      NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
+      SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
+      SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
+    };
+  };
+
+  onRegionChangeComplete = (region) => {
+    this.currentRegion = region;
+    this.getBoundingBox(region);
+    console.log(region);
+  }
 }
 
 decorate(UserStore, {
   info: observable,
   myCat: observable,
+  currentPosition: observable,
+  currentRegion: observable,
+  currentBoundingBox: observable,
+  getLocationPermission: action,
+  getWatchPosition: action,
+  getBoundingBox: action,
+  onRegionChangeComplete: action,
   signUp: action,
   signIn: action,
   signOut: action,
