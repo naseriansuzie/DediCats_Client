@@ -16,7 +16,6 @@ import * as Permissions from 'expo-permissions';
  *   desc: string,
  *   species: string,
  *   tagInput: string,
- *   tags: array,
  *   cut: {Y: number, N: number, unknown: number}
  * }
  * 3. cat 관련
@@ -54,7 +53,6 @@ class CatStore {
     catNickname: '',
     catDescription: '',
     catSpecies: '',
-    catTag: '',
     catCut: { Y: 0, N: 0, unknown: 0 },
     uri: null,
     cutClicked: { Y: false, N: false, unknown: false },
@@ -70,11 +68,15 @@ class CatStore {
           location: 'POINT(1 2)',
           address: '서울시 강남구 대치동',
           nickname: '애옹이',
-          cut: "{ 'Y':5, 'N': 0, 'unknown': 0 }",
-          rainbow:
-            "{ 'Y': 2, 'YDate': 2020-02-01, 'N': 3, 'NDate': 2020-02-06 }",
-          species: null,
-          today: '건강해요:+1:',
+          cut: { Y: 5, N: 0, unknown: 0 },
+          rainbow: {
+            Y: 17,
+            YDate: '2020-02-05',
+            N: 0,
+            NDate: null,
+          },
+          species: '코숏',
+          today: '건강해요😸',
           todayTime: '2020-02-06T05:50:43.000Z',
           status: 'Y',
           createAt: '2020-02-05T03:26:25.561Z',
@@ -157,6 +159,10 @@ class CatStore {
           ],
         },
       ],
+    rainbowOpen: false,
+    rainbowYReported: false,
+    rainbowNReported: false,
+    cutClicked: { Y: false, N: false, unknown: false },
     reportInfo: null,
   };
 
@@ -174,13 +180,16 @@ class CatStore {
     this.spot.selected = selectedSpotCats;
   };
 
-  getSelectedCatInfo = () => {
+  getSelectedCatInfo = catId => {
     const { userId } = this.root.user.info.myInfo;
-    const catId = this.info.selectedPost[0].id;
-    console.log('고양이 정보 가져오기', userId, catId);
+
     axios
       .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
-      .then(res => (this.info.selectedCat = res.data))
+      .then(res => {
+        res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+        res.data[0].cut = JSON.parse(res.data[0].cut);
+        this.info.selectedCat = res.data;
+      })
       .catch(err => console.log(err));
   };
 
@@ -224,15 +233,15 @@ class CatStore {
     }
   };
 
-  selectCut = type => {
-    const keys = Object.keys(this.addCatBio.cutClicked);
-    const values = Object.values(this.addCatBio.cutClicked);
+  selectCut = (observable, type) => {
+    const keys = Object.keys(this[observable].cutClicked);
+    const values = Object.values(this[observable].cutClicked);
     keys.forEach((key, idx) => {
       if (key === type) {
         values.splice(idx, 1, true);
       } else values.splice(idx, 1, false);
     });
-    this.addCatBio.cutClicked = {
+    this[observable].cutClicked = {
       Y: values[0],
       N: values[1],
       unknown: values[2],
@@ -246,7 +255,6 @@ class CatStore {
       catNickname,
       catDescription,
       catSpecies,
-      catTag,
       cutClicked,
     } = this.addCatBio;
     if (
@@ -254,7 +262,6 @@ class CatStore {
       catNickname.length &&
       catDescription.length &&
       catSpecies.length &&
-      catTag &&
       (cutClicked.Y || cutClicked.N || cutClicked.unknown)
     ) {
       isValidated = true;
@@ -300,7 +307,6 @@ class CatStore {
       catDescription,
       catSpecies,
       catCut,
-      catTag,
     } = this.addCatBio;
     axios
       .post(
@@ -313,7 +319,6 @@ class CatStore {
           catDescription,
           catSpecies,
           catCut,
-          catTag,
         },
         defaultCredential,
       )
@@ -329,6 +334,10 @@ class CatStore {
       });
   };
 
+  toggleRainbowOpen = () => {
+    this.info.rainbowOpen = !this.info.rainbowOpen;
+  };
+
   reportRainbow = type => {
     const report = {
       Y: 0,
@@ -336,7 +345,7 @@ class CatStore {
       N: 0,
       NDate: null,
     };
-    report[type] += report[type];
+    report[type] = 1;
     report[`${type}Date`] = this.makeDateTime();
 
     axios
@@ -344,14 +353,16 @@ class CatStore {
       .then(res => {
         if (res.status === 201) {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
-        } else if (res.status === 200) {
-          Alert.alert('신고가 불가능합니다?');
         }
       })
       .catch(err => console.log(err));
   };
 
-  updateCut = type => {
+  disableReportBtn = type => {
+    this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
+  };
+
+  postCut = type => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     // axios로 cut post하기, req.body는 request
@@ -402,9 +413,9 @@ class CatStore {
   makeDateTime = () => {
     const YYYY = new Date().getFullYear();
     const MM =
-      new Date().getMonth() > 9
+      new Date().getMonth() > 8
         ? new Date().getMonth()
-        : `0${new Date().getMonth()}`;
+        : `0${new Date().getMonth() + 1}`;
     const DD =
       new Date().getDate() > 9
         ? new Date().getDate()
@@ -414,6 +425,7 @@ class CatStore {
 
   updateInput = (group, key, text) => {
     this[group][key] = text;
+    console.log(this[group][key]);
   };
 
   clearInput = (...pairs) => {
@@ -432,7 +444,6 @@ class CatStore {
         catNickname: '',
         catDescription: '',
         catSpecies: '',
-        catTag: '',
         cutClicked: { Y: false, N: false, unknown: false },
         catCut: { Y: 0, N: 0, unknown: 0 },
       };
@@ -455,8 +466,10 @@ decorate(CatStore, {
   validateAddCat: action,
   getAddress: action,
   addCat: action,
+  toggleRainbowOpen: action,
   reportRainbow: action,
-  updateCut: action,
+  disableReportBtn: action,
+  postCut: action,
   createTag: action,
   getPostList: action,
   addPost: action,

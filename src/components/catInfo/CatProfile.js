@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    // borderColor: '#edf1f5',
     borderColor: '#6772f1',
     borderWidth: 1,
   },
@@ -43,13 +42,11 @@ const styles = StyleSheet.create({
   nickName: {
     fontSize: 25,
     fontWeight: '600',
-    // color: '#080811',
     color: 'white',
     marginVertical: 5,
   },
   address: {
     fontSize: 15,
-    // color: '#7f8296',
     color: 'white',
     marginBottom: 10,
   },
@@ -58,11 +55,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 15,
-    // backgroundColor: '#677ef1',
     backgroundColor: 'white',
   },
   btnTxt: {
-    // color: 'white',
     color: '#677ef1',
     fontWeight: 'bold',
   },

@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { inject, observer } from 'mobx-react';
+import { StyleSheet, View } from 'react-native';
 import { Container, Header, Tab, Tabs } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
@@ -12,75 +13,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabBarUnderline: {
-    paddingHorizontal: 10,
-    borderRadius: 100,
-    backgroundColor: '#e0e2e8',
+  hide: {
+    display: 'none',
   },
+  tab: {
+    backgroundColor: '#6772f1',
+  },
+  textColor: { color: '#e0e2e8' },
+  activeTab: {
+    backgroundColor: '#6772f1',
+  },
+  activeText: { color: 'white', fontSize: 18 },
 });
-const CatInfoTabs = () => (
+const CatInfoTabs = ({ selectedCat }) => (
   <Container style={styles.container}>
-    <Header hasTabs style={{ display: 'none' }} />
-    <Tabs
-      tabBarUnderlineStyle={{ display: 'none' }}
-      // tabBarActiveTextColor="#6772f1"
-    >
-      <Tab
-        heading="Bio"
-        tabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        textStyle={{ color: '#e0e2e8' }}
-        activeTabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        activeTextStyle={{ color: 'white', fontSize: 20 }}
-      >
-        <CatBio />
-      </Tab>
-      <Tab
-        heading="Posts"
-        tabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        textStyle={{ color: '#e0e2e8' }}
-        activeTabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        activeTextStyle={{ color: 'white', fontSize: 20 }}
-      >
-        <CatPostList />
-      </Tab>
-      <Tab
-        heading="Albums"
-        tabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        textStyle={{ color: '#e0e2e8' }}
-        activeTabStyle={{
-          backgroundColor: '#6772f1',
-        }}
-        activeTextStyle={{ color: 'white', fontSize: 20 }}
-      >
-        <CatAlbum />
-      </Tab>
-      <Tab
-        heading="Followers"
-        tabStyle={{
-          // borderTopRightRadius: 15,
-          backgroundColor: '#6772f1',
-        }}
-        textStyle={{ color: '#e0e2e8' }}
-        activeTabStyle={{
-          // borderTopRightRadius: 15,
-          backgroundColor: '#6772f1',
-        }}
-        activeTextStyle={{ color: 'white', fontSize: 20 }}
-      >
-        <CatFollowerList />
-      </Tab>
-    </Tabs>
+    {selectedCat && selectedCat.length > 0 ? (
+      <View>
+        <Header hasTabs style={styles.hide} />
+        <Tabs tabBarUnderlineStyle={styles.hide}>
+          <Tab
+            heading="Bio"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatBio />
+          </Tab>
+          <Tab
+            heading="Posts"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatPostList />
+          </Tab>
+          <Tab
+            heading="Albums"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatAlbum />
+          </Tab>
+          <Tab
+            heading="Followers"
+            tabStyle={styles.tab}
+            textStyle={styles.textColor}
+            activeTabStyle={styles.activeTab}
+            activeTextStyle={styles.activeText}
+          >
+            <CatFollowerList />
+          </Tab>
+        </Tabs>
+      </View>
+    ) : (
+      <View />
+    )}
   </Container>
 );
 
-export default CatInfoTabs;
+export default inject(({ cat }) => ({
+  selectedCat: cat.info.selectedCat,
+}))(observer(CatInfoTabs));

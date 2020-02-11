@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
   white: {
     color: 'white',
   },
+  font16: {
+    fontSize: 16,
+  },
 });
 
 const SignUp_Info = ({
@@ -67,7 +70,10 @@ const SignUp_Info = ({
       <Form>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="email-check-outline" size="16" />{' '}
+            <MaterialCommunityIcons
+              name="email-check-outline"
+              style={styles.font16}
+            />{' '}
             hello@cat.com
           </Label>
           <Input
@@ -77,7 +83,8 @@ const SignUp_Info = ({
         </Item>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="paw" size="16" /> Nickname
+            <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
+            Nickname
           </Label>
           <Input
             onChangeText={text => updateInput('nickName', text)}
@@ -86,7 +93,8 @@ const SignUp_Info = ({
         </Item>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="lock-outline" size="16" /> Password
+            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
+            Password
           </Label>
           <Input
             onChangeText={text => updateInput('confirmPW', text)}
@@ -95,8 +103,8 @@ const SignUp_Info = ({
         </Item>
         <Item floatingLabel>
           <Label>
-            <MaterialCommunityIcons name="lock-outline" size="16" /> Password
-            재확인
+            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
+            Password 재확인
           </Label>
           <Input
             onChangeText={text => updateInput('reConfirmPW', text)}

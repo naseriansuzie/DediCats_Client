@@ -5,18 +5,27 @@ import CatPost from './CatPost';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ececec',
-    borderColor: 'red',
-    borderWidth: 2,
+    backgroundColor: '#6772f1',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  radiusView: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: 'white',
+    paddingTop: 50,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    alignItems: 'center',
   },
 });
 
 const CatPostList = () => (
   <View style={styles.container}>
-    <CatPost />
-    <CatPost />
+    <View style={styles.radiusView}>
+      <CatPost />
+      <CatPost />
+    </View>
   </View>
 );
 
