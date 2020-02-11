@@ -197,11 +197,13 @@ class UserStore {
     }
   };
 
+  // 현재 나의 위치
   currentPosition = {
     latitude: 0,
     longitude: 0,
   };
 
+  // 현재 화면의 위치
   currentRegion = {
     latitude: 0,
     latitudeDelta: 0,
@@ -209,6 +211,7 @@ class UserStore {
     longitudeDelta: 0,
   }
 
+  // 현재 화면의 범위
   currentBoundingBox = {
     NElatitude: 0,
     NElongitude: 0,
@@ -235,13 +238,12 @@ class UserStore {
           latitude,
           longitude,
         };
-        this.currentRegion = {
+        this.onRegionChangeComplete({
           latitude,
           longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        };
-        this.getBoundingBox(this.currentRegion);
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        });
       },
       (error) => { Alert.alert(error.code, error.message); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
@@ -260,7 +262,7 @@ class UserStore {
   onRegionChangeComplete = (region) => {
     this.currentRegion = region;
     this.getBoundingBox(region);
-    console.log('currentRegion', this.currentRegion);
+    console.log(region);
   }
 }
 
