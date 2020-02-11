@@ -14,8 +14,14 @@ import {
   Content,
   Card,
   CardItem,
+  Badge,
   Text,
+  Icon,
+  Picker,
+  Form,
+  ListItem,
   Input,
+  Right,
   Body,
 } from 'native-base';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -60,6 +66,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cutTxt: { color: '#767577', fontWeight: 'bold' },
+  tagGuide: { width: '100%', paddingBottom: 10 },
+  tagView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  tag: {
+    backgroundColor: '#f38847',
+    borderRadius: 10,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  submit: {
+    alignItems: 'center',
+    padding: 10,
+    margin: 0,
+    backgroundColor: '#677ef1',
+    borderRadius: 10,
+  },
+  submitTxt: {
+    color: 'white',
+    fontSize: 17,
+  },
   flex1: { flex: 1 },
   width100: { width: '100%' },
   row: { flexDirection: 'row' },
@@ -79,35 +107,45 @@ class CatBio extends React.Component {
   render() {
     const {
       cat,
+      today,
       rainbowOpen,
       toggleRainbowOpen,
       cutClicked,
+      tags,
+      newTag,
       selectCut,
       postCut,
+      postCatToday,
+      validateTag,
+      updateInput,
+      makeDateTime,
     } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
-          <View style={styles.rainbowView}>
-            <TouchableOpacity
-              onPress={toggleRainbowOpen}
-              style={styles.reportBtn}
-            >
-              <Text style={styles.font18}>
-                <SimpleLineIcons style={styles.font20} name="directions" />
-                {'신고 '}
-                {rainbowOpen ? (
-                  <SimpleLineIcons style={styles.font15} name="arrow-up" />
-                ) : (
-                  <SimpleLineIcons style={styles.font15} name="arrow-down" />
-                )}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {rainbowOpen ? <Rainbow /> : <View />}
           <Container style={styles.flex}>
             <Header style={{ display: 'none' }} />
             <Content padder>
+              <View style={styles.rainbowView}>
+                <TouchableOpacity
+                  onPress={toggleRainbowOpen}
+                  style={styles.reportBtn}
+                >
+                  <Text style={styles.font18}>
+                    <SimpleLineIcons style={styles.font20} name="directions" />
+                    {'신고 '}
+                    {rainbowOpen ? (
+                      <SimpleLineIcons style={styles.font15} name="arrow-up" />
+                    ) : (
+                      <SimpleLineIcons
+                        style={styles.font15}
+                        name="arrow-down"
+                      />
+                    )}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {rainbowOpen ? <Rainbow /> : <View />}
               <Card transparent>
                 <CardItem>
                   <Body>
@@ -194,8 +232,83 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       오늘 {cat.nickname}의 건강 상태
                     </Text>
-                    {/* 여기에다가 드롭다운 작업 예정 */}
-                    {cat.today ? <Text>{cat.today}</Text> : <View />}
+                    <Text>{cat.today}</Text>
+                    {cat.today &&
+                    makeDateTime(cat.todayTime) === makeDateTime(new Date()) ? (
+                      <Text>{cat.today}</Text>
+                    ) : (
+                      <Form
+                        style={{
+                          width: '100%',
+                          flexDirection: 'row',
+                        }}
+                      >
+                        <Picker
+                          note
+                          enabled
+                          mode="dialog"
+                          iosIcon={<Icon name="arrow-down" />}
+                          style={{
+                            alignItems: 'flex-start',
+                            width: '90%',
+                            height: 30,
+                          }}
+                          placeholder="오늘의 건강 상태 선택하기"
+                          placeholderStyle={{ fontSize: 15 }}
+                          selectedValue={today}
+                          onValueChange={postCatToday}
+                        >
+                          <Picker.Item label="😼기운 넘쳐요" value="key0" />
+                          <Picker.Item label="😺튼튼해요" value="key1" />
+                          <Picker.Item label="😻사랑스러워요" value="key2" />
+                          <Picker.Item
+                            label="😾가까이 가지 마세요"
+                            value="key3"
+                          />
+                          <Picker.Item label="😿기운이 없어요" value="key4" />
+                          <Picker.Item label="🙀아파요" value="key5" />
+                        </Picker>
+                      </Form>
+                    )}
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text style={styles.tagGuide}>#Tags</Text>
+                    <View style={styles.tagView}>
+                      {tags.length > 0 ? (
+                        tags.map(tagInfo => (
+                          <Badge style={styles.tag} key={tagInfo.id}>
+                            <Text>{`#${tagInfo.tag.content}`}</Text>
+                          </Badge>
+                        ))
+                      ) : (
+                        <Text>{cat.nickname}를 표현해주세요.</Text>
+                      )}
+                    </View>
+                    <KeyboardAvoidingView style={styles.width100}>
+                      <View>
+                        <ListItem>
+                          <Input
+                            placeholder="ex) 귀염, 도도, 츄르만먹음"
+                            maxLength={11}
+                            value={newTag}
+                            onChangeText={text => {
+                              const noSpaceText = text.split(' ').join('');
+                              updateInput('info', 'newTag', noSpaceText);
+                            }}
+                          />
+                          <Right>
+                            <TouchableOpacity
+                              style={styles.submit}
+                              onPress={validateTag}
+                            >
+                              <Text style={styles.submitTxt}>등록</Text>
+                            </TouchableOpacity>
+                          </Right>
+                        </ListItem>
+                      </View>
+                    </KeyboardAvoidingView>
                   </Body>
                 </CardItem>
               </Card>
@@ -210,10 +323,18 @@ class CatBio extends React.Component {
 export default inject(({ cat }) => ({
   cat: cat.info.selectedCat[0],
   catId: cat.info.selectedCat[0].id,
+  today: cat.info.today,
   rainbowOpen: cat.info.rainbowOpen,
   cutClicked: cat.info.cutClicked,
+  tags: cat.info.selectedCat[2],
+  newTag: cat.info.newTag,
   getSelectedCatInfo: cat.getSelectedCatInfo,
   toggleRainbowOpen: cat.toggleRainbowOpen,
   selectCut: cat.selectCut,
   postCut: cat.postCut,
+  postCatToday: cat.postCatToday,
+  validateTag: cat.validateTag,
+  updateInput: cat.updateInput,
+
+  makeDateTime: cat.makeDateTime,
 }))(observer(CatBio));

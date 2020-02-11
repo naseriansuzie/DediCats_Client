@@ -76,8 +76,8 @@ class CatStore {
             NDate: null,
           },
           species: '코숏',
-          today: '건강해요😸',
-          todayTime: '2020-02-06T05:50:43.000Z',
+          today: null,
+          todayTime: '2020-02-11T05:50:43.000Z',
           status: 'Y',
           createAt: '2020-02-05T03:26:25.561Z',
           updateAt: '2020-02-06T11:30:24.000Z',
@@ -92,11 +92,30 @@ class CatStore {
               content: '초큐트',
             },
           },
+          {
+            id: 4,
+            tag: {
+              content: '돼냥이',
+            },
+          },
+          {
+            id: 11,
+            tag: {
+              content: '우리동네대장애옹이',
+            },
+          },
+          {
+            id: 12,
+            tag: {
+              content: '귀염뽀짝',
+            },
+          },
         ],
         {
           path: 'https://source.unsplash.com/hGMvqCyRM9U',
         },
       ],
+    today: undefined,
     newTag: '',
     postList: null,
     selectedPost: null,
@@ -365,16 +384,72 @@ class CatStore {
   postCut = type => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
-    // axios로 cut post하기, req.body는 request
-    // res => CatInfo.selectedCat.cut : res.data
-    // err => console
+    const catId = this.info.selectedCat[0].id;
+    runInAction(() => {
+      axios
+        .post(`${SERVER_URL}/cat/cut`, { catId, request }, defaultCredential)
+        .then(res => {
+          this.info.selectedCat[0].cut = JSON.parse(res.data);
+        })
+        .catch(err => {
+          if (err.response && err.response.status === 409) {
+            Alert.alert('중성화 유무 등록에 실패했습니다.');
+          } else console.log(err);
+        });
+    });
   };
 
-  createTag = () => {
-    // axios로 this.info.newTag와 this.info.selectedCat.catId를 post 보냄
-    // res => clearInput({group: "cat", key: "newTag"}) 실행
-    // err => alert 처리
-    // 근데 지금 api에서 안 찾아짐 -> 확인 필요
+  postCatToday = value => {
+    this.info.today = value;
+    const todayInfo = {
+      catToday: value,
+      catId: this.info.selectedCat[0].id,
+    };
+    runInAction(() => {
+      axios
+        .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
+        .then(res => {
+          this.info.selectedCat[0].today = res.data.cat_today;
+          this.info.selectedCat[0].todayTime = this.makeDateTime(
+            res.data.cat_today_time,
+          );
+        })
+        .catch(err => {
+          if (err.response && err.response.status === 409) {
+            Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
+            this.info.today = undefined;
+          } else console.log(err);
+        });
+    });
+  };
+
+  validateTag = () => {
+    const { newTag } = this.info;
+    const tags = this.info.selectedCat[2].map(tagInfo => tagInfo.tag.content);
+    if (tags.includes(newTag)) {
+      Alert.alert('이미 존재하는 태그입니다!');
+      this.clearInput({ group: 'info', key: 'newTag' });
+    } else {
+      this.postTag(newTag);
+    }
+  };
+
+  postTag = newTag => {
+    const catId = this.info.selectedCat[0].id;
+    axios
+      .post(
+        `${SERVER_URL}/cat/updateTag`,
+        { catTag: newTag, catId },
+        defaultCredential,
+      )
+      .then(res => {
+        const { tags } = this.info.selectedCat[0];
+        this.info.selectedCat[0].tags = [...tags, res.data];
+        runInAction(() => {
+          this.clearInput({ group: 'info', key: 'newTag' });
+        });
+      })
+      .catch(err => console.log(err));
   };
 
   getPostList = catId => {
@@ -429,7 +504,7 @@ class CatStore {
   };
 
   clearInput = (...pairs) => {
-    pairs.forEach(function(pair) {
+    pairs.forEach(pair => {
       const { group, key } = pair;
       this[group][key] = '';
     });
@@ -450,7 +525,7 @@ class CatStore {
     }
   };
 
-  markers= [
+  markers = [
     {
       latitude: 37.802597,
       longitude: -122.435197,
@@ -509,7 +584,9 @@ decorate(CatStore, {
   reportRainbow: action,
   disableReportBtn: action,
   postCut: action,
-  createTag: action,
+  postCatToday: action,
+  validateTag: action,
+  postTag: action,
   getPostList: action,
   addPost: action,
   getCommentList: action,
