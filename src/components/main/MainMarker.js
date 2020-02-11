@@ -23,13 +23,7 @@ export default class MainMarker extends React.Component {
           onPress={() => this.props.onMarkerPressed(marker, index)}
           tracksViewChanges={this.state.tracksViewChanges}
           onLoad={this.stopRendering}
-        >
-          {/* <Callout>
-            <Text>{marker.name}</Text>
-            <Text>{marker.content}</Text>
-          </Callout> */}
-          {/* {fadeDuration={0}} */}
-        </Marker>
+        />
       );
     } else {
       return <View></View>;
