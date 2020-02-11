@@ -14,6 +14,7 @@ import MyPage from './src/pages/MyPage';
 import EditMyProfile from './src/pages/EditMyProfile';
 import ChangePW from './src/pages/ChangePW';
 import SelectedPost from './src/pages/SelectedPost';
+import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
 
 const root = new RootStore();
@@ -54,6 +55,7 @@ const MainStack = createStackNavigator(
       },
     },
     SelectedPost,
+    PhotoModal,
   },
   {
     initialRouteName: 'Main',

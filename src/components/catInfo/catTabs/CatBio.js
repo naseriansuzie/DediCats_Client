@@ -335,6 +335,5 @@ export default inject(({ cat }) => ({
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
   updateInput: cat.updateInput,
-
   makeDateTime: cat.makeDateTime,
 }))(observer(CatBio));
