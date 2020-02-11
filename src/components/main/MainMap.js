@@ -5,8 +5,6 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  Platform,
-  Alert
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { inject, observer } from 'mobx-react';
@@ -29,26 +27,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     marginBottom: 10,
   },
-  card: {
-    backgroundColor: '#ececec',
-    height: 200,
-    width: 300,
-    padding: 24,
-    borderRadius: 24,
-  },
-  cardImg: {
-    height: 120,
-    width: 200,
-  },
-  cardtitle: {
-    fontSize: 12,
-    marginTop: 5,
-    fontWeight: 'bold',
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: '#444',
-  },
 });
 
 class MainMap extends React.Component {
@@ -62,13 +40,16 @@ class MainMap extends React.Component {
 
   renderCarouselItem = ({ item }) => {
     const { isShowingCarousel } = this.state;
-    return (
-      <BriefCatInfo
-        item={item}
-        isShowingCarousel={isShowingCarousel}
-        hideCarousel={this.hideCarousel}
-      />
-    );
+
+    if (isShowingCarousel) {
+      return (
+        <BriefCatInfo
+          item={item}
+          isShowingCarousel={isShowingCarousel}
+          hideCarousel={this.hideCarousel}
+        />
+      );
+    }
   };
 
   hideCarousel = () => {
@@ -76,28 +57,25 @@ class MainMap extends React.Component {
   }
 
   onCarouselItemChange = (index) => {
-    const { onRegionChangeComplete, markers } = this.props;
+    const { markers } = this.props;
     const location = markers[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.006,
-      longitudeDelta: 0.006,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
     };
-    onRegionChangeComplete(region);
     this._map.animateToRegion(region);
   }
 
   onMarkerPressed = (location, index) => {
     const { isShowingCarousel } = this.state;
-    const { onRegionChangeComplete } = this.props;
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.006,
-      longitudeDelta: 0.006,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
     };
-    onRegionChangeComplete(region);
     this._map.animateToRegion(region);
     this._carousel.snapToItem(index);
     if (!isShowingCarousel) {
@@ -115,7 +93,7 @@ class MainMap extends React.Component {
           ref={(map) => this._map = map}
           style={styles.map}
           showsUserLocation={true}
-          region={{...currentRegion}}
+          region={{ ...currentRegion }}
           onRegionChangeComplete={onRegionChangeComplete}
         >
           {
