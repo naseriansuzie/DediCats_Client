@@ -38,10 +38,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   rainbowView: { alignItems: 'flex-end' },
-  flex1: { flex: 1 },
   reportBtn: { marginTop: 10, marginRight: 25 },
-  width100: { width: '100%' },
-  row: { flexDirection: 'row' },
+  catCut: { width: '100%', paddingBottom: 10 },
   peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 15 },
   peanut: {
     width: 80,
@@ -61,6 +59,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  cutTxt: { color: '#767577', fontWeight: 'bold' },
+  flex1: { flex: 1 },
+  width100: { width: '100%' },
+  row: { flexDirection: 'row' },
   font15: { fontSize: 15 },
   font18: { fontSize: 18 },
   font20: { fontSize: 20 },
@@ -124,7 +126,7 @@ class CatBio extends React.Component {
                 </CardItem>
                 <CardItem>
                   <Body>
-                    <Text style={styles.width100}>중성화 유무</Text>
+                    <Text style={styles.catCut}>중성화 유무</Text>
                     <View style={styles.row}>
                       <TouchableHighlight
                         style={cutClicked.Y ? styles.noPeanut : styles.peanut}
@@ -185,6 +187,15 @@ class CatBio extends React.Component {
                         </Text>
                       </TouchableHighlight>
                     </View>
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text style={styles.width100}>
+                      오늘 {cat.nickname}의 건강 상태
+                    </Text>
+                    {/* 여기에다가 드롭다운 작업 예정 */}
+                    {cat.today ? <Text>{cat.today}</Text> : <View />}
                   </Body>
                 </CardItem>
               </Card>
