@@ -137,7 +137,7 @@ const AddCatBio = ({
               <TouchableOpacity
                 onPress={async () => {
                   await getPermissionAsync();
-                  pickImage();
+                  pickImage('addCatBio');
                 }}
               >
                 <Text style={styles.uploadBtn}>Upload photo</Text>
