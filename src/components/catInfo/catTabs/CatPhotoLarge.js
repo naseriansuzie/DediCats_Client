@@ -1,11 +1,10 @@
 import React from 'react';
 import { StyleSheet, Image, TouchableHighlight } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   defaultPhoto: {
-    width: 120,
-    height: 120,
+    width: 350,
+    height: 350,
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -15,15 +14,10 @@ const styles = StyleSheet.create({
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
-const CatPhoto = ({ path, photo, selectPhoto, navigation }) => (
-  <TouchableHighlight
-    onPress={async () => {
-      await selectPhoto(photo);
-      navigation.navigate('PhotoModal');
-    }}
-  >
+const CatPhotoLarge = ({ path }) => (
+  <TouchableHighlight>
     <Image style={styles.defaultPhoto} source={{ uri: path || DEFAULT_CAT }} />
   </TouchableHighlight>
 );
 
-export default withNavigation(CatPhoto);
+export default CatPhotoLarge;
