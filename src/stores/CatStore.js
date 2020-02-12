@@ -503,10 +503,12 @@ class CatStore {
         ),
       )
       .catch(err => {
-        if (err.response && err.response.status === 409) {
-          console.dir(err.response);
+        if (err.response && err.response.status === 405) {
+          Alert.alert(
+            '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
+          );
           // 로직 확인 필요
-        } else console.log(err);
+        } else Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
       });
   };
 
