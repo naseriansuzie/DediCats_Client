@@ -120,7 +120,6 @@ class CatStore {
     postList: null,
     selectedPost: null,
     inputContent: '',
-    inputPhoto: null,
     commentList: null,
     inputComment: '',
     album:
@@ -139,7 +138,8 @@ class CatStore {
           path: 'https://source.unsplash.com/hGMvqCyRM9U',
         },
       ],
-    selectedPhoto: null,
+    uri: null,
+    photoPath: null,
     followerList:
       // null,
       [
@@ -254,7 +254,7 @@ class CatStore {
     }
   };
 
-  pickImage = async () => {
+  pickImage = async type => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -263,8 +263,9 @@ class CatStore {
       base64: true,
     });
     if (!result.cancelled) {
-      this.addCatBio.uri = result.uri;
-      this.addCatBio.photoPath = result.base64;
+      this[type].uri = result.uri;
+      this[type].photoPath = result.base64;
+      console.log(!!this[type].uri, !!this[type].photoPath);
     }
   };
 
@@ -473,8 +474,38 @@ class CatStore {
     // axios로 catPost들을 get해서 this.info.postList 업데이트
   };
 
+  removePhoto = () => {
+    this.info.uri = null;
+  };
+
+  validateAddPost = () => {
+    if (this.info.inputContent) {
+      return true;
+    }
+    Alert.alert('글을 입력하신 후 등록해주세요!');
+    return false;
+  };
+
   addPost = () => {
-    // 인풋메시지와 포토를 등록하는 함수
+    const postInfo = {
+      content: this.info.inputContent,
+      catId: this.info.selectedCat[0].id,
+      photoPath: this.info.photoPath,
+    };
+    axios
+      .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
+      .then(res =>
+        this.clearInput(
+          { group: 'info', key: 'content' },
+          { group: 'info', key: 'photoPath' },
+        ),
+      )
+      .catch(err => {
+        if (err.response && err.response.status === 409) {
+          console.dir(err.response);
+          // 로직 확인 필요
+        } else console.log(err);
+      });
   };
 
   getCommentList = postId => {
@@ -616,7 +647,9 @@ decorate(CatStore, {
   postCatToday: action,
   validateTag: action,
   postTag: action,
+  removePhoto: action,
   getPostList: action,
+  validateAddPost: action,
   addPost: action,
   getCommentList: action,
   addComment: action,
