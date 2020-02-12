@@ -225,8 +225,10 @@ const AddCatBio = ({
               const validation = await validateAddCat();
               if (validation) {
                 const addressResult = await getAddress();
+                console.log('주소검증 성공', addressResult);
                 if (addressResult) {
                   const addCatResult = await addCat();
+                  console.log('등록 성공', addCatResult);
                   if (addCatResult) {
                     navigation.goBack();
                   }
