@@ -118,7 +118,26 @@ class CatStore {
     today: undefined,
     newTag: '',
     postList: null,
-    selectedPost: null,
+    selectedPost:
+      // null,
+      {
+        id: 3,
+        content: '바보',
+        status: 'Y',
+        createAt: '2020-02-05T04:15:21.607Z',
+        updateAt: '2020-02-05T04:15:21.607Z',
+        user: {
+          id: 1,
+          nickname: 'testUser',
+          photoPath: null,
+        },
+        photos: [
+          {
+            id: 2,
+            path: '경로',
+          },
+        ],
+      },
     inputContent: '',
     commentList: null,
     inputComment: '',
@@ -479,8 +498,8 @@ class CatStore {
     this.info.uri = null;
   };
 
-  validateAddPost = () => {
-    if (this.info.inputContent) {
+  validateAddInput = type => {
+    if (this.info[type]) {
       return true;
     }
     Alert.alert('글을 입력하신 후 등록해주세요!');
@@ -509,7 +528,10 @@ class CatStore {
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
           );
           // 로직 확인 필요
-        } else Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
+        } else {
+          Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
+          console.dir(err);
+        }
       });
   };
 
@@ -518,7 +540,16 @@ class CatStore {
   };
 
   addComment = () => {
-    // 댓글 인풋 메시지를 등록하는 함수
+    const catId = this.info.selectedPost.id;
+    const commentInfo = { catId, content: this.info.inputComment };
+    axios
+      .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
+      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
+      .catch(err => {
+        if (err.response && err.response.status === 409) {
+          Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
+        } else console.dir(err);
+      });
   };
 
   getAlbums = () => {
@@ -654,7 +685,7 @@ decorate(CatStore, {
   postTag: action,
   removePhoto: action,
   getPostList: action,
-  validateAddPost: action,
+  validateAddInput: action,
   addPost: action,
   getCommentList: action,
   addComment: action,
