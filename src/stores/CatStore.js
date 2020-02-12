@@ -490,8 +490,10 @@ class CatStore {
     const postInfo = {
       content: this.info.inputContent,
       catId: this.info.selectedCat[0].id,
-      photoPath: this.info.photoPath,
     };
+    if (this.info.photoPath) {
+      postInfo.photoPath = this.info.photoPath;
+    }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
       .then(res =>
