@@ -225,7 +225,7 @@ class CatStore {
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   followCat = () => {
@@ -234,7 +234,7 @@ class CatStore {
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
       .then(res => this.getSelectedCatInfo())
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
     // test용으로 넣은 코드
     this.info.selectedCat[1].isFollowing = true;
   };
@@ -265,7 +265,6 @@ class CatStore {
     if (!result.cancelled) {
       this[type].uri = result.uri;
       this[type].photoPath = result.base64;
-      console.log(!!this[type].uri, !!this[type].photoPath);
     }
   };
 
@@ -305,7 +304,7 @@ class CatStore {
     return isValidated;
   };
 
-  getAddress = () => {
+  getAddress = async () => {
     const { latitude, longitude } = this.addCatBio.location;
     console.log(latitude, longitude);
     /* API 제한 때문에 실제로 서버 연동 후에 주석 풀 예정 */
@@ -326,12 +325,14 @@ class CatStore {
     //     } = res.data.documents[0].address;
     //     console.log(region_1depth_name, region_2depth_name, region_3depth_name);
     //     this.addCatBio.address = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
-    //     return true;
+    //     return this.addCatBio.address;
     //   })
     //   .catch(err => {
     //     console.dir(err);
     //     Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
     //   });
+    this.addCatBio.address = '서울 강남구 대치동';
+    return true;
   };
 
   addCat = () => {
@@ -364,9 +365,9 @@ class CatStore {
         return true;
       })
       .catch(err => {
-        if (err.response.status === 404) {
+        if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
-        } else console.log(err);
+        } else console.dir(err);
       });
   };
 
@@ -391,7 +392,7 @@ class CatStore {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   disableReportBtn = type => {
@@ -411,7 +412,7 @@ class CatStore {
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('중성화 유무 등록에 실패했습니다.');
-          } else console.log(err);
+          } else console.dir(err);
         });
     });
   };
@@ -533,7 +534,7 @@ class CatStore {
         this.info.album = photos;
       })
       .catch(err => {
-        console.log(err);
+        console.dir(err);
       });
   };
 
@@ -546,7 +547,7 @@ class CatStore {
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => (this.info.followerList = res.data))
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   makeDateTime = () => {
