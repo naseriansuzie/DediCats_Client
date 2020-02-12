@@ -93,7 +93,7 @@ const CatPostInput = ({
   getPermissionAsync,
   pickImage,
   removePhoto,
-  validateAddPost,
+  validateAddInput,
   addPost,
 }) => (
   <View style={styles.container}>
@@ -136,8 +136,8 @@ const CatPostInput = ({
           <View>
             <TouchableOpacity
               style={styles.submitBtn}
-              onPress={async () => {
-                const validation = await validateAddPost();
+              onPress={() => {
+                const validation = validateAddInput('inputContent');
                 console.log(validation);
                 if (validation) {
                   addPost();
@@ -161,6 +161,6 @@ export default inject(({ cat }) => ({
   getPermissionAsync: cat.getPermissionAsync,
   pickImage: cat.pickImage,
   removePhoto: cat.removePhoto,
-  validateAddPost: cat.validateAddPost,
+  validateAddInput: cat.validateAddInput,
   addPost: cat.addPost,
 }))(observer(CatPostInput));
