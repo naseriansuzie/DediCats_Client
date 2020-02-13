@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import CatPost from './CatPost';
+import CatPostInput from './CatPostInput';
 
 const styles = StyleSheet.create({
   container: {

@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     height: 350,
     resizeMode: 'stretch',
     overflow: 'hidden',
-    borderRadius: 30,
+    borderRadius: 5,
   },
 });
 
