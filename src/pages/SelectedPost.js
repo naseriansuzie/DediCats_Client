@@ -1,5 +1,8 @@
 import React from 'react';
+<<<<<<< HEAD
+// import { StyleSheet, Text, View } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
+import CatSelectedPost from '../components/catInfo/catTabs/CatSelectedPost';
 import CatCommentInput from '../components/catInfo/catTabs/CatCommentInput';
 
 const styles = StyleSheet.create({
@@ -13,7 +16,7 @@ const styles = StyleSheet.create({
 
 const SelectedPost = () => (
   <View style={styles.container}>
-    <Text>selected post</Text>
+    <CatSelectedPost />
     <CatCommentInput />
   </View>
 );

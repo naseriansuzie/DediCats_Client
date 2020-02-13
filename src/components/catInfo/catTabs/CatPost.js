@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
 
 
@@ -35,44 +35,55 @@ const styles = StyleSheet.create({
 // },
 
 class CatPost extends React.Component {
+  setCatPostHere = (item) => {
+    console.log('setCatPostHere :', item);
+    this.props.setCatPost(item);
+    this.props.navigation.navigate('SelectedPost');
+  };
+
   render() {
-    // console.log(this.props.post)
+    // console.log(this.props)
     const { content, createAt, user } = this.props.item
     return (
-      <Card style={{width: 400, borderRadius: 20, overflow: 'hidden'}}>
-        <CardItem>
-          <Left>
-            <Thumbnail source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg'}} />
-            <Body>
-              <Text>{user.nickname}</Text>
-            </Body>
-          </Left>
-          <Right>
-            <Text>{createAt}</Text>
-          </Right>
-        </CardItem>
-        <CardItem cardBody>
-          <Image source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 200, width: null, flex: 1}}/>
-        </CardItem>
-        <CardItem>
-          {/* <Left><L/eft> */}
-          <Text note style={{textAlign: 'center',  justifyContent: 'space-between'}}>{content}</Text>
-        </CardItem>
-        <CardItem style={{marginLeft: 260}}>
-          <Right >
-            <Button transparent>
-              <Icon active name="chatbubbles" style={{marginRight: 10}} />
-              <Text>4 Comments</Text>
-            </Button>
-          </Right>
-        </CardItem>
-      </Card>
-  // <TouchableOpacity
-  //   style={styles.container}
-  //   onPress={() => props.navigation.navigate('SelectedPost')}
-  // >
-  //   <Text>cat post</Text>
-  // </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={() => this.setCatPostHere(this.props.item)}>
+        <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
+          <CardItem>
+            <Left>
+              <Thumbnail source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg'}} />
+              <Body>
+                <Text>{user.nickname}</Text>
+              </Body>
+            </Left>
+            <Right>
+              <Text>{createAt}</Text>
+            </Right>
+          </CardItem>
+          <CardItem cardBody>
+            <Image source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 200, width: null, flex: 1}}/>
+          </CardItem>
+          <CardItem>
+            {/* <Left><L/eft> */}
+            <Text note>{content}</Text>
+          </CardItem>
+          <CardItem style={{ marginLeft: 260 }}>
+            <Right>
+              <Button
+                // onPress={() => this.props.navigation.navigate('SelectedPost')}
+                transparent
+              >
+                <Icon active name="chatbubbles" style={{ marginRight: 10 }} />
+                <Text>4 Comments</Text>
+              </Button>
+            </Right>
+          </CardItem>
+        </Card>
+      </TouchableWithoutFeedback>
+    // <TouchableOpacity
+    //   style={styles.container}
+    //   onPress={() => props.navigation.navigate('SelectedPost')}
+    // >
+    //   <Text>cat post</Text>
+    // </TouchableOpacity>
     );
   }
 }
