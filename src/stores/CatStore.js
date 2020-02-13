@@ -293,12 +293,13 @@ class CatStore {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 0.3,
+      quality: 1,
       base64: true,
     });
     if (!result.cancelled) {
+      const imageTarget = `data:image/jpeg;base64,${result.base64}`;
       this[type].uri = result.uri;
-      this[type].photoPath = result.base64;
+      this[type].photoPath = imageTarget;
     }
   };
 
@@ -369,7 +370,7 @@ class CatStore {
     return true;
   };
 
-  addCat = () => {
+  addCat = async () => {
     const {
       address,
       location,
@@ -379,7 +380,7 @@ class CatStore {
       catSpecies,
       catCut,
     } = this.addCatBio;
-    axios
+    const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
         {
@@ -403,6 +404,8 @@ class CatStore {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else console.dir(err);
       });
+
+      return result;
   };
 
   toggleRainbowOpen = () => {
