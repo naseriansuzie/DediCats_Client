@@ -9,6 +9,7 @@ import {
   Label,
 } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
