@@ -61,10 +61,10 @@ class UserStore {
         return true;
       })
       .catch(err => {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         } else {
-          console.log(err);
+          console.dir(err);
         }
       });
   };
@@ -79,12 +79,12 @@ class UserStore {
         return true;
       })
       .catch(err => {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           Alert.alert(
             '회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.',
           );
         } else {
-          console.log(err);
+          console.dir(err);
         }
       });
   };
@@ -98,7 +98,7 @@ class UserStore {
         this.info.signIn = false;
         this.info.myInfo = null;
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   validateSignUp = () => {
@@ -167,7 +167,7 @@ class UserStore {
           this.root.getSelectedCatInfo();
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
     // test용으로 넣은 코드
     this.root.cat.info.selectedCat[1].isFollowing = false;
   };
@@ -193,7 +193,7 @@ class UserStore {
       axios
         .patch(`${SERVER_URL}/user/changepw`, updateInfo, defaultCredential)
         .then(res => res)
-        .catch(err => console.log(err));
+        .catch(err => console.dir(err));
     }
   };
 
@@ -214,7 +214,7 @@ class UserStore {
     latitudeDelta: 0,
     longitude: 0,
     longitudeDelta: 0,
-  }
+  };
 
   // 현재 화면의 범위
   currentBoundingBox = {
@@ -236,7 +236,7 @@ class UserStore {
         console.log('Granted');
         console.log('before watchPosition');
         this.watchId = navigator.geolocation.watchPosition(
-          (position) => {
+          position => {
             const { latitude, longitude } = position.coords;
             console.log('before set permisiionState');
             this.permissionState = true;
@@ -259,7 +259,6 @@ class UserStore {
             this.getBoundingBox(this.currentRegion);
             console.log('after set getBoundingBox');
           },
-          (error) => { Alert.alert(error.code, error.message); },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
         console.log('after watchPosition');
@@ -268,11 +267,11 @@ class UserStore {
         this.permissionState = false;
       }
     } catch (err) {
-      console.warn(err)
+      console.warn(err);
     }
   };
 
-  getBoundingBox = (region) => {
+  getBoundingBox = region => {
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
       NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
@@ -281,7 +280,7 @@ class UserStore {
     };
   };
 
-  onRegionChangeComplete = (region) => {
+  onRegionChangeComplete = region => {
     this.currentRegion = region;
     this.getBoundingBox(region);
   };

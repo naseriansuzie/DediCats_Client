@@ -4,11 +4,12 @@ import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   defaultPhoto: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     resizeMode: 'stretch',
     overflow: 'hidden',
-    borderRadius: 30,
+    borderRadius: 5,
+    marginHorizontal: 1,
   },
 });
 
