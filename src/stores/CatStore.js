@@ -118,35 +118,35 @@ class CatStore {
     today: undefined,
     newTag: '',
     postList: [{
-        id: 3,
-        content: "바보",
-        status: "Y",
-        createAt: "2020-02-05T04:15:21.607Z",
-        updateAt: "2020-02-05T04:15:21.607Z",
-        user: {
-            id: 1,
-            nickname: "testUser",
-            photoPath: null
-        },
-        photos: [
-            {
-                id: 2,
-                path: "경로"
-            }
-        ]
+      id: 3,
+      content: '바보',
+      status: 'Y',
+      createAt: '2020-02-05T04:15:21.607Z',
+      updateAt: '2020-02-05T04:15:21.607Z',
+      user: {
+        id: 1,
+        nickname: 'testUser',
+        photoPath: null
+      },
+      photos: [
+        {
+          id: 2,
+          path: '경로'
+        }
+      ]
     },
     {
+      id: 1,
+      content: '뭐지',
+      status: 'Y',
+      createAt: '2020-02-05T03:26:25.603Z',
+      updateAt: '2020-02-05T03:54:58.000Z',
+      user: {
         id: 1,
-        content: "뭐지",
-        status: "Y",
-        createAt: "2020-02-05T03:26:25.603Z",
-        updateAt: "2020-02-05T03:54:58.000Z",
-        user: {
-            id: 1,
-            nickname: "testUser",
-            photoPath: null
-        },
-        photos: []
+        nickname: 'testUser',
+        photoPath: null
+      },
+      photos: []
     },],
     selectedPost: null,
     inputContent: '',
@@ -230,6 +230,10 @@ class CatStore {
     cutClicked: { Y: false, N: false, unknown: false },
     reportInfo: null,
   };
+
+  setCatPost = (item) => {
+    this.info.selectedPost = item;
+  }
 
   // actions
   getMapInfo = (lat, long) => {
@@ -707,6 +711,7 @@ decorate(CatStore, {
   updateInput: action,
   clearInput: action,
   clearAllInput: action,
+  setCatPost: action,
 });
 
 export default CatStore;

@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   inputView: {
     width: '95%',
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 5,
     borderColor: '#edf1f5',
+    marginTop: 5,
   },
   inputBottomView: {
     flexDirection: 'row',

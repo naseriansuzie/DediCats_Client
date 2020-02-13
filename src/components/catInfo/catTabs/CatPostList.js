@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class CatPostList extends React.Component { 
+class CatPostList extends React.Component {
   // render() {
 
   //   console.log(this.props.postList[0].content);
@@ -34,8 +34,8 @@ class CatPostList extends React.Component {
   //         {/* <CatPost />
   //         <CatPost /> */}
   //         {
-  //           this.props.postList.map((item) => 
-  //             <CatPost 
+  //           this.props.postList.map((item) =>
+  //             <CatPost
   //               item={item}
   //             />
   //           )
@@ -50,7 +50,7 @@ class CatPostList extends React.Component {
   //   fetch(url)
   //     .then(r => r.json())
   //     .then(data => {
-  //       this.setState({ 
+  //       this.setState({
   //         data: this.state.data.concat(data), // 기존 data에 추가.
   //         page: this.state.page + 1
   //       })
@@ -61,21 +61,22 @@ class CatPostList extends React.Component {
   //   this._getData();  --> this.props._getData();
   // }
 
-  _renderItem = ({item}) => (
-    <CatPost item={item}/>
+  _renderItem = ({ item }) => (
+    <CatPost item={item} setCatPost={this.props.setCatPost}/>
   );
 
   render() {
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.radiusView}>
-          <FlatList 
+          <FlatList
             data={this.props.postList}
             renderItem={this._renderItem}
-            keyExtractor={(item, index) => item.id}
+            keyExtractor={(item, index) => `${item.id}`}
             showsVerticalScrollIndicator={false}
           />
         </SafeAreaView>
+        <CatPostInput />
       </View>
     );
   }
@@ -83,6 +84,7 @@ class CatPostList extends React.Component {
 
 export default inject(({ cat }) => ({
   postList: cat.info.postList,
+  setCatPost: cat.setCatPost,
 }))(
   observer(CatPostList),
 );
