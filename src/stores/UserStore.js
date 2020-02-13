@@ -49,24 +49,25 @@ class UserStore {
   };
 
   // actions
-  signUp = info => {
-    axios
-      .post(`${SERVER_URL}/user/signup`, info, defaultCredential)
-      .then(res => {
-        Alert.alert('회원가입에 성공했습니다!');
-        this.info.isSignUp = true;
-        runInAction(() => {
-          this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
-        });
-        return true;
-      })
+  signUp = async info => {
+    const res = await axios
+      .post(`${SERVER_URL}/signup`, info, defaultCredential)
       .catch(err => {
-        if (err.response && err.response.status === 401) {
+        if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         } else {
           console.dir(err);
         }
       });
+    if (res) {
+      Alert.alert('회원가입에 성공했습니다!');
+      this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+      console.log('바꾸기 전 ', this.info.isSignUp);
+      this.info.isSignUp = true;
+      console.log('바꾸기 후 ', this.info.isSignUp);
+      console.log('data는 ', res.data);
+      return res.data;
+    }
   };
 
   signIn = info => {
@@ -75,8 +76,10 @@ class UserStore {
       .then(res => {
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
-        runInAction(() => this.clearInput('email', 'PW'));
-        return true;
+        runInAction(() => {
+          this.clearInput('email', 'PW');
+          return true;
+        });
       })
       .catch(err => {
         if (err.response && err.response.status === 401) {
@@ -123,14 +126,16 @@ class UserStore {
     return isValidated;
   };
 
-  updateState = field => {
+  updateState = async field => {
     if (field === 'SignUp') {
       const signUpInfo = {
         email: this.info.email,
         password: this.info.confirmPW,
         nickname: this.info.nickName,
       };
-      return this.signUp(signUpInfo);
+      const result = await this.signUp(signUpInfo);
+      console.log(result);
+      return result;
     }
     if (field === 'SignIn') {
       const signIpInfo = {
@@ -206,7 +211,7 @@ class UserStore {
   addCatMarker = {
     latitude: 0,
     longitude: 0,
-  }
+  };
 
   // 현재 화면의 위치
   currentRegion = {

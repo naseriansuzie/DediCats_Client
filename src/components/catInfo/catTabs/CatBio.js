@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   rainbowView: { alignItems: 'flex-end' },
   reportBtn: { marginTop: 10, marginRight: 25 },
-  catCut: { width: '100%', paddingBottom: 10 },
+  cut: { width: '100%', paddingBottom: 10 },
   peanuts: { flex: 1, flexDirection: 'row', paddingVertical: 15 },
   peanut: {
     width: 80,
@@ -164,7 +164,7 @@ class CatBio extends React.Component {
                 </CardItem>
                 <CardItem>
                   <Body>
-                    <Text style={styles.catCut}>중성화 유무</Text>
+                    <Text style={styles.cut}>중성화 유무</Text>
                     <View style={styles.row}>
                       <TouchableHighlight
                         style={cutClicked.Y ? styles.noPeanut : styles.peanut}
