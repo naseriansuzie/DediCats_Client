@@ -67,8 +67,8 @@ class MainMap extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
+      latitudeDelta: 0.0035,
+      longitudeDelta: 0.0035,
     };
     this._map.animateToRegion(region);
   }
@@ -78,8 +78,8 @@ class MainMap extends React.Component {
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
+      latitudeDelta: 0.0035,
+      longitudeDelta: 0.0035,
     };
     this._map.animateToRegion(region);
     this._carousel.snapToItem(index);
@@ -92,7 +92,7 @@ class MainMap extends React.Component {
   render() {
     console.disableYellowBox = 'true';
     const { markers, onRegionChangeComplete, currentPosition, currentRegion, permissionState } = this.props;
-    console.log('render watchId: ', this.props.watchId);
+    console.log('render region: ', { ...currentRegion });
     if (permissionState === true) {
       return (
         <View style={styles.container}>
