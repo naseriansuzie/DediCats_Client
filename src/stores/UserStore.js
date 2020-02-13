@@ -203,6 +203,11 @@ class UserStore {
     longitude: 0,
   };
 
+  addCatMarker = {
+    latitude: 0,
+    longitude: 0,
+  }
+
   // 현재 화면의 위치
   currentRegion = {
     latitude: 0,
@@ -225,29 +230,39 @@ class UserStore {
 
   requestMapPermission = async () => {
     try {
+      console.log('before askAsync');
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-    if (status === 'granted') {
+      if (status === 'granted') {
         console.log('Granted');
+        console.log('before watchPosition');
         this.watchId = navigator.geolocation.watchPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
+            console.log('before set permisiionState');
             this.permissionState = true;
+            console.log('after set permisiionState');
+            console.log('before set currentPosition');
             this.currentPosition = {
               latitude,
               longitude,
             };
+            console.log('after set currentPosition');
+            console.log('before set currentRegion');
             this.currentRegion = {
               latitude,
               latitudeDelta: 0.005,
               longitude,
               longitudeDelta: 0.005,
             };
-            this.getBoundingBox({...this.currentRegion});
+            console.log('after set currentRegion');
+            console.log('before set getBoundingBox');
+            this.getBoundingBox(this.currentRegion);
+            console.log('after set getBoundingBox');
           },
           (error) => { Alert.alert(error.code, error.message); },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
+        console.log('after watchPosition');
       } else {
         console.log('not Granted');
         this.permissionState = false;
@@ -255,7 +270,7 @@ class UserStore {
     } catch (err) {
       console.warn(err)
     }
-  }
+  };
 
   getBoundingBox = (region) => {
     this.currentBoundingBox = {
@@ -269,7 +284,7 @@ class UserStore {
   onRegionChangeComplete = (region) => {
     this.currentRegion = region;
     this.getBoundingBox(region);
-  }
+  };
 }
 
 decorate(UserStore, {
@@ -280,6 +295,7 @@ decorate(UserStore, {
   currentBoundingBox: observable,
   permissionState: observable,
   watchId: observable,
+  addCatMarker: observable,
   requestMapPermission: action,
   getLocationPermission: action,
   getWatchPosition: action,
