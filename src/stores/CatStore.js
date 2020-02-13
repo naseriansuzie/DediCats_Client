@@ -117,27 +117,38 @@ class CatStore {
       ],
     today: undefined,
     newTag: '',
-    postList: null,
-    selectedPost:
-      // null,
-      {
+    postList: [{
         id: 3,
-        content: '바보',
-        status: 'Y',
-        createAt: '2020-02-05T04:15:21.607Z',
-        updateAt: '2020-02-05T04:15:21.607Z',
+        content: "바보",
+        status: "Y",
+        createAt: "2020-02-05T04:15:21.607Z",
+        updateAt: "2020-02-05T04:15:21.607Z",
         user: {
-          id: 1,
-          nickname: 'testUser',
-          photoPath: null,
+            id: 1,
+            nickname: "testUser",
+            photoPath: null
         },
         photos: [
-          {
-            id: 2,
-            path: '경로',
-          },
-        ],
-      },
+            {
+                id: 2,
+                path: "경로"
+            }
+        ]
+    },
+    {
+        id: 1,
+        content: "뭐지",
+        status: "Y",
+        createAt: "2020-02-05T03:26:25.603Z",
+        updateAt: "2020-02-05T03:54:58.000Z",
+        user: {
+            id: 1,
+            nickname: "testUser",
+            photoPath: null
+        },
+        photos: []
+    },],
+    selectedPost: null,
     inputContent: '',
     commentList: null,
     inputComment: '',

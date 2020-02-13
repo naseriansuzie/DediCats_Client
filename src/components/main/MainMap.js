@@ -5,15 +5,12 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  Platform,
   Text,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
 import MainMarker from './MainMarker';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -129,14 +126,14 @@ class MainMap extends React.Component {
             itemWidth={300}
             containerCustomStyle={styles.carousel}
           />
-        </View>)
-    } else {
-      return (      
-        <View>
-          <Text style={{flex: 1}}>No Permission for location</Text>
         </View>
-      )
+      );
     }
+    return (
+      <View>
+        <Text style={{ flex: 1 }}>No Permission for location</Text>
+      </View>
+    );
   }
 }
 
