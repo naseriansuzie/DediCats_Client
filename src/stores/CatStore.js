@@ -289,7 +289,7 @@ class CatStore {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 1,
+      quality: 0.3,
       base64: true,
     });
     if (!result.cancelled) {
@@ -385,7 +385,7 @@ class CatStore {
           catNickname,
           catDescription,
           catSpecies,
-          catCut,
+          cut: catCut,
         },
         defaultCredential,
       )
