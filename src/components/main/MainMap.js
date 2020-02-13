@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   Dimensions,
+  Text,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { inject, observer } from 'mobx-react';
@@ -35,7 +36,11 @@ class MainMap extends React.Component {
   };
 
   componentDidMount() {
-    this.props.getLocationPermission();
+    this.props.requestMapPermission();
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.props.watchId);
   }
 
   renderCarouselItem = ({ item }) => {
@@ -81,43 +86,52 @@ class MainMap extends React.Component {
     if (!isShowingCarousel) {
       this.setState({ isShowingCarousel: true });
     }
+    console.log(isShowingCarousel);
   }
 
   render() {
     console.disableYellowBox = 'true';
-    const { markers, currentRegion, onRegionChangeComplete } = this.props;
+    const { markers, onRegionChangeComplete, currentPosition, currentRegion, permissionState } = this.props;
+    console.log('render watchId: ', this.props.watchId);
+    if (permissionState === true) {
+      return (
+        <View style={styles.container}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            ref={(map) => this._map = map}
+            style={styles.map}
+            showsUserLocation={true}
+            region={{ ...currentRegion }}
+            onRegionChangeComplete={onRegionChangeComplete}
+          >
+            {
+              markers.map((marker, index) => (
+                <MainMarker
+                  key={marker.name}
+                  marker={marker}
+                  index={index}
+                  onMarkerPressed={this.onMarkerPressed}
+                  currentRegion={currentRegion}
+                />
+              ))
+            }
+          </MapView>
+          <Carousel
+            ref={(c) => { this._carousel = c; }}
+            data={markers}
+            renderItem={this.renderCarouselItem}
+            onSnapToItem={(index) => this.onCarouselItemChange(index)}
+            removeClippedSubviews={false}
+            sliderWidth={width}
+            itemWidth={300}
+            containerCustomStyle={styles.carousel}
+          />
+        </View>
+      );
+    }
     return (
-      <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          ref={(map) => this._map = map}
-          style={styles.map}
-          showsUserLocation={true}
-          region={{ ...currentRegion }}
-          onRegionChangeComplete={onRegionChangeComplete}
-        >
-          {
-            markers.map((marker, index) => (
-              <MainMarker
-                key={marker.name}
-                marker={marker}
-                index={index}
-                onMarkerPressed={this.onMarkerPressed}
-                currentRegion={currentRegion}
-              />
-            ))
-          }
-        </MapView>
-        <Carousel
-          ref={(c) => { this._carousel = c; }}
-          data={markers}
-          renderItem={this.renderCarouselItem}
-          onSnapToItem={(index) => this.onCarouselItemChange(index)}
-          removeClippedSubviews={false}
-          sliderWidth={width}
-          itemWidth={300}
-          containerCustomStyle={styles.carousel}
-        />
+      <View>
+        <Text style={{ flex: 1 }}>No Permission for location</Text>
       </View>
     );
   }
@@ -128,8 +142,10 @@ export default inject(({ cat, user }) => ({
   currentPosition: user.currentPosition,
   currentRegion: user.currentRegion,
   currentBoundingBox: user.currentBoundingBox,
-  getLocationPermission: user.getLocationPermission,
   onRegionChangeComplete: user.onRegionChangeComplete,
+  permissionState: user.permissionState,
+  watchId: user.watchId,
+  requestMapPermission: user.requestMapPermission,
 }))(
   observer(MainMap),
 );
