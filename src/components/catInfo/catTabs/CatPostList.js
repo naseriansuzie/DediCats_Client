@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class CatPostList extends React.Component { 
+class CatPostList extends React.Component {
   // render() {
 
   //   console.log(this.props.postList[0].content);
@@ -76,6 +76,7 @@ class CatPostList extends React.Component {
             showsVerticalScrollIndicator={false}
           />
         </SafeAreaView>
+        <CatPostInput />
       </View>
     );
   }
