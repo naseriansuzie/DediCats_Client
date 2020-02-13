@@ -235,7 +235,7 @@ class UserStore {
       if (status === 'granted') {
         console.log('Granted');
         console.log('before watchPosition');
-        this.watchId = navigator.geolocation.watchPosition(
+        this.watchId = navigator.geolocation.getCurrentPosition(
           position => {
             const { latitude, longitude } = position.coords;
             console.log('before set permisiionState');
@@ -259,6 +259,7 @@ class UserStore {
             this.getBoundingBox(this.currentRegion);
             console.log('after set getBoundingBox');
           },
+          (error) => { Alert.alert(error.code, error.message); },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
         console.log('after watchPosition');
