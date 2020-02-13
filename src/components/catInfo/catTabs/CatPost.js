@@ -58,17 +58,16 @@ class CatPost extends React.Component {
               <Text>{createAt}</Text>
             </Right>
           </CardItem>
+          {}
           <CardItem cardBody>
             <Image source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 200, width: null, flex: 1}}/>
           </CardItem>
           <CardItem>
-            {/* <Left><L/eft> */}
             <Text note>{content}</Text>
           </CardItem>
           <CardItem style={{ marginLeft: 260 }}>
             <Right>
               <Button
-                // onPress={() => this.props.navigation.navigate('SelectedPost')}
                 transparent
               >
                 <Icon active name="chatbubbles" style={{ marginRight: 10 }} />

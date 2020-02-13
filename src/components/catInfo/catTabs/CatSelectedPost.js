@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 class CatSelectedPost extends React.Component {
   render() {
     return (
-      <Container>
+      <Container style={{width: '100%'}}>
         <Header style={{ display: 'none' }} />
         <Content>
           <Card style={{flex: 0}}>
