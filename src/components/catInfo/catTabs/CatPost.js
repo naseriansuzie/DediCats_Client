@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -13,13 +15,66 @@ const styles = StyleSheet.create({
   },
 });
 
-const CatPost = props => (
-  <TouchableOpacity
-    style={styles.container}
-    onPress={() => props.navigation.navigate('SelectedPost')}
-  >
-    <Text>cat post</Text>
-  </TouchableOpacity>
-);
+// {
+//   id: 3,
+//   content: "바보",
+//   status: "Y",
+//   createAt: "2020-02-05T04:15:21.607Z",
+//   updateAt: "2020-02-05T04:15:21.607Z",
+//   user: {
+//       id: 1,
+//       nickname: "testUser",
+//       photoPath: null
+//   },
+//   photos: [
+//       {
+//           id: 2,
+//           path: "경로"
+//       }
+//   ]
+// },
+
+class CatPost extends React.Component {
+  render() {
+    // console.log(this.props.post)
+    const { content, createAt, user } = this.props.item
+    return (
+      <Card style={{width: 400, borderRadius: 20, overflow: 'hidden'}}>
+        <CardItem>
+          <Left>
+            <Thumbnail source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg'}} />
+            <Body>
+              <Text>{user.nickname}</Text>
+            </Body>
+          </Left>
+          <Right>
+            <Text>{createAt}</Text>
+          </Right>
+        </CardItem>
+        <CardItem cardBody>
+          <Image source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 200, width: null, flex: 1}}/>
+        </CardItem>
+        <CardItem>
+          {/* <Left><L/eft> */}
+          <Text note style={{textAlign: 'center',  justifyContent: 'space-between'}}>{content}</Text>
+        </CardItem>
+        <CardItem style={{marginLeft: 260}}>
+          <Right >
+            <Button transparent>
+              <Icon active name="chatbubbles" style={{marginRight: 10}} />
+              <Text>4 Comments</Text>
+            </Button>
+          </Right>
+        </CardItem>
+      </Card>
+  // <TouchableOpacity
+  //   style={styles.container}
+  //   onPress={() => props.navigation.navigate('SelectedPost')}
+  // >
+  //   <Text>cat post</Text>
+  // </TouchableOpacity>
+    );
+  }
+}
 
 export default withNavigation(CatPost);

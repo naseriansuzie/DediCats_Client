@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native';
+import { inject, observer } from 'mobx-react';
 import CatPost from './CatPost';
 
 const styles = StyleSheet.create({
@@ -20,13 +21,67 @@ const styles = StyleSheet.create({
   },
 });
 
-const CatPostList = () => (
-  <View style={styles.container}>
-    <View style={styles.radiusView}>
-      <CatPost />
-      <CatPost />
-    </View>
-  </View>
-);
+class CatPostList extends React.Component { 
+  // render() {
 
-export default CatPostList;
+  //   console.log(this.props.postList[0].content);
+  //   return (
+  //     <View style={styles.container}>
+  //       <View style={styles.radiusView}>
+  //       {/* <FlatList/> */}
+  //         {/* <CatPost post={this.props.postList[0]}/> */}
+  //         {/* <CatPost />
+  //         <CatPost /> */}
+  //         {
+  //           this.props.postList.map((item) => 
+  //             <CatPost 
+  //               item={item}
+  //             />
+  //           )
+  //         }
+  //       </View>
+  //     </View>
+  //   )
+  // }
+
+  // _getData = () => {
+  //   const url = 'https://jsonplaceholder.typicode.com/photos?_limit=10&_page=' + this.state.page;
+  //   fetch(url)
+  //     .then(r => r.json())
+  //     .then(data => {
+  //       this.setState({ 
+  //         data: this.state.data.concat(data), // 기존 data에 추가.
+  //         page: this.state.page + 1
+  //       })
+  //     });
+  // }  --> to mobX
+
+  // componentDidMount() {
+  //   this._getData();  --> this.props._getData();
+  // }
+
+  _renderItem = ({item}) => (
+    <CatPost item={item}/>
+  );
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView style={styles.radiusView}>
+          <FlatList 
+            data={this.props.postList}
+            renderItem={this._renderItem}
+            keyExtractor={(item, index) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </SafeAreaView>
+      </View>
+    );
+  }
+}
+
+export default inject(({ cat }) => ({
+  postList: cat.info.postList,
+}))(
+  observer(CatPostList),
+);
