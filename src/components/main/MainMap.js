@@ -6,7 +6,10 @@ import {
   View,
   Dimensions,
   Text,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import Carousel from 'react-native-snap-carousel';
 import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
@@ -37,10 +40,6 @@ class MainMap extends React.Component {
 
   componentDidMount() {
     this.props.requestMapPermission();
-  }
-
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.props.watchId);
   }
 
   renderCarouselItem = ({ item }) => {
@@ -86,14 +85,12 @@ class MainMap extends React.Component {
     if (!isShowingCarousel) {
       this.setState({ isShowingCarousel: true });
     }
-    console.log(isShowingCarousel);
   }
 
   render() {
     console.disableYellowBox = 'true';
-    const { markers, onRegionChangeComplete, currentPosition, currentRegion, permissionState } = this.props;
-    console.log('render region: ', { ...currentRegion });
-    if (permissionState === true) {
+    const { markers, onRegionChangeComplete, getCurrentPosition, currentRegion, permissionState } = this.props;
+    if (permissionState === true && currentRegion.longitude !== 0) {
       return (
         <View style={styles.container}>
           <MapView
@@ -103,6 +100,7 @@ class MainMap extends React.Component {
             showsUserLocation={true}
             region={{ ...currentRegion }}
             onRegionChangeComplete={onRegionChangeComplete}
+            maxZoomLevel={18}
           >
             {
               markers.map((marker, index) => (
@@ -116,6 +114,18 @@ class MainMap extends React.Component {
               ))
             }
           </MapView>
+          <TouchableOpacity
+            onPress={() => getCurrentPosition()}
+            style={{
+              width: 50, height: 50, position: 'absolute', top: 20, left: 20, borderRadius: 30, backgroundColor: '#d2d2d2',
+            }}
+          >
+            {/* <Image
+              style={{ width: 40, height: 40, margin: 10 }}
+              source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png' }}
+            /> */}
+            <MaterialIcons name="my-location" style={{ fontSize: 30, width: 30, height: 40, margin: 10 }} />
+          </TouchableOpacity>
           <Carousel
             ref={(c) => { this._carousel = c; }}
             data={markers}
@@ -130,7 +140,7 @@ class MainMap extends React.Component {
       );
     }
     return (
-      <View>
+      <View style={{ position: 'absolute' }}>
         <Text style={{ flex: 1 }}>No Permission for location</Text>
       </View>
     );
@@ -146,6 +156,7 @@ export default inject(({ cat, user }) => ({
   permissionState: user.permissionState,
   watchId: user.watchId,
   requestMapPermission: user.requestMapPermission,
+  getCurrentPosition: user.getCurrentPosition,
 }))(
   observer(MainMap),
 );
