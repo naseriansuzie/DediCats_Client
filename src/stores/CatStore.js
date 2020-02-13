@@ -118,9 +118,27 @@ class CatStore {
     today: undefined,
     newTag: '',
     postList: null,
-    selectedPost: null,
+    selectedPost:
+      // null,
+      {
+        id: 3,
+        content: '바보',
+        status: 'Y',
+        createAt: '2020-02-05T04:15:21.607Z',
+        updateAt: '2020-02-05T04:15:21.607Z',
+        user: {
+          id: 1,
+          nickname: 'testUser',
+          photoPath: null,
+        },
+        photos: [
+          {
+            id: 2,
+            path: '경로',
+          },
+        ],
+      },
     inputContent: '',
-    inputPhoto: null,
     commentList: null,
     inputComment: '',
     album:
@@ -139,7 +157,8 @@ class CatStore {
           path: 'https://source.unsplash.com/hGMvqCyRM9U',
         },
       ],
-    selectedPhoto: null,
+    uri: null,
+    photoPath: null,
     followerList:
       // null,
       [
@@ -225,7 +244,7 @@ class CatStore {
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   followCat = () => {
@@ -234,7 +253,7 @@ class CatStore {
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
       .then(res => this.getSelectedCatInfo())
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
     // test용으로 넣은 코드
     this.info.selectedCat[1].isFollowing = true;
   };
@@ -254,7 +273,7 @@ class CatStore {
     }
   };
 
-  pickImage = async () => {
+  pickImage = async type => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -263,8 +282,8 @@ class CatStore {
       base64: true,
     });
     if (!result.cancelled) {
-      this.addCatBio.uri = result.uri;
-      this.addCatBio.photoPath = result.base64;
+      this[type].uri = result.uri;
+      this[type].photoPath = result.base64;
     }
   };
 
@@ -304,7 +323,7 @@ class CatStore {
     return isValidated;
   };
 
-  getAddress = () => {
+  getAddress = async () => {
     const { latitude, longitude } = this.addCatBio.location;
     console.log(latitude, longitude);
     /* API 제한 때문에 실제로 서버 연동 후에 주석 풀 예정 */
@@ -325,12 +344,14 @@ class CatStore {
     //     } = res.data.documents[0].address;
     //     console.log(region_1depth_name, region_2depth_name, region_3depth_name);
     //     this.addCatBio.address = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
-    //     return true;
+    //     return this.addCatBio.address;
     //   })
     //   .catch(err => {
     //     console.dir(err);
     //     Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
     //   });
+    this.addCatBio.address = '서울 강남구 대치동';
+    return true;
   };
 
   addCat = () => {
@@ -363,9 +384,9 @@ class CatStore {
         return true;
       })
       .catch(err => {
-        if (err.response.status === 404) {
+        if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
-        } else console.log(err);
+        } else console.dir(err);
       });
   };
 
@@ -390,7 +411,7 @@ class CatStore {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   disableReportBtn = type => {
@@ -410,7 +431,7 @@ class CatStore {
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('중성화 유무 등록에 실패했습니다.');
-          } else console.log(err);
+          } else console.dir(err);
         });
     });
   };
@@ -473,8 +494,45 @@ class CatStore {
     // axios로 catPost들을 get해서 this.info.postList 업데이트
   };
 
+  removePhoto = () => {
+    this.info.uri = null;
+  };
+
+  validateAddInput = type => {
+    if (this.info[type]) {
+      return true;
+    }
+    Alert.alert('글을 입력하신 후 등록해주세요!');
+    return false;
+  };
+
   addPost = () => {
-    // 인풋메시지와 포토를 등록하는 함수
+    const postInfo = {
+      content: this.info.inputContent,
+      catId: this.info.selectedCat[0].id,
+    };
+    if (this.info.photoPath) {
+      postInfo.photoPath = this.info.photoPath;
+    }
+    axios
+      .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
+      .then(res =>
+        this.clearInput(
+          { group: 'info', key: 'content' },
+          { group: 'info', key: 'photoPath' },
+        ),
+      )
+      .catch(err => {
+        if (err.response && err.response.status === 405) {
+          Alert.alert(
+            '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
+          );
+          // 로직 확인 필요
+        } else {
+          Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
+          console.dir(err);
+        }
+      });
   };
 
   getCommentList = postId => {
@@ -482,7 +540,16 @@ class CatStore {
   };
 
   addComment = () => {
-    // 댓글 인풋 메시지를 등록하는 함수
+    const catId = this.info.selectedPost.id;
+    const commentInfo = { catId, content: this.info.inputComment };
+    axios
+      .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
+      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
+      .catch(err => {
+        if (err.response && err.response.status === 409) {
+          Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
+        } else console.dir(err);
+      });
   };
 
   getAlbums = () => {
@@ -498,7 +565,7 @@ class CatStore {
         this.info.album = photos;
       })
       .catch(err => {
-        console.log(err);
+        console.dir(err);
       });
   };
 
@@ -511,7 +578,7 @@ class CatStore {
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => (this.info.followerList = res.data))
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   makeDateTime = () => {
@@ -616,7 +683,9 @@ decorate(CatStore, {
   postCatToday: action,
   validateTag: action,
   postTag: action,
+  removePhoto: action,
   getPostList: action,
+  validateAddInput: action,
   addPost: action,
   getCommentList: action,
   addComment: action,

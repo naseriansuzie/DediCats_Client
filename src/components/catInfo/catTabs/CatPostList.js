@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CatPost from './CatPost';
+import CatPostInput from './CatPostInput';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,6 +26,7 @@ const CatPostList = () => (
     <View style={styles.radiusView}>
       <CatPost />
       <CatPost />
+      <CatPostInput />
     </View>
   </View>
 );

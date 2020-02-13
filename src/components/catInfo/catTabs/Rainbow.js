@@ -55,7 +55,11 @@ const Rainbow = ({
     </ListItem>
     <ListItem avatar>
       <Left>
-        <MaterialCommunityIcons style={{ fontSize: 30 }} name="paw-off" />
+        <MaterialCommunityIcons
+          style={{ fontSize: 30 }}
+          name="paw-off"
+          color="#767577"
+        />
       </Left>
       {rainbow.Y > 0 ? (
         <Body>
@@ -102,7 +106,11 @@ const Rainbow = ({
     </ListItem>
     <ListItem avatar>
       <Left>
-        <MaterialCommunityIcons style={{ fontSize: 30 }} name="paw" />
+        <MaterialCommunityIcons
+          style={{ fontSize: 30 }}
+          name="paw"
+          color="#f38847"
+        />
       </Left>
       {rainbow.N > 0 ? (
         <Body>
