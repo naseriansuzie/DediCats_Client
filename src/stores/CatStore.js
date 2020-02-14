@@ -63,7 +63,7 @@ class CatStore {
       // null,
       [
         {
-          id: 1,
+          id: 2,
           description: '완전 귀염이 넘치는 아이에요.',
           location: 'POINT(1 2)',
           address: '서울시 강남구 대치동',
@@ -255,7 +255,7 @@ class CatStore {
     const { userId } = this.root.user.info.myInfo;
 
     axios
-      .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
+      .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then(res => {
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         res.data[0].cut = JSON.parse(res.data[0].cut);
@@ -415,7 +415,7 @@ class CatStore {
         }
       });
 
-      return result;
+    return result;
   };
 
   toggleRainbowOpen = () => {
@@ -423,6 +423,7 @@ class CatStore {
   };
 
   reportRainbow = type => {
+    const catId = this.info.selectedCat[0].id;
     const report = {
       Y: 0,
       YDate: null,
@@ -433,7 +434,7 @@ class CatStore {
     report[`${type}Date`] = this.makeDateTime();
 
     axios
-      .post(`${SERVER_URL}/cat/rainbow`, report, defaultCredential)
+      .post(`${SERVER_URL}/cat/rainbow`, { catId, report }, defaultCredential)
       .then(res => {
         if (res.status === 201) {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
@@ -444,6 +445,7 @@ class CatStore {
 
   disableReportBtn = type => {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
+    console.log('변경된 값 ', this.info[`rainbow${type}Reported`]);
   };
 
   postCut = type => {
@@ -452,9 +454,13 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     runInAction(() => {
       axios
-        .post(`${SERVER_URL}/cat/cut`, { catId, request }, defaultCredential)
+        .post(
+          `${SERVER_URL}/cat/cut`,
+          { catId, catCut: request },
+          defaultCredential,
+        )
         .then(res => {
-          this.info.selectedCat[0].cut = JSON.parse(res.data);
+          this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
         })
         .catch(err => {
           if (err.response && err.response.status === 409) {
@@ -508,13 +514,13 @@ class CatStore {
         defaultCredential,
       )
       .then(res => {
-        const { tags } = this.info.selectedCat[0];
-        this.info.selectedCat[0].tags = [...tags, res.data];
+        const tags = this.info.selectedCat[2];
+        tags.push(res.data);
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.dir(err));
   };
 
   getPostList = catId => {
