@@ -15,25 +15,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// {
-//   id: 3,
-//   content: "바보",
-//   status: "Y",
-//   createAt: "2020-02-05T04:15:21.607Z",
-//   updateAt: "2020-02-05T04:15:21.607Z",
-//   user: {
-//       id: 1,
-//       nickname: "testUser",
-//       photoPath: null
-//   },
-//   photos: [
-//       {
-//           id: 2,
-//           path: "경로"
-//       }
-//   ]
-// },
-
 class CatPost extends React.Component {
   setCatPostHere = (item) => {
     console.log('setCatPostHere :', item);
@@ -43,24 +24,23 @@ class CatPost extends React.Component {
 
   render() {
     // console.log(this.props)
-    const { content, createAt, user } = this.props.item
+    const { content, createAt, user, photos } = this.props.item;
     return (
       <TouchableWithoutFeedback onPress={() => this.setCatPostHere(this.props.item)}>
         <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg'}} />
+              <Thumbnail source={{uri: user.photoPath}} />
               <Body>
                 <Text>{user.nickname}</Text>
               </Body>
             </Left>
             <Right>
-              <Text>{createAt}</Text>
+              <Text style={{ color: 'grey' }}>{this.props.convertDateTime(createAt)}</Text>
             </Right>
           </CardItem>
-          {}
           <CardItem cardBody>
-            <Image source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 200, width: null, flex: 1}}/>
+            <Image source={{uri: photos[0].path}} style={{height: 200, width: null, flex: 1}}/>
           </CardItem>
           <CardItem>
             <Text note>{content}</Text>
