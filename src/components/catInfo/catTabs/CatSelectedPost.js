@@ -15,24 +15,25 @@ const styles = StyleSheet.create({
 
 class CatSelectedPost extends React.Component {
   render() {
+    const { content, createAt, user, photos } = this.props.selectedPost;
     return (
-      <Container style={{width: '100%'}}>
+      <Container style={{ width: '100%' }}>
         <Header style={{ display: 'none' }} />
         <Content>
-          <Card style={{flex: 0}}>
+          <Card style={{ flex: 0 }}>
             <CardItem>
               <Left>
-                <Thumbnail source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg'}} />
+                <Thumbnail source={{uri: user.photoPath}} />
                 <Body>
-                  <Text>NativeBase</Text>
-                  <Text note>April 15, 2016</Text>
+                  <Text>{user.nickname}</Text>
+                  <Text note>{this.props.convertDateTime(createAt)}</Text>
                 </Body>
               </Left>
             </CardItem>
             <CardItem>
               <Body>
-                <Image source={{uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg'}} style={{height: 300, width: 380, flex: 1}}/>
-                <Text>{this.props.selectedPost.content}</Text>
+                <Image source={{uri: photos[0].path}} style={{height: 300, width: 380, flex: 1}}/>
+                <Text>{content}</Text>
               </Body>
             </CardItem>
             {this.props.commentList !== null
@@ -58,6 +59,7 @@ class CatSelectedPost extends React.Component {
 export default inject(({ cat }) => ({
   selectedPost: cat.info.selectedPost,
   commentList: cat.info.commentList,
+  convertDateTime: cat.convertDateTime,
 }))(
   observer(CatSelectedPost),
 );
