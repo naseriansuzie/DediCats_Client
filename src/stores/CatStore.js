@@ -5,6 +5,7 @@ import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import Axios from 'axios';
 
 /**
  * 1. spot 관련
@@ -127,12 +128,12 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: null,
+          photoPath: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
         photos: [
           {
             id: 2,
-            path: '경로',
+            path: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
           },
         ],
       },
@@ -145,9 +146,14 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: null,
+          photoPath: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
-        photos: [],
+        photos: [
+          {
+            id: 3,
+            path: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
+          },
+        ],
       },
     ],
     selectedPost: null,
@@ -233,7 +239,7 @@ class CatStore {
     reportInfo: null,
   };
 
-  setCatPost = item => {
+  setCatPost = (item) => {
     this.info.selectedPost = item;
   };
 
@@ -517,10 +523,46 @@ class CatStore {
       .catch(err => console.log(err));
   };
 
-  getPostList = catId => {
+  postPage = 1;
+
+  isLoadingPost = false;
+
+  isRefreshingPost = false;
+
+  getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
+    try {
+      this.isLoadingPost = true;
+      const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
+      const post = await Axios.get(url);
+      if (post) {
+        if (this.isRefreshingPost) {
+          this.info.postList = post.data;
+          this.isRefreshingPost = false;
+        } else {
+          this.info.postList = this.info.postList.concat(post.data);
+          this.isLoadingPost = false;
+        }
+        console.log(this.info.postList);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  _handleLoadMorePosts = () => {
+    this.postPage += 1;
+    console.log(this.postPage);
+    this.getPostList();
+  }
+
+  _handleRefresh = () => {
+    this.isRefreshingPost = true;
+    this.postPage = 1;
+    this.getPostList();
+
+  }
 
   removePhoto = () => {
     this.info.uri = null;
@@ -622,6 +664,18 @@ class CatStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
+  convertDateTime = (str) => {
+    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
+
+    if (dateStr[11] === '1') {
+      const convertedHour = Number(dateStr.substring(11,13)) - 12;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) + dateStr.substring(13, 19)}`;
+    } else {
+      dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
+    }
+    return dateStr;
+  };
+
   updateInput = (group, key, text) => {
     this[group][key] = text;
     console.log(this[group][key]);
@@ -633,6 +687,8 @@ class CatStore {
       this[group][key] = '';
     });
   };
+
+
 
   clearAllInput = type => {
     if (type === 'addCatBio') {
@@ -712,7 +768,11 @@ decorate(CatStore, {
   validateTag: action,
   postTag: action,
   removePhoto: action,
+  postPage: observable,
+  isRefreshingPost: observable,
   getPostList: action,
+  _handleLoadMorePosts: action,
+  _handleRefresh: action,
   validateAddInput: action,
   addPost: action,
   getCommentList: action,
@@ -721,6 +781,7 @@ decorate(CatStore, {
   selectPhoto: action,
   getFollowerList: action,
   makeDateTime: action,
+  convertDateTime: action,
   updateInput: action,
   clearInput: action,
   clearAllInput: action,
