@@ -252,11 +252,10 @@ class CatStore {
   };
 
   getSelectedCatInfo = catId => {
-    const { userId } = this.root.user.info.myInfo;
-
     axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then(res => {
+        res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
@@ -265,14 +264,11 @@ class CatStore {
   };
 
   followCat = () => {
-    const { userId } = this.root.user.info.myInfo;
     const catId = this.info.selectedCat[0].id;
     axios
-      .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
-      .then(res => this.getSelectedCatInfo())
+      .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
+      .then(res => this.getSelectedCatInfo(catId))
       .catch(err => console.dir(err));
-    // test용으로 넣은 코드
-    this.info.selectedCat[1].isFollowing = true;
   };
 
   // {latitude: Number, longitude: Number}
@@ -489,7 +485,7 @@ class CatStore {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.info.today = undefined;
-          } else console.log(err);
+          } else console.dir(err);
         });
     });
   };
@@ -628,6 +624,15 @@ class CatStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
+  changeToDateTime = timeInfo => {
+    const dateTimeArr = timeInfo
+      .split('T')
+      .join(' ')
+      .split('.')[0]
+      .split(' ');
+    return dateTimeArr[0];
+  };
+
   updateInput = (group, key, text) => {
     this[group][key] = text;
     console.log(this[group][key]);
@@ -727,6 +732,7 @@ decorate(CatStore, {
   selectPhoto: action,
   getFollowerList: action,
   makeDateTime: action,
+  changeToDateTime: action,
   updateInput: action,
   clearInput: action,
   clearAllInput: action,
