@@ -232,7 +232,6 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       오늘 {cat.nickname}의 건강 상태
                     </Text>
-                    <Text>{cat.today}</Text>
                     {cat.today &&
                     makeDateTime(cat.todayTime) === makeDateTime(new Date()) ? (
                       <Text>{cat.today}</Text>
@@ -258,15 +257,21 @@ class CatBio extends React.Component {
                           selectedValue={today}
                           onValueChange={postCatToday}
                         >
-                          <Picker.Item label="😼기운 넘쳐요" value="key0" />
-                          <Picker.Item label="😺튼튼해요" value="key1" />
-                          <Picker.Item label="😻사랑스러워요" value="key2" />
+                          <Picker.Item
+                            label="😼기운 넘쳐요"
+                            value="😼기운 넘쳐요"
+                          />
+                          <Picker.Item label="😺튼튼해요" value="😺튼튼해요" />
+                          <Picker.Item
+                            label="😻사랑스러워요"
+                            value="😻사랑스러워요"
+                          />
                           <Picker.Item
                             label="😾가까이 가지 마세요"
-                            value="key3"
+                            value="😾가까이"
                           />
-                          <Picker.Item label="😿기운이 없어요" value="key4" />
-                          <Picker.Item label="🙀아파요" value="key5" />
+                          <Picker.Item label="😿기운이 없어요" value="없어요" />
+                          <Picker.Item label="🙀아파요" value="🙀아파요" />
                         </Picker>
                       </Form>
                     )}
