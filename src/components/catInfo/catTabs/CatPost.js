@@ -57,12 +57,6 @@ class CatPost extends React.Component {
           </CardItem>
         </Card>
       </TouchableWithoutFeedback>
-    // <TouchableOpacity
-    //   style={styles.container}
-    //   onPress={() => props.navigation.navigate('SelectedPost')}
-    // >
-    //   <Text>cat post</Text>
-    // </TouchableOpacity>
     );
   }
 }
