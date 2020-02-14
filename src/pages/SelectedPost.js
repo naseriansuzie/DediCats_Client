@@ -1,6 +1,5 @@
 import React from 'react';
-// import { StyleSheet, Text, View } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CatSelectedPost from '../components/catInfo/catTabs/CatSelectedPost';
 import CatCommentInput from '../components/catInfo/catTabs/CatCommentInput';
 

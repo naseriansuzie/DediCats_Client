@@ -182,7 +182,7 @@ const AddCatBio = ({
               placeholder="간략한 고양이 소개(30자 이내)"
               style={styles.intro}
               value={catDescription}
-              onChangeText={text => {
+              onChangeText={(text) => {
                 updateInput('addCatBio', 'catDescription', text);
               }}
             />

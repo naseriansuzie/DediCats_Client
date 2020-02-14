@@ -81,12 +81,21 @@ class UserStore {
         return true;
       })
       .catch(err => {
-        if (err.response && err.response.status === 401) {
+        if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         } else {
           console.dir(err);
         }
       });
+    if (res) {
+      Alert.alert('회원가입에 성공했습니다!');
+      this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+      console.log('바꾸기 전 ', this.info.isSignUp);
+      this.info.isSignUp = true;
+      console.log('바꾸기 후 ', this.info.isSignUp);
+      console.log('data는 ', res.data);
+      return res.data;
+    }
   };
 
   signIn = info => {
@@ -95,8 +104,10 @@ class UserStore {
       .then(res => {
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
-        runInAction(() => this.clearInput('email', 'PW'));
-        return true;
+        runInAction(() => {
+          this.clearInput('email', 'PW');
+          return true;
+        });
       })
       .catch(err => {
         if (err.response && err.response.status === 401) {
@@ -229,7 +240,7 @@ class UserStore {
   addCatMarker = {
     latitude: 0,
     longitude: 0,
-  }
+  };
 
   // 현재 화면의 위치
   currentRegion = {
@@ -249,43 +260,12 @@ class UserStore {
 
   permissionState = false;
 
-  watchId = null;
-
   requestMapPermission = async () => {
     try {
-      console.log('before askAsync');
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status === 'granted') {
-        console.log('Granted');
-        console.log('before watchPosition');
-        this.watchId = navigator.geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            console.log('before set permisiionState');
-            this.permissionState = true;
-            console.log('after set permisiionState');
-            console.log('before set currentPosition');
-            this.currentPosition = {
-              latitude,
-              longitude,
-            };
-            console.log('after set currentPosition');
-            console.log('before set currentRegion');
-            this.currentRegion = {
-              latitude,
-              latitudeDelta: 0.005,
-              longitude,
-              longitudeDelta: 0.005,
-            };
-            console.log('after set currentRegion');
-            console.log('before set getBoundingBox');
-            this.getBoundingBox(this.currentRegion);
-            console.log('after set getBoundingBox');
-          },
-          (error) => { Alert.alert(error.code, error.message); },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
-        console.log('after watchPosition');
+        this.permissionState = true;
+        this.getCurrentPosition();
       } else {
         console.log('not Granted');
         this.permissionState = false;
@@ -295,18 +275,30 @@ class UserStore {
     }
   };
 
-  getBoundingBox = region => {
+  getCurrentPosition = () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        this.onRegionChangeComplete({
+          latitude,
+          latitudeDelta: 0.005,
+          longitude,
+          longitudeDelta: 0.005,
+        });
+      },
+      (error) => { Alert.alert(error.code, error.message); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
+  }
+
+  onRegionChangeComplete = async region => {
+    this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
       NElongitude: region.longitude + region.longitudeDelta / 2, // eastLng - max lng
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-  };
-
-  onRegionChangeComplete = region => {
-    this.currentRegion = region;
-    this.getBoundingBox(region);
   };
 }
 
@@ -315,12 +307,10 @@ decorate(UserStore, {
   myCat: observable,
   currentPosition: observable,
   currentRegion: observable,
-  currentBoundingBox: observable,
   permissionState: observable,
-  watchId: observable,
   addCatMarker: observable,
   requestMapPermission: action,
-  getLocationPermission: action,
+  getCurrentPosition: action,
   getWatchPosition: action,
   setUserLocation: action,
   setUserRegion: action,

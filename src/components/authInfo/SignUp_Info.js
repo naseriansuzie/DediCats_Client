@@ -8,9 +8,14 @@ import {
   Input,
   Label,
 } from 'native-base';
+<<<<<<< HEAD
 import {
   StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
+=======
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// eslint-disable-next-line import/no-extraneous-dependencies
+>>>>>>> d7323a527c2c603e247f591b7d93b150a1818721
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -117,7 +122,7 @@ const SignUp_Info = ({
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const validation = await validateSignUp();
+          const validation = validateSignUp();
           if (validation) {
             const emailResult = await updateState('SignUp');
             if (emailResult) {
@@ -131,11 +136,13 @@ const SignUp_Info = ({
     </Content>
   </Container>
 );
+
 SignUp_Info.navigationOptions = {
   title: '회원가입',
 };
 
 export default inject(({ user }) => ({
+  isSignUp: user.info.isSignUp,
   email: user.info.email,
   nickName: user.info.nickName,
   confirmPW: user.info.confirmPW,
