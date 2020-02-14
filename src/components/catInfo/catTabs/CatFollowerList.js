@@ -51,7 +51,6 @@ class CatFollowerList extends React.Component {
 
   render() {
     const { myInfo, followerList, nickname } = this.props;
-    console.log(followerList || followerList.length);
     if (myInfo && followerList && followerList[0].users.length) {
       return (
         <View style={styles.container}>
