@@ -8,14 +8,9 @@ import {
   Input,
   Label,
 } from 'native-base';
-<<<<<<< HEAD
 import {
   StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
-=======
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// eslint-disable-next-line import/no-extraneous-dependencies
->>>>>>> d7323a527c2c603e247f591b7d93b150a1818721
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -52,7 +47,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignUp_Info = ({
+const emailCertified = ({
   email,
   nickName,
   confirmPW,
@@ -61,6 +56,7 @@ const SignUp_Info = ({
   validateSignUp,
   updateState,
   navigation,
+  emailCertified,
 }) => (
   <Container>
     <Header />
@@ -81,52 +77,22 @@ const SignUp_Info = ({
               name="email-check-outline"
               style={styles.font16}
             />{' '}
-            hello@cat.com
+            이메일 인증 코드
           </Label>
           <Input
             onChangeText={(text) => updateInput('email', text)}
             value={email}
           />
         </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
-            Nickname
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('nickName', text)}
-            value={nickName}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('confirmPW', text)}
-            value={confirmPW}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password 재확인
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('reConfirmPW', text)}
-            value={reConfirmPW}
-          />
-        </Item>
       </Form>
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const validation = validateSignUp();
+          const validation = await validateSignUp();
           if (validation) {
-            const emailResult = await updateState('SignUp');
-            if (emailResult) {
-              navigation.navigate('Email Certified');
+            const signUpResult = await updateState('SignUp');
+            if (signUpResult) {
+              navigation.navigate('Sign In');
             }
           }
         }}
@@ -136,13 +102,11 @@ const SignUp_Info = ({
     </Content>
   </Container>
 );
-
-SignUp_Info.navigationOptions = {
-  title: '회원가입',
-};
+// SignUp_Info.navigationOptions = {
+//   title: '회원가입',
+// };
 
 export default inject(({ user }) => ({
-  isSignUp: user.info.isSignUp,
   email: user.info.email,
   nickName: user.info.nickName,
   confirmPW: user.info.confirmPW,
@@ -150,4 +114,4 @@ export default inject(({ user }) => ({
   updateInput: user.updateInput,
   validateSignUp: user.validateSignUp,
   updateState: user.updateState,
-}))(observer(withNavigation(SignUp_Info)));
+}))(observer(withNavigation(emailCertified)));

@@ -10,6 +10,7 @@ import AuthLoadingScreen from './src/components/authInfo/AuthLoadingScreen';
 import Main from './src/pages/Main';
 import CatInfo from './src/pages/CatInfo';
 import AddCatTab from './src/pages/AddCatTab';
+import EmailCertified from './src/pages/EmailCertified';
 import AddCatModal from './src/pages/AddCatModal';
 import MyPage from './src/pages/MyPage';
 import EditMyProfile from './src/pages/EditMyProfile';
@@ -119,6 +120,7 @@ const AuthStack = createStackNavigator(
       },
     },
     'Sign Up': Signup,
+    'Email Certified ': EmailCertified,
   },
   {
     initialRouteName: 'Sign In',
@@ -131,7 +133,7 @@ const RootNavigator = createSwitchNavigator(
     Auth: AuthStack,
     App: AppStack,
   },
-  { initialRouteName: 'AuthLoading' },
+  { initialRouteName: 'Auth' },
 );
 
 const AppContainer = createAppContainer(RootNavigator);

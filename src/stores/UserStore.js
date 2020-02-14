@@ -1,8 +1,11 @@
 /* eslint-disable arrow-parens */
-import { observable, action, computed, decorate, runInAction } from 'mobx';
+import {
+  observable, action, computed, decorate, runInAction,
+} from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
+
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
@@ -48,10 +51,35 @@ class UserStore {
     unFollowed: null,
   };
 
+  emailCertified = async (signUpInfo) => {
+    const { email, nickName } = signUpInfo;
+    const result = await axios.post(`${SERVER_URL}/signup/email`, { email, nickName }, defaultCredential)
+      .then((res) => {
+        Alert.alert(`${email}로 이메일 전송이 성공하였습니다!`);
+        return signUpInfo;
+      }).catch(err => {
+        if (err.response && err.response.status === 401) {
+          Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
+          return false;
+        }
+        console.dir(err);
+      });
+
+    return result;
+  }
+
   // actions
-  signUp = async info => {
-    const res = await axios
+  signUp = info => {
+    axios
       .post(`${SERVER_URL}/signup`, info, defaultCredential)
+      .then(res => {
+        Alert.alert('회원가입에 성공했습니다!');
+        this.info.isSignUp = true;
+        runInAction(() => {
+          this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+        });
+        return true;
+      })
       .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
@@ -72,7 +100,7 @@ class UserStore {
 
   signIn = info => {
     axios
-      .post(`${SERVER_URL}/user/signin`, info, defaultCredential)
+      .post('10.0.2.2:8000/user/signin', info, defaultCredential)
       .then(res => {
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
@@ -126,15 +154,16 @@ class UserStore {
     return isValidated;
   };
 
-  updateState = async field => {
+  updateState = async (field) => {
     if (field === 'SignUp') {
       const signUpInfo = {
         email: this.info.email,
         password: this.info.confirmPW,
         nickname: this.info.nickName,
       };
-      const result = await this.signUp(signUpInfo);
-      console.log(result);
+      // 실패시 false return
+      // 성공시 obj return -> Signup info param로 넣어주면 됨
+      const result = await this.emailCertified(signUpInfo);
       return result;
     }
     if (field === 'SignIn') {
