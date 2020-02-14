@@ -8,14 +8,8 @@ import {
   Input,
   Label,
 } from 'native-base';
-<<<<<<< HEAD
-import {
-  StyleSheet, Text, TouchableOpacity, View,
-} from 'react-native';
-=======
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // eslint-disable-next-line import/no-extraneous-dependencies
->>>>>>> d7323a527c2c603e247f591b7d93b150a1818721
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
