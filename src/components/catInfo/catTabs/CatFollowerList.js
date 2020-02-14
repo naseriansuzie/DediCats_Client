@@ -51,7 +51,8 @@ class CatFollowerList extends React.Component {
 
   render() {
     const { myInfo, followerList, nickname } = this.props;
-    if (myInfo && followerList) {
+    console.log(followerList || followerList.length);
+    if (myInfo && followerList && followerList[0].users.length) {
       return (
         <View style={styles.container}>
           <Container style={styles.radiusView}>
@@ -86,7 +87,7 @@ class CatFollowerList extends React.Component {
             <Text style={styles.noFollowerTxt}>
               {`There's no follower for ${nickname} now.`}
             </Text>
-            <Text>Be the First Follower!</Text>
+            <Text>Be the FIRST Follower!</Text>
           </View>
         </View>
       );
