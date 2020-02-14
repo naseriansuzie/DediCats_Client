@@ -53,7 +53,7 @@ class CatStore {
     catNickname: '',
     catDescription: '',
     catSpecies: '',
-    catCut: { Y: 0, N: 0, unknown: 0 },
+    cut: { Y: 0, N: 0, unknown: 0 },
     uri: null,
     cutClicked: { Y: false, N: false, unknown: false },
   };
@@ -117,37 +117,39 @@ class CatStore {
       ],
     today: undefined,
     newTag: '',
-    postList: [{
-      id: 3,
-      content: '바보',
-      status: 'Y',
-      createAt: '2020-02-05T04:15:21.607Z',
-      updateAt: '2020-02-05T04:15:21.607Z',
-      user: {
-        id: 1,
-        nickname: 'testUser',
-        photoPath: null
+    postList: [
+      {
+        id: 3,
+        content: '바보',
+        status: 'Y',
+        createAt: '2020-02-05T04:15:21.607Z',
+        updateAt: '2020-02-05T04:15:21.607Z',
+        user: {
+          id: 1,
+          nickname: 'testUser',
+          photoPath: null,
+        },
+        photos: [
+          {
+            id: 2,
+            path: '경로',
+          },
+        ],
       },
-      photos: [
-        {
-          id: 2,
-          path: '경로'
-        }
-      ]
-    },
-    {
-      id: 1,
-      content: '뭐지',
-      status: 'Y',
-      createAt: '2020-02-05T03:26:25.603Z',
-      updateAt: '2020-02-05T03:54:58.000Z',
-      user: {
+      {
         id: 1,
-        nickname: 'testUser',
-        photoPath: null
+        content: '뭐지',
+        status: 'Y',
+        createAt: '2020-02-05T03:26:25.603Z',
+        updateAt: '2020-02-05T03:54:58.000Z',
+        user: {
+          id: 1,
+          nickname: 'testUser',
+          photoPath: null,
+        },
+        photos: [],
       },
-      photos: []
-    },],
+    ],
     selectedPost: null,
     inputContent: '',
     commentList: null,
@@ -231,9 +233,9 @@ class CatStore {
     reportInfo: null,
   };
 
-  setCatPost = (item) => {
+  setCatPost = item => {
     this.info.selectedPost = item;
-  }
+  };
 
   // actions
   getMapInfo = (lat, long) => {
@@ -293,7 +295,7 @@ class CatStore {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 1,
+      quality: 0.2,
       base64: true,
     });
     if (!result.cancelled) {
@@ -304,18 +306,24 @@ class CatStore {
   };
 
   selectCut = (observable, type) => {
-    const keys = Object.keys(this[observable].cutClicked);
-    const values = Object.values(this[observable].cutClicked);
-    keys.forEach((key, idx) => {
-      if (key === type) {
-        values.splice(idx, 1, true);
-      } else values.splice(idx, 1, false);
+    this[observable].cut = { Y: 0, N: 0, unknown: 0 };
+    runInAction(() => {
+      const keys = Object.keys(this[observable].cutClicked);
+      const values = Object.values(this[observable].cutClicked);
+      keys.forEach((key, idx) => {
+        if (key === type) {
+          values.splice(idx, 1, true);
+        } else values.splice(idx, 1, false);
+      });
+      this[observable].cutClicked = {
+        Y: values[0],
+        N: values[1],
+        unknown: values[2],
+      };
+      runInAction(() => {
+        this[observable].cut[type] = 1;
+      });
     });
-    this[observable].cutClicked = {
-      Y: values[0],
-      N: values[1],
-      unknown: values[2],
-    };
   };
 
   validateAddCat = () => {
@@ -378,7 +386,7 @@ class CatStore {
       catNickname,
       catDescription,
       catSpecies,
-      catCut,
+      cut,
     } = this.addCatBio;
     const result = await axios
       .post(
@@ -390,7 +398,7 @@ class CatStore {
           catNickname,
           catDescription,
           catSpecies,
-          cut: catCut,
+          cut,
         },
         defaultCredential,
       )
@@ -402,7 +410,9 @@ class CatStore {
       .catch(err => {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
-        } else console.dir(err);
+        } else {
+          console.dir(err);
+        }
       });
 
       return result;
@@ -634,7 +644,7 @@ class CatStore {
         catDescription: '',
         catSpecies: '',
         cutClicked: { Y: false, N: false, unknown: false },
-        catCut: { Y: 0, N: 0, unknown: 0 },
+        cut: { Y: 0, N: 0, unknown: 0 },
       };
     }
   };

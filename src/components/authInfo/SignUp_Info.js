@@ -116,11 +116,14 @@ const SignUp_Info = ({
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const validation = await validateSignUp();
+          const validation = validateSignUp();
           if (validation) {
-            const signUpResult = await updateState('SignUp');
-            if (signUpResult) {
-              navigation.navigate('Sign In');
+            const result = await updateState('SignUp');
+            console.log('비동기로 받은 결과 ', result);
+
+            if (result) {
+              console.log('페이지 이동');
+              navigation.goBack();
             }
           }
         }}
@@ -130,11 +133,13 @@ const SignUp_Info = ({
     </Content>
   </Container>
 );
+
 SignUp_Info.navigationOptions = {
   title: '회원가입',
 };
 
 export default inject(({ user }) => ({
+  isSignUp: user.info.isSignUp,
   email: user.info.email,
   nickName: user.info.nickName,
   confirmPW: user.info.confirmPW,
