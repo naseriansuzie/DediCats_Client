@@ -299,8 +299,9 @@ class CatStore {
       base64: true,
     });
     if (!result.cancelled) {
+      const imageTarget = `data:image/jpeg;base64,${result.base64}`;
       this[type].uri = result.uri;
-      this[type].photoPath = result.base64;
+      this[type].photoPath = imageTarget;
     }
   };
 
@@ -377,7 +378,7 @@ class CatStore {
     return true;
   };
 
-  addCat = () => {
+  addCat = async () => {
     const {
       address,
       location,
@@ -387,13 +388,7 @@ class CatStore {
       catSpecies,
       cut,
     } = this.addCatBio;
-    console.log(this.addCatBio.address);
-    console.log(this.addCatBio.location);
-    console.log(this.addCatBio.catNickname);
-    console.log(this.addCatBio.catDescription);
-    console.log(this.addCatBio.catSpecies);
-    console.log(this.addCatBio.cut);
-    axios
+    const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
         {
@@ -419,6 +414,8 @@ class CatStore {
           console.dir(err);
         }
       });
+
+      return result;
   };
 
   toggleRainbowOpen = () => {
