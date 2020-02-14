@@ -120,7 +120,7 @@ const AuthStack = createStackNavigator(
       },
     },
     'Sign Up': Signup,
-    'Email Certified ': EmailCertified,
+    'Email Certified': EmailCertified,
   },
   {
     initialRouteName: 'Sign In',
