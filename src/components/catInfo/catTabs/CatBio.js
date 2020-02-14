@@ -118,8 +118,11 @@ class CatBio extends React.Component {
       postCatToday,
       validateTag,
       updateInput,
-      makeDateTime,
     } = this.props;
+    const yyyy = new Date().getFullYear();
+    const mm = new Date().getMonth() + 1;
+    const dd = new Date().getDate();
+    const dateOfToday = `${yyyy}-${mm}-${dd}`;
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
@@ -232,8 +235,7 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       오늘 {cat.nickname}의 건강 상태
                     </Text>
-                    {cat.today &&
-                    makeDateTime(cat.todayTime) === makeDateTime(new Date()) ? (
+                    {cat.today && cat.todayTime === dateOfToday ? (
                       <Text>{cat.today}</Text>
                     ) : (
                       <Form
@@ -340,5 +342,4 @@ export default inject(({ cat }) => ({
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
   updateInput: cat.updateInput,
-  makeDateTime: cat.makeDateTime,
 }))(observer(CatBio));
