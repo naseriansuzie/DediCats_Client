@@ -133,7 +133,7 @@ const RootNavigator = createSwitchNavigator(
     Auth: AuthStack,
     App: AppStack,
   },
-  { initialRouteName: 'Auth' },
+  { initialRouteName: 'AuthLoading' },
 );
 
 const AppContainer = createAppContainer(RootNavigator);
