@@ -59,7 +59,6 @@ const emailCertified = ({
     <View style={styles.logo}>
       <Text
         style={styles.logoTxt}
-        onPress={() => navigation.navigate('Sign In')}
       >
         Dedicat
       </Text>

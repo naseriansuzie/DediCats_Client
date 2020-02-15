@@ -126,7 +126,7 @@ class UserStore {
 
         return false;
       });
-
+    console.log('reuslt : ', reuslt);
     return reuslt;
   };
 
@@ -181,7 +181,8 @@ class UserStore {
         email: this.info.email,
         password: this.info.PW,
       };
-      return this.signIn(signIpInfo);
+      const result = await this.signIn(signIpInfo);
+      return result;
     }
     this.signOut();
   };

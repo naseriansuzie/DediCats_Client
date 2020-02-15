@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import {
+  StyleSheet, Text, TouchableOpacity, View, Alert,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -73,7 +75,7 @@ const SignIn_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={text => {
+            onChangeText={(text) => {
               updateInput('email', text);
             }}
             value={email}
@@ -84,7 +86,7 @@ const SignIn_Info = ({
             <MaterialCommunityIcons style={styles.font16} name="lock-outline" />{' '}
             Password
           </Label>
-          <Input onChangeText={text => updateInput('PW', text)} value={PW} />
+          <Input onChangeText={(text) => updateInput('PW', text)} value={PW} />
         </Item>
       </Form>
       <TouchableOpacity
@@ -92,7 +94,8 @@ const SignIn_Info = ({
         onPress={async () => {
           const validation = await validateSignIn();
           if (validation) {
-            const signInResult = updateState('SignIn');
+            const signInResult = await updateState('SignIn');
+            console.log('signInResult :', signInResult);
             if (signInResult) {
               navigation.navigate('AuthLoading');
             }
