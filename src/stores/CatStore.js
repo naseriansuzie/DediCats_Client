@@ -1,6 +1,4 @@
-import {
-  observable, action, computed, decorate, runInAction,
-} from 'mobx';
+import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
@@ -64,182 +62,179 @@ class CatStore {
 
   // CatStore -> info 안의 요소들을 꺼내서 개별적인 observable로 변경 가능
   info = {
-    selectedCat:
-      // null,
-      [
-        {
-          id: 2,
-          description: '완전 귀염이 넘치는 아이에요.',
-          location: 'POINT(1 2)',
-          address: '서울시 강남구 대치동',
-          nickname: '애옹이',
-          cut: { Y: 5, N: 0, unknown: 0 },
-          rainbow: {
-            Y: 17,
-            YDate: '2020-02-05',
-            N: 0,
-            NDate: null,
-          },
-          species: '코숏',
-          today: null,
-          todayTime: '2020-02-11T05:50:43.000Z',
-          status: 'Y',
-          createAt: '2020-02-05T03:26:25.561Z',
-          updateAt: '2020-02-06T11:30:24.000Z',
-        },
-        {
-          isFollowing: false,
-        },
-        [
-          {
-            id: 7,
-            tag: {
-              content: '초큐트',
-            },
-          },
-          {
-            id: 4,
-            tag: {
-              content: '돼냥이',
-            },
-          },
-          {
-            id: 11,
-            tag: {
-              content: '우리동네대장애옹이',
-            },
-          },
-          {
-            id: 12,
-            tag: {
-              content: '귀염뽀짝',
-            },
-          },
-        ],
-        {
-          path: 'https://source.unsplash.com/nKC772R_qog',
-        },
-      ],
+    selectedCat: null,
+    // [
+    //   {
+    //     id: 2,
+    //     description: '완전 귀염이 넘치는 아이에요.',
+    //     location: 'POINT(1 2)',
+    //     address: '서울시 강남구 대치동',
+    //     nickname: '애옹이',
+    //     cut: { Y: 5, N: 0, unknown: 0 },
+    //     rainbow: {
+    //       Y: 17,
+    //       YDate: '2020-02-05',
+    //       N: 0,
+    //       NDate: null,
+    //     },
+    //     species: '코숏',
+    //     today: null,
+    //     todayTime: '2020-02-11T05:50:43.000Z',
+    //     status: 'Y',
+    //     createAt: '2020-02-05T03:26:25.561Z',
+    //     updateAt: '2020-02-06T11:30:24.000Z',
+    //   },
+    //   {
+    //     isFollowing: false,
+    //   },
+    //   [
+    //     {
+    //       id: 7,
+    //       tag: {
+    //         content: '초큐트',
+    //       },
+    //     },
+    //     {
+    //       id: 4,
+    //       tag: {
+    //         content: '돼냥이',
+    //       },
+    //     },
+    //     {
+    //       id: 11,
+    //       tag: {
+    //         content: '우리동네대장애옹이',
+    //       },
+    //     },
+    //     {
+    //       id: 12,
+    //       tag: {
+    //         content: '귀염뽀짝',
+    //       },
+    //     },
+    //   ],
+    //   {
+    //     path: 'https://source.unsplash.com/nKC772R_qog',
+    //   },
+    // ],
     today: undefined,
     newTag: '',
-    postList: [
-      {
-        id: 3,
-        content: '바보',
-        status: 'Y',
-        createAt: '2020-02-05T04:15:21.607Z',
-        updateAt: '2020-02-05T04:15:21.607Z',
-        user: {
-          id: 1,
-          nickname: 'testUser',
-          photoPath:
-            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
-        },
-        photos: [
-          {
-            id: 2,
-            path:
-              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
-          },
-        ],
-      },
-      {
-        id: 1,
-        content: '뭐지',
-        status: 'Y',
-        createAt: '2020-02-05T03:26:25.603Z',
-        updateAt: '2020-02-05T03:54:58.000Z',
-        user: {
-          id: 1,
-          nickname: 'testUser',
-          photoPath:
-            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
-        },
-        photos: [
-          {
-            id: 3,
-            path:
-              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
-          },
-        ],
-      },
-    ],
+    postList: [],
+    //   {
+    //     id: 3,
+    //     content: '바보',
+    //     status: 'Y',
+    //     createAt: '2020-02-05T04:15:21.607Z',
+    //     updateAt: '2020-02-05T04:15:21.607Z',
+    //     user: {
+    //       id: 1,
+    //       nickname: 'testUser',
+    //       photoPath:
+    //         '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
+    //     },
+    //     photos: [
+    //       {
+    //         id: 2,
+    //         path:
+    //           '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: 1,
+    //     content: '뭐지',
+    //     status: 'Y',
+    //     createAt: '2020-02-05T03:26:25.603Z',
+    //     updateAt: '2020-02-05T03:54:58.000Z',
+    //     user: {
+    //       id: 1,
+    //       nickname: 'testUser',
+    //       photoPath:
+    //         '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
+    //     },
+    //     photos: [
+    //       {
+    //         id: 3,
+    //         path:
+    //           '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
+    //       },
+    //     ],
+    //   },
+    // ],
     selectedPost: null,
     inputContent: '',
     commentList: null,
     inputComment: '',
-    album:
-      // null,
-      [
-        {
-          id: 4,
-          path: 'https://source.unsplash.com/hGMvqCyRM9U',
-        },
-        {
-          id: 6,
-          path: 'https://source.unsplash.com/nKC772R_qog',
-        },
-        {
-          id: 7,
-          path: 'https://source.unsplash.com/hGMvqCyRM9U',
-        },
-      ],
+    album: null,
+    // [
+    //   {
+    //     id: 4,
+    //     path: 'https://source.unsplash.com/hGMvqCyRM9U',
+    //   },
+    //   {
+    //     id: 6,
+    //     path: 'https://source.unsplash.com/nKC772R_qog',
+    //   },
+    //   {
+    //     id: 7,
+    //     path: 'https://source.unsplash.com/hGMvqCyRM9U',
+    //   },
+    // ],
     uri: null,
     photoPath: null,
-    followerList:
-      // null,
-      [
-        {
-          id: 1,
-          users: [
-            {
-              id: 1,
-              nickname: 'testUser',
-              photoPath: null,
-            },
-            {
-              id: 2,
-              nickname: 'Joshua',
-              photoPath: null,
-            },
-            {
-              id: 3,
-              nickname: 'perry',
-              photoPath: null,
-            },
-            {
-              id: 4,
-              nickname: 'testUser',
-              photoPath: null,
-            },
-            {
-              id: 5,
-              nickname: 'Joshua',
-              photoPath: null,
-            },
-            {
-              id: 6,
-              nickname: 'perry',
-              photoPath: null,
-            },
-            {
-              id: 7,
-              nickname: 'testUser',
-              photoPath: null,
-            },
-            {
-              id: 8,
-              nickname: 'Joshua',
-              photoPath: null,
-            },
-            {
-              id: 9,
-              nickname: 'perry',
-              photoPath: null,
-            },
-          ],
-        },
-      ],
+    followerList: null,
+    // [
+    //   {
+    //     id: 1,
+    //     users: [
+    //       {
+    //         id: 1,
+    //         nickname: 'testUser',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 2,
+    //         nickname: 'Joshua',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 3,
+    //         nickname: 'perry',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 4,
+    //         nickname: 'testUser',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 5,
+    //         nickname: 'Joshua',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 6,
+    //         nickname: 'perry',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 7,
+    //         nickname: 'testUser',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 8,
+    //         nickname: 'Joshua',
+    //         photoPath: null,
+    //       },
+    //       {
+    //         id: 9,
+    //         nickname: 'perry',
+    //         photoPath: null,
+    //       },
+    //     ],
+    //   },
+    // ],
     rainbowOpen: false,
     rainbowYReported: false,
     rainbowNReported: false,
@@ -248,24 +243,25 @@ class CatStore {
   };
 
   // CatStore
-  setCatPost = (item) => {
+  setCatPost = item => {
     this.info.selectedPost = item;
   };
 
   // actions
   /**
-  * 1. 마커 배열과 carousel 배열을 분리
-  * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
-  * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
-  */
+   * 1. 마커 배열과 carousel 배열을 분리
+   * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
+   * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
+   */
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
   // MapStore
   getMapInfo = async () => {
     const currentBound = this.root.user.currentBoundingBox;
     console.log(currentBound);
-    await axios.post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
-      .then((res) => {
+    await axios
+      .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
+      .then(res => {
         console.log('Response data is : ', res.data);
         this.markers = res.data;
         console.log('마커정보는:', this.markers, res.data.length);
@@ -274,7 +270,7 @@ class CatStore {
         console.log('카루셀 정보: ', this.carousels);
         return true;
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
     // if (result) {
     //   return true;
     // }
@@ -290,11 +286,11 @@ class CatStore {
   //   this.spot.selected = selectedSpotCats;
   // };
 
-  getSelectedCatInfo = async (catId) => {
+  getSelectedCatInfo = async catId => {
     console.log('클릭이되나?:', catId);
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
-      .then((res) => {
+      .then(res => {
         console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
           res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
@@ -309,7 +305,7 @@ class CatStore {
 
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         console.dir(err);
         return false;
       });
@@ -322,13 +318,16 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
-      .then((res) => this.getSelectedCatInfo(catId))
-      .catch((err) => console.dir(err));
+      .then(res => {
+        this.getSelectedCatInfo(catId);
+        this.getFollowerList(catId);
+      })
+      .catch(err => console.dir(err));
   };
 
   // MapStore
   // {latitude: Number, longitude: Number}
-  onDragEnd = (e) => {
+  onDragEnd = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.addCatBio.location = { latitude, longitude };
   };
@@ -344,7 +343,7 @@ class CatStore {
   };
 
   // * HelperStore
-  pickImage = async (type) => {
+  pickImage = async type => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -354,7 +353,7 @@ class CatStore {
     });
     if (!result.cancelled) {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this[type].uri = result.uri; 
+      this[type].uri = result.uri;
       this[type].photoPath = imageTarget;
     }
   };
@@ -404,11 +403,11 @@ class CatStore {
       cutClicked,
     } = this.addCatBio;
     if (
-      location
-      && catNickname.length
-      && catDescription.length
-      && catSpecies.length
-      && (cutClicked.Y || cutClicked.N || cutClicked.unknown)
+      location &&
+      catNickname.length &&
+      catDescription.length &&
+      catSpecies.length &&
+      (cutClicked.Y || cutClicked.N || cutClicked.unknown)
     ) {
       isValidated = true;
     } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
@@ -472,12 +471,12 @@ class CatStore {
         },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         Alert.alert('등록에 성공하였습니다!');
         this.clearAllInput('addCatBio');
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
@@ -506,21 +505,21 @@ class CatStore {
     rainbow[`${type}Date`] = this.makeDateTime();
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
-      .then((res) => {
+      .then(res => {
         this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
     return result;
   };
 
   // CatStore
-  disableReportBtn = (type) => {
+  disableReportBtn = type => {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
   };
 
   // CatStore
-  postCut = (type) => {
+  postCut = type => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     const catId = this.info.selectedCat[0].id;
@@ -531,10 +530,10 @@ class CatStore {
           { catId, catCut: request },
           defaultCredential,
         )
-        .then((res) => {
+        .then(res => {
           this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('중성화 유무 등록에 실패했습니다.');
           } else console.dir(err);
@@ -543,7 +542,7 @@ class CatStore {
   };
 
   // CatStore
-  postCatToday = (value) => {
+  postCatToday = value => {
     this.info.today = value;
     const todayInfo = {
       catToday: value,
@@ -552,13 +551,13 @@ class CatStore {
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then((res) => {
+        .then(res => {
           this.info.selectedCat[0].today = res.data.cat_today;
           this.info.selectedCat[0].todayTime = this.makeDateTime(
             res.data.cat_today_time,
           );
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.info.today = undefined;
@@ -570,7 +569,7 @@ class CatStore {
   // CatStore
   validateTag = () => {
     const { newTag } = this.info;
-    const tags = this.info.selectedCat[2].map((tagInfo) => tagInfo.tag.content);
+    const tags = this.info.selectedCat[2].map(tagInfo => tagInfo.tag.content);
     if (tags.includes(newTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
       this.clearInput({ group: 'info', key: 'newTag' });
@@ -580,7 +579,7 @@ class CatStore {
   };
 
   // CatStore
-  postTag = (newTag) => {
+  postTag = newTag => {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(
@@ -588,14 +587,14 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         const tags = this.info.selectedCat[2];
         tags.push(res.data);
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
   };
 
   // * PostStore
@@ -634,7 +633,7 @@ class CatStore {
     this.getPostList();
   };
 
-  validateAddInput = (type) => {
+  validateAddInput = type => {
     if (this.info[type]) {
       return true;
     }
@@ -652,11 +651,13 @@ class CatStore {
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then((res) => this.clearInput(
-        { group: 'info', key: 'content' },
-        { group: 'info', key: 'photoPath' },
-      ))
-      .catch((err) => {
+      .then(res =>
+        this.clearInput(
+          { group: 'info', key: 'content' },
+          { group: 'info', key: 'photoPath' },
+        ),
+      )
+      .catch(err => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
@@ -670,7 +671,7 @@ class CatStore {
   };
   // * Post Store
 
-  getCommentList = (postId) => {
+  getCommentList = postId => {
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   };
 
@@ -679,8 +680,8 @@ class CatStore {
     const commentInfo = { catId, content: this.info.inputComment };
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
-      .then((res) => this.clearInput({ group: 'info', key: 'inputComment' }))
-      .catch((err) => {
+      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
+      .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
         } else console.dir(err);
@@ -691,44 +692,49 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
-      .then((res) => {
+      .then(res => {
         console.log('서버에서 받은 앨범', res.data);
         const photos = res.data.filter(
-          (photo) => photo.path !== this.info.selectedCat[3].path,
+          photo => photo.path !== this.info.selectedCat[3].path,
         );
         console.log('필터한 앨범', photos);
         this.info.album = photos;
       })
-      .catch((err) => {
+      .catch(err => {
         console.dir(err);
       });
   };
 
-  selectPhoto = (photo) => {
+  selectPhoto = photo => {
     this.info.selectedPhoto = photo;
   };
 
-  getFollowerList = (catId) => {
+  getFollowerList = catId => {
     console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
-      .then((res) => (this.info.followerList = res.data))
-      .catch((err) => console.dir(err));
+      .then(res => {
+        this.info.followerList = res.data;
+        console.log(this.info.followerList);
+      })
+      .catch(err => console.dir(err));
   };
 
   // * Helper Store
   makeDateTime = () => {
     const YYYY = new Date().getFullYear();
-    const MM = new Date().getMonth() > 8
-      ? new Date().getMonth()
-      : `0${new Date().getMonth() + 1}`;
-    const DD = new Date().getDate() > 9
-      ? new Date().getDate()
-      : `0${new Date().getDate()}`;
+    const MM =
+      new Date().getMonth() > 8
+        ? new Date().getMonth()
+        : `0${new Date().getMonth() + 1}`;
+    const DD =
+      new Date().getDate() > 9
+        ? new Date().getDate()
+        : `0${new Date().getDate()}`;
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  changeToDateTime = (timeInfo) => {
+  changeToDateTime = timeInfo => {
     const dateTimeArr = timeInfo
       .split('T')
       .join(' ')
@@ -737,7 +743,7 @@ class CatStore {
     return dateTimeArr[0];
   };
 
-  convertDateTime = (str) => {
+  convertDateTime = str => {
     let dateStr = `${str.substring(0, 4)}/${str.substring(
       5,
       7,
@@ -745,8 +751,8 @@ class CatStore {
 
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
-        + dateStr.substring(13, 19)}`;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
+        dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }
@@ -759,13 +765,13 @@ class CatStore {
   };
 
   clearInput = (...pairs) => {
-    pairs.forEach((pair) => {
+    pairs.forEach(pair => {
       const { group, key } = pair;
       this[group][key] = '';
     });
   };
 
-  clearAllInput = (type) => {
+  clearAllInput = type => {
     if (type === 'addCatBio') {
       this.addCatBio = {
         location: null,
@@ -779,7 +785,6 @@ class CatStore {
       };
     }
   };
-
 
   carousels = [
     //! sample data

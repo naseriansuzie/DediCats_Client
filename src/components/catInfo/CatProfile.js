@@ -105,9 +105,8 @@ const CatProfile = ({ selectedCat, followCat, unFollowCat }) => (
   </View>
 );
 
-export default inject(({ cat, user }) => ({
+export default inject(({ cat, helper }) => ({
   selectedCat: cat.info.selectedCat,
   followCat: cat.followCat,
-  unFollowCat: user.unFollowCat,
-  test: cat.test,
+  unFollowCat: helper.unFollowCat,
 }))(observer(CatProfile));

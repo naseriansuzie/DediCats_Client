@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Badge, Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
-import { inject, observer, propTypes } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
@@ -71,7 +71,12 @@ const styles = StyleSheet.create({
   row70: { width: '70%' },
 });
 
-const BriefCatInfo = ({ getSelectedCatInfo, item, navigation, hideCarousel }) => (
+const BriefCatInfo = ({
+  getSelectedCatInfo,
+  item,
+  navigation,
+  hideCarousel,
+}) => (
   <View style={styles.card}>
     <View>
       <View style={styles.closeBtn}>
@@ -84,7 +89,7 @@ const BriefCatInfo = ({ getSelectedCatInfo, item, navigation, hideCarousel }) =>
         onPress={async () => {
           console.log('카루셀 클릭시: ', item.catId);
           const result = await getSelectedCatInfo(item.catId);
-          console.log("카드", result)
+          console.log('카드', result);
           if (result) {
             navigation.navigate('CatInfo');
           }
