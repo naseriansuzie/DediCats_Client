@@ -120,7 +120,7 @@ const AuthStack = createStackNavigator(
       },
     },
     'Sign Up': Signup,
-    'Email Certified ': EmailCertified,
+    'Email Certified': EmailCertified,
   },
   {
     initialRouteName: 'Sign In',
@@ -133,7 +133,8 @@ const RootNavigator = createSwitchNavigator(
     Auth: AuthStack,
     App: AppStack,
   },
-  { initialRouteName: 'App' },
+  // { initialRouteName: 'App' },
+  { initialRouteName: 'AuthLoading' },
 );
 
 const AppContainer = createAppContainer(RootNavigator);

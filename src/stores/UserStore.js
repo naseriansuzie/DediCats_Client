@@ -1,10 +1,8 @@
 /* eslint-disable arrow-parens */
-import {
-  observable, action, computed, decorate, runInAction,
-} from 'mobx';
+import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL } from 'react-native-dotenv';
+import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
 
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -36,13 +34,15 @@ class UserStore {
     isSignUp: false,
     isSignIn: false,
     email: '',
-    nickName: '',
+    nickname: '',
     confirmPW: '',
     reConfirmPW: '',
     PW: '',
+    emailVerification: '',
+    emailCode: '',
     myInfo:
       // null,
-      { userId: 1, nickname: '김집사', created_at: '2020-02-09' },
+      { userId: 2, nickname: '김집사', created_at: '2020-02-09' },
     myPhoto: defaultPhotoUrl,
   };
 
@@ -52,11 +52,12 @@ class UserStore {
   };
 
   emailCertified = async (signUpInfo) => {
-    const { email, nickName } = signUpInfo;
-    const result = await axios.post(`${SERVER_URL}/signup/email`, { email, nickName }, defaultCredential)
+    const { email, nickname } = signUpInfo;
+    const result = await axios.post(`${SERVER_URL}/signup/email`, { email, nickname }, defaultCredential)
       .then((res) => {
         Alert.alert(`${email}로 이메일 전송이 성공하였습니다!`);
-        return signUpInfo;
+        this.info.emailCode = res.data;
+        return true;
       }).catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
@@ -66,17 +67,21 @@ class UserStore {
       });
 
     return result;
-  }
+  };
 
   // actions
-  signUp = info => {
-    axios
-      .post(`${SERVER_URL}/signup`, info, defaultCredential)
-      .then(res => {
+  signUp = async () => {
+    const { email, confirmPW, nickname } = this.info;
+    const result = await axios
+      .post(`${SERVER_URL}/signup/`, { email, password: confirmPW, nickname }, defaultCredential)
+      .then((res) => {
+        if (res.status !== 201) return false;
+
         Alert.alert('회원가입에 성공했습니다!');
         this.info.isSignUp = true;
+
         runInAction(() => {
-          this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
+          this.clearInput('email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification');
         });
         return true;
       })
@@ -86,38 +91,41 @@ class UserStore {
         } else {
           console.dir(err);
         }
+        return false;
       });
-    if (res) {
-      Alert.alert('회원가입에 성공했습니다!');
-      this.clearInput('email', 'nickName', 'confirmPW', 'reConfirmPW');
-      console.log('바꾸기 전 ', this.info.isSignUp);
-      this.info.isSignUp = true;
-      console.log('바꾸기 후 ', this.info.isSignUp);
-      console.log('data는 ', res.data);
-      return res.data;
+
+    if (!result) {
+      Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
+      return false;
     }
+    Alert.alert('회원가입에 성공하였습니다!');
+    return true;
   };
 
-  signIn = info => {
-    axios
-      .post(`${SERVER_URL}/user/signin`, info, defaultCredential)
-      .then(res => {
+  signIn = async (info) => {
+    const reuslt = await axios
+      .post(`${AUTH_SERVER}/auth/signin`, info, defaultCredential)
+      .then((res) => {
+        if (res.status !== 201) return false;
+
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
         runInAction(() => {
           this.clearInput('email', 'PW');
-          return true;
         });
+
+        return true;
       })
       .catch(err => {
         if (err.response && err.response.status === 401) {
-          Alert.alert(
-            '회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.',
-          );
-        } else {
-          console.dir(err);
-        }
+          Alert.alert('회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.');
+        } else console.dir(err);
+
+
+        return false;
       });
+    console.log('reuslt : ', reuslt);
+    return reuslt;
   };
 
   signOut = id => {
@@ -136,7 +144,7 @@ class UserStore {
     let isValidated = false;
     if (this.info.confirmPW !== this.info.reConfirmPW) {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
-    } else if (this.info.email && this.info.confirmPW && this.info.nickName) {
+    } else if (this.info.email && this.info.confirmPW && this.info.nickname) {
       isValidated = true;
     } else {
       Alert.alert('모든 정보를 입력해주세요.');
@@ -154,12 +162,12 @@ class UserStore {
     return isValidated;
   };
 
-  updateState = async (field) => {
+  updateState = async field => {
     if (field === 'SignUp') {
       const signUpInfo = {
         email: this.info.email,
         password: this.info.confirmPW,
-        nickname: this.info.nickName,
+        nickname: this.info.nickname,
       };
       // 실패시 false return
       // 성공시 obj return -> Signup info param로 넣어주면 됨
@@ -171,7 +179,8 @@ class UserStore {
         email: this.info.email,
         password: this.info.PW,
       };
-      return this.signIn(signIpInfo);
+      const result = await this.signIn(signIpInfo);
+      return result;
     }
     this.signOut();
   };
@@ -191,19 +200,16 @@ class UserStore {
   };
 
   unFollowCat = () => {
-    const { userId } = this.info.myInfo;
     const catId = this.root.cat.info.selectedCat[0].id;
     axios
-      .post(`${SERVER_URL}/cat/unfollow`, { userId, catId }, defaultCredential)
+      .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
       .then(res => {
         this.myCat.unFollowed = catId;
         runInAction(() => {
-          this.root.getSelectedCatInfo();
+          this.root.cat.getSelectedCatInfo(catId);
         });
       })
       .catch(err => console.dir(err));
-    // test용으로 넣은 코드
-    this.root.cat.info.selectedCat[1].isFollowing = false;
   };
 
   uploadMyImg = () => {
@@ -287,10 +293,12 @@ class UserStore {
         });
         this.root.cat.getMapInfo();
       },
-      (error) => { Alert.alert(error.code, error.message); },
+      error => {
+        Alert.alert(error.code, error.message);
+      },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
-  }
+  };
 
   onRegionChangeComplete = async region => {
     this.currentRegion = { ...region };

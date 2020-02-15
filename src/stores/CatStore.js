@@ -7,6 +7,7 @@ import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import Axios from 'axios';
 
 /**
  * 1. spot 관련
@@ -65,7 +66,7 @@ class CatStore {
       // null,
       [
         {
-          id: 1,
+          id: 2,
           description: '완전 귀염이 넘치는 아이에요.',
           location: 'POINT(1 2)',
           address: '서울시 강남구 대치동',
@@ -129,12 +130,14 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: null,
+          photoPath:
+            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
         photos: [
           {
             id: 2,
-            path: '경로',
+            path:
+              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
           },
         ],
       },
@@ -147,9 +150,16 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: null,
+          photoPath:
+            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
-        photos: [],
+        photos: [
+          {
+            id: 3,
+            path:
+              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
+          },
+        ],
       },
     ],
     selectedPost: null,
@@ -274,13 +284,11 @@ class CatStore {
     this.spot.selected = selectedSpotCats;
   };
 
-  getSelectedCatInfo = (catId) => {
-    const { userId } = this.root.user.info.myInfo;
-
+  getSelectedCatInfo = catId => {
     axios
-      .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
-      .then((res) => {
-        console.log(res.data)
+      .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
+      .then(res => {
+        res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
@@ -291,14 +299,11 @@ class CatStore {
   };
 
   followCat = () => {
-    const { userId } = this.root.user.info.myInfo;
     const catId = this.info.selectedCat[0].id;
     axios
-      .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
-      .then((res) => this.getSelectedCatInfo())
-      .catch((err) => console.dir(err));
-    // test용으로 넣은 코드
-    this.info.selectedCat[1].isFollowing = true;
+      .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
+      .then(res => this.getSelectedCatInfo(catId))
+      .catch(err => console.dir(err));
   };
 
   // {latitude: Number, longitude: Number}
@@ -448,24 +453,24 @@ class CatStore {
     this.info.rainbowOpen = !this.info.rainbowOpen;
   };
 
-  reportRainbow = (type) => {
-    const report = {
+  reportRainbow = async type => {
+    const catId = this.info.selectedCat[0].id;
+    const rainbow = {
       Y: 0,
       YDate: null,
       N: 0,
       NDate: null,
     };
-    report[type] = 1;
-    report[`${type}Date`] = this.makeDateTime();
-
-    axios
-      .post(`${SERVER_URL}/cat/rainbow`, report, defaultCredential)
-      .then((res) => {
-        if (res.status === 201) {
-          this.info.selectedCat[0].rainbow = JSON.parse(res.data);
-        }
+    rainbow[type] = 1;
+    rainbow[`${type}Date`] = this.makeDateTime();
+    const result = axios
+      .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
+      .then(res => {
+        this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
+        return res.data;
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
+    return result;
   };
 
   disableReportBtn = (type) => {
@@ -478,9 +483,13 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     runInAction(() => {
       axios
-        .post(`${SERVER_URL}/cat/cut`, { catId, request }, defaultCredential)
-        .then((res) => {
-          this.info.selectedCat[0].cut = JSON.parse(res.data);
+        .post(
+          `${SERVER_URL}/cat/cut`,
+          { catId, catCut: request },
+          defaultCredential,
+        )
+        .then(res => {
+          this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
         })
         .catch((err) => {
           if (err.response && err.response.status === 409) {
@@ -509,7 +518,7 @@ class CatStore {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.info.today = undefined;
-          } else console.log(err);
+          } else console.dir(err);
         });
     });
   };
@@ -533,19 +542,49 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then((res) => {
-        const { tags } = this.info.selectedCat[0];
-        this.info.selectedCat[0].tags = [...tags, res.data];
+      .then(res => {
+        const tags = this.info.selectedCat[2];
+        tags.push(res.data);
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.dir(err));
   };
 
-  getPostList = (catId) => {
+  postPage = 1;
+
+  isRefreshingPost = false;
+
+  getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
+    try {
+      const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
+      const post = await Axios.get(url);
+      if (post) {
+        if (this.isRefreshingPost) {
+          this.info.postList = post.data;
+          this.isRefreshingPost = false;
+        } else {
+          this.info.postList = this.info.postList.concat(post.data);
+          this.isLoadingPost = false;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  _handleLoadMorePosts = () => {
+    this.postPage += 1;
+    this.getPostList();
+  };
+
+  _handleRefresh = () => {
+    this.isRefreshingPost = true;
+    this.postPage = 1;
+    this.getPostList();
   };
 
   removePhoto = () => {
@@ -644,6 +683,31 @@ class CatStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
+  changeToDateTime = timeInfo => {
+    const dateTimeArr = timeInfo
+      .split('T')
+      .join(' ')
+      .split('.')[0]
+      .split(' ');
+    return dateTimeArr[0];
+  };
+
+  convertDateTime = str => {
+    let dateStr = `${str.substring(0, 4)}/${str.substring(
+      5,
+      7,
+    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
+
+    if (dateStr[11] === '1') {
+      const convertedHour = Number(dateStr.substring(11, 13)) - 12;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
+        dateStr.substring(13, 19)}`;
+    } else {
+      dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
+    }
+    return dateStr;
+  };
+
   updateInput = (group, key, text) => {
     this[group][key] = text;
     console.log(this[group][key]);
@@ -722,7 +786,11 @@ decorate(CatStore, {
   validateTag: action,
   postTag: action,
   removePhoto: action,
+  postPage: observable,
+  isRefreshingPost: observable,
   getPostList: action,
+  _handleLoadMorePosts: action,
+  _handleRefresh: action,
   validateAddInput: action,
   addPost: action,
   getCommentList: action,
@@ -731,6 +799,8 @@ decorate(CatStore, {
   selectPhoto: action,
   getFollowerList: action,
   makeDateTime: action,
+  changeToDateTime: action,
+  convertDateTime: action,
   updateInput: action,
   clearInput: action,
   clearAllInput: action,

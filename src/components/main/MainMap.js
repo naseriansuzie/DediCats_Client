@@ -134,7 +134,7 @@ class MainMap extends React.Component {
             onSnapToItem={(index) => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
             sliderWidth={width}
-            itemWidth={300}
+            itemWidth={width * 0.9}
             containerCustomStyle={styles.carousel}
           />
         </View>
