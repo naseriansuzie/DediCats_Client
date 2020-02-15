@@ -34,13 +34,13 @@ class AddCatMap extends React.Component {
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        // const currentPosition = {
-        //   latitude: position.coords.latitude,
-        //   longitude: position.coords.longitude,
-        //   latitudeDelta: 0.0015,
-        //   longitudeDelta: 0.0005,
-        // };
-        const currentPosition = this.props.currentPosition;
+        const currentPosition = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: 0.0015,
+          longitudeDelta: 0.0005,
+        };
+        // const currentPosition = this.props.currentPosition;
         const markerData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
