@@ -82,7 +82,7 @@ const Rainbow = ({
         ) : (
           <TouchableOpacity
             style={styles.abledReportBtn}
-            onPress={() =>
+            onPress={() => {
               Alert.alert(`${nickName} 실종`, '실종 신고를 하시겠습니까?', [
                 {
                   text: '취소',
@@ -92,12 +92,14 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    await disableReportBtn('Y');
-                    reportRainbow('Y');
+                    const result = await reportRainbow('Y');
+                    if (result) {
+                      disableReportBtn('Y');
+                    }
                   },
                 },
-              ])
-            }
+              ]);
+            }}
           >
             <Text style={{ color: '#767577' }}>신고</Text>
           </TouchableOpacity>
@@ -135,7 +137,7 @@ const Rainbow = ({
         ) : (
           <TouchableOpacity
             style={styles.abledReportBtn}
-            onPress={() =>
+            onPress={() => {
               Alert.alert(`${nickName} 실종`, '실종 신고를 하시겠습니까?', [
                 {
                   text: '취소',
@@ -145,12 +147,14 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    await disableReportBtn('N');
-                    reportRainbow('N');
+                    const result = await reportRainbow('N');
+                    if (result) {
+                      disableReportBtn('N');
+                    }
                   },
                 },
-              ])
-            }
+              ]);
+            }}
           >
             <Text style={{ color: '#767577' }}>신고</Text>
           </TouchableOpacity>

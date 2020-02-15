@@ -418,30 +418,28 @@ class CatStore {
     this.info.rainbowOpen = !this.info.rainbowOpen;
   };
 
-  reportRainbow = type => {
+  reportRainbow = async type => {
     const catId = this.info.selectedCat[0].id;
-    const report = {
+    const rainbow = {
       Y: 0,
       YDate: null,
       N: 0,
       NDate: null,
     };
-    report[type] = 1;
-    report[`${type}Date`] = this.makeDateTime();
-
-    axios
-      .post(`${SERVER_URL}/cat/rainbow`, { catId, report }, defaultCredential)
+    rainbow[type] = 1;
+    rainbow[`${type}Date`] = this.makeDateTime();
+    const result = axios
+      .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
       .then(res => {
-        if (res.status === 201) {
-          this.info.selectedCat[0].rainbow = JSON.parse(res.data);
-        }
+        this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
+        return res.data;
       })
       .catch(err => console.dir(err));
+    return result;
   };
 
   disableReportBtn = type => {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
-    console.log('변경된 값 ', this.info[`rainbow${type}Reported`]);
   };
 
   postCut = type => {
