@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     color: '#444',
     paddingVertical: 5,
   },
-  tagView: { flexDirection: 'row', overFlow: 'hidden' },
+  tagView: { flexDirection: 'row', overflow: 'hidden' },
   tag: {
     backgroundColor: '#f38847',
     borderRadius: 10,
