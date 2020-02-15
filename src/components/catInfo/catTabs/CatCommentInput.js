@@ -1,12 +1,18 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { Form, Textarea } from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: '100%',
-    justifyContent: 'center',
   },
   inputView: {
     width: '100%',
@@ -44,29 +50,31 @@ const CatCommentInput = ({
   addComment,
 }) => (
   <View style={styles.container}>
-    <View style={styles.inputView}>
-      <Form style={styles.inputForm}>
-        <Textarea
-          style={styles.textArea}
-          rowSpan={inputComment.length > 27 ? 3 : 2}
-          placeholder="댓글을 입력해주세요."
-          value={inputComment}
-          onChangeText={text => updateInput('info', 'inputComment', text)}
-        />
-      </Form>
-      <TouchableOpacity
-        style={styles.submitBtn}
-        onPress={() => {
-          const validation = validateAddInput('inputComment');
-          console.log(validation);
-          if (validation) {
-            addComment();
-          }
-        }}
-      >
-        <Text style={styles.submitBtnTxt}>등록</Text>
-      </TouchableOpacity>
-    </View>
+    <KeyboardAvoidingView>
+      <View style={styles.inputView}>
+        <Form style={styles.inputForm}>
+          <Textarea
+            style={styles.textArea}
+            rowSpan={inputComment.length > 27 ? 3 : 2}
+            placeholder="댓글을 입력해주세요."
+            value={inputComment}
+            onChangeText={text => updateInput('info', 'inputComment', text)}
+          />
+        </Form>
+        <TouchableOpacity
+          style={styles.submitBtn}
+          onPress={() => {
+            const validation = validateAddInput('inputComment');
+            console.log(validation);
+            if (validation) {
+              addComment();
+            }
+          }}
+        >
+          <Text style={styles.submitBtnTxt}>등록</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   </View>
 );
 

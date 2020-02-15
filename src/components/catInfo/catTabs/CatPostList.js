@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { inject, observer } from 'mobx-react';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
@@ -15,68 +23,50 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: 'white',
-    paddingTop: 50,
+    paddingTop: 25,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     alignItems: 'center',
   },
+  keyboard: { width: '95%' },
 });
 
 class CatPostList extends React.Component {
-  // render() {
-
-  //   console.log(this.props.postList[0].content);
-  //   return (
-  //     <View style={styles.container}>
-  //       <View style={styles.radiusView}>
-  //       {/* <FlatList/> */}
-  //         {/* <CatPost post={this.props.postList[0]}/> */}
-  //         {/* <CatPost />
-  //         <CatPost /> */}
-  //         {
-  //           this.props.postList.map((item) =>
-  //             <CatPost
-  //               item={item}
-  //             />
-  //           )
-  //         }
-  //       </View>
-  //     </View>
-  //   )
-  // }
-
-  // _getData = () => {
-  //   const url = 'https://jsonplaceholder.typicode.com/photos?_limit=10&_page=' + this.state.page;
-  //   fetch(url)
-  //     .then(r => r.json())
-  //     .then(data => {
-  //       this.setState({
-  //         data: this.state.data.concat(data), // 기존 data에 추가.
-  //         page: this.state.page + 1
-  //       })
-  //     });
-  // }  --> to mobX
-
   // componentDidMount() {
-  //   this._getData();  --> this.props._getData();
+  //   this.props.getPostList(); //  --> this.props._getData();
   // }
 
   _renderItem = ({ item }) => (
-    <CatPost item={item} setCatPost={this.props.setCatPost}/>
+    <CatPost item={item} setCatPost={this.props.setCatPost} convertDateTime={this.props.convertDateTime} />
+  );
+
+  renderFooter = () => (
+    <View style={styles.loader}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.radiusView}>
-          <FlatList
+        <View style={styles.radiusView}>
+          <KeyboardAvoidingView style={styles.keyboard}>
+            <CatPostInput />
+          </KeyboardAvoidingView>
+          <SafeAreaView>
+            <FlatList
             data={this.props.postList}
             renderItem={this._renderItem}
             keyExtractor={(item, index) => `${item.id}`}
             showsVerticalScrollIndicator={false}
-          />
-        </SafeAreaView>
-        <CatPostInput />
+            // onEndReached={this.props._handleLoadMorePosts}
+            // onEndReachedThreshold={1}
+            // ListFooterComponent={this.renderFooter}
+            // refreshing={this.props.isRefreshingPost}
+            // onRefresh={this.props._handleRefresh}
+            />
+          </SafeAreaView>
+        </View>
       </View>
     );
   }
@@ -85,6 +75,11 @@ class CatPostList extends React.Component {
 export default inject(({ cat }) => ({
   postList: cat.info.postList,
   setCatPost: cat.setCatPost,
+  getPostList: cat.getPostList,
+  isRefreshingPost: cat.isRefreshingPost,
+  _handleLoadMorePosts: cat._handleLoadMorePosts,
+  _handleRefresh: cat._handleRefresh,
+  convertDateTime: cat.convertDateTime,
 }))(
   observer(CatPostList),
 );
