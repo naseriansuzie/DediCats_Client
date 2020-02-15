@@ -20,7 +20,12 @@ const styles = StyleSheet.create({
 class AddCatMap extends React.Component {
   // eslint-disable-next-line react/state-in-constructor
   state = {
-    currentPosition: {},
+    currentPosition: {
+      latitude: 0,
+      latitudeDelta: 0.0015,
+      longitude: 0,
+      longitudeDelta: 0.005,
+    },
     markerData: {
       latitude: 0,
       longitude: 0,
@@ -29,6 +34,15 @@ class AddCatMap extends React.Component {
 
   componentDidMount() {
     this.getCurrentPosition();
+    // const currentPosition = this.props.currentPosition;
+    // const markerData = {
+    //   latitude: this.props.currentPosition.latitude,
+    //   longitude: this.props.currentPosition.longitude,
+    // };
+    // this.setState({
+    //   currentPosition,
+    //   markerData,
+    // });
   }
 
   getCurrentPosition() {
