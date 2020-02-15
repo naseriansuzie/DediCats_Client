@@ -284,26 +284,34 @@ class CatStore {
     this.spot.selected = selectedSpotCats;
   };
 
-  getSelectedCatInfo = catId => {
-    axios
+  getSelectedCatInfo = async (catId) => {
+    console.log('클릭이되나?:', catId);
+    const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
+        console.log("고양이 정보", res.data)
         res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
         const replacement = this.markers;
         this.carousels = replacement;
+
+        return true;
       })
-      .catch((err) => console.dir(err));
+      .catch((err) => {console.dir(err)
+      return false;
+      });
+    console.log("함수", result);  
+      return result;
   };
 
   followCat = () => {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
-      .then(res => this.getSelectedCatInfo(catId))
-      .catch(err => console.dir(err));
+      .then((res) => this.getSelectedCatInfo(catId))
+      .catch((err) => console.dir(err));
   };
 
   // {latitude: Number, longitude: Number}
@@ -453,7 +461,7 @@ class CatStore {
     this.info.rainbowOpen = !this.info.rainbowOpen;
   };
 
-  reportRainbow = async type => {
+  reportRainbow = async (type) => {
     const catId = this.info.selectedCat[0].id;
     const rainbow = {
       Y: 0,
@@ -465,11 +473,11 @@ class CatStore {
     rainbow[`${type}Date`] = this.makeDateTime();
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     return result;
   };
 
@@ -488,7 +496,7 @@ class CatStore {
           { catId, catCut: request },
           defaultCredential,
         )
-        .then(res => {
+        .then((res) => {
           this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
         })
         .catch((err) => {
@@ -542,14 +550,14 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         const tags = this.info.selectedCat[2];
         tags.push(res.data);
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
   postPage = 1;
@@ -683,7 +691,7 @@ class CatStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  changeToDateTime = timeInfo => {
+  changeToDateTime = (timeInfo) => {
     const dateTimeArr = timeInfo
       .split('T')
       .join(' ')
@@ -692,7 +700,7 @@ class CatStore {
     return dateTimeArr[0];
   };
 
-  convertDateTime = str => {
+  convertDateTime = (str) => {
     let dateStr = `${str.substring(0, 4)}/${str.substring(
       5,
       7,
@@ -700,8 +708,8 @@ class CatStore {
 
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
-        dateStr.substring(13, 19)}`;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
+        + dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }

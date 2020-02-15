@@ -285,6 +285,7 @@ class UserStore {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
+        this.currentPosition = { latitude, longitude};
         this.onRegionChangeComplete({
           latitude,
           latitudeDelta: 0.005,
