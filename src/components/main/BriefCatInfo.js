@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { Badge, Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -30,10 +36,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: -110,
-    marginBottom: 20,
-    marginRight: 20,
   },
   address: {
     fontSize: 15,

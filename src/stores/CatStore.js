@@ -128,12 +128,14 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
+          photoPath:
+            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
         photos: [
           {
             id: 2,
-            path: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
+            path:
+              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
           },
         ],
       },
@@ -146,12 +148,14 @@ class CatStore {
         user: {
           id: 1,
           nickname: 'testUser',
-          photoPath: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
+          photoPath:
+            '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
         },
         photos: [
           {
             id: 3,
-            path: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
+            path:
+              '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
           },
         ],
       },
@@ -239,7 +243,7 @@ class CatStore {
     reportInfo: null,
   };
 
-  setCatPost = (item) => {
+  setCatPost = item => {
     this.info.selectedPost = item;
   };
 
@@ -550,13 +554,13 @@ class CatStore {
   _handleLoadMorePosts = () => {
     this.postPage += 1;
     this.getPostList();
-  }
+  };
 
   _handleRefresh = () => {
     this.isRefreshingPost = true;
     this.postPage = 1;
     this.getPostList();
-  }
+  };
 
   removePhoto = () => {
     this.info.uri = null;
@@ -665,13 +669,18 @@ class CatStore {
       .split('.')[0]
       .split(' ');
     return dateTimeArr[0];
+  };
 
-  convertDateTime = (str) => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
+  convertDateTime = str => {
+    let dateStr = `${str.substring(0, 4)}/${str.substring(
+      5,
+      7,
+    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
 
     if (dateStr[11] === '1') {
-      const convertedHour = Number(dateStr.substring(11,13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) + dateStr.substring(13, 19)}`;
+      const convertedHour = Number(dateStr.substring(11, 13)) - 12;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
+        dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }
@@ -689,8 +698,6 @@ class CatStore {
       this[group][key] = '';
     });
   };
-
-
 
   clearAllInput = type => {
     if (type === 'addCatBio') {
