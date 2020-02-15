@@ -263,8 +263,9 @@ class CatStore {
       .then((res) => {
         console.log('Response data is : ', res.data);
         this.markers = res.data;
-        console.log('마커정보는:', this.markers);
+        console.log('마커정보는:', this.markers, res.data.length);
         this.carousels = res.data;
+        // this.carousels = res.data;
         console.log('카루셀 정보: ', this.carousels);
         return true;
       })
@@ -289,21 +290,26 @@ class CatStore {
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then((res) => {
-        console.log("고양이 정보", res.data)
-        res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
-        res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+        console.log('고양이 정보', res.data);
+        if (res.data[0].todayTime) {
+          res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
+        }
+        if (res.data[0].rainbow) {
+          res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+        }
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
-        const replacement = this.markers;
-        this.carousels = replacement;
+        // const replacement = this.markers;
+        // this.carousels = replacement;
 
         return true;
       })
-      .catch((err) => {console.dir(err)
-      return false;
+      .catch((err) => {
+        console.dir(err);
+        return false;
       });
-    console.log("함수", result);  
-      return result;
+    console.log('함수', result);
+    return result;
   };
 
   followCat = () => {
@@ -745,27 +751,27 @@ class CatStore {
 
 
   carousels = [
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
   ];
 
   markers = [
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
   ];
 }
 

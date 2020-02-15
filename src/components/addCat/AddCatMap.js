@@ -27,19 +27,20 @@ class AddCatMap extends React.Component {
     },
   };
 
-  // componentDidMount() {
-  //   this.getCurrentPosition();
-  // }
+  componentDidMount() {
+    this.getCurrentPosition();
+  }
 
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        const currentPosition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.0015,
-          longitudeDelta: 0.0005,
-        };
+        // const currentPosition = {
+        //   latitude: position.coords.latitude,
+        //   longitude: position.coords.longitude,
+        //   latitudeDelta: 0.0015,
+        //   longitudeDelta: 0.0005,
+        // };
+        const currentPosition = this.props.currentPosition;
         const markerData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -61,8 +62,8 @@ class AddCatMap extends React.Component {
   };
 
   render() {
-    const { markerData } = this.state;
-
+    const { markerData, currentPosition } = this.state;
+    console.log(currentPosition);
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <Text style={styles.spotTxt}>자주 만나는 장소</Text>
@@ -70,7 +71,7 @@ class AddCatMap extends React.Component {
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation
-            region={this.props.currentPosition}
+            region={currentPosition}
             // onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
           >
