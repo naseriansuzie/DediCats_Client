@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
   row70: { width: '70%' },
 });
 
-const BriefCatInfo = ({ item, navigation }) => (
+const BriefCatInfo = ({ item, navigation, hideCarousel }) => (
   <View style={styles.card}>
     <View>
       <View style={styles.closeBtn}>
-        <TouchableOpacity onPress={() => this.props.hideCarousel()}>
+        <TouchableOpacity onPress={() => hideCarousel()}>
           <Text>X</Text>
         </TouchableOpacity>
       </View>
