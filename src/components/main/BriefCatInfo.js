@@ -30,6 +30,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: 'bold',
   },
+  cardAddress: {
+    fontSize: 10,
+    color: '#445', 
+  },
   cardDescription: {
     fontSize: 12,
     color: '#444',
@@ -47,10 +51,11 @@ class BriefCatInfo extends React.Component {
         </TouchableOpacity>
         <Image
           style={styles.cardImg}
-          source={this.props.item.img}
+          source={{uri: this.props.item.catProfile }}
         />
-        <Text style={styles.cardtitle}>{this.props.item.name}</Text>
-        <Text style={styles.cardDescription}>{this.props.item.content}</Text>
+        <Text style={styles.cardtitle}>{this.props.item.catNickname}</Text>
+        <Text style={styles.cardAddress}>{this.props.item.catAddress}</Text>
+        <Text style={styles.cardDescription}>{this.props.item.description}</Text>
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('CatInfo')}
         >

@@ -231,8 +231,22 @@ const AddCatBio = ({
                   console.log('등록 성공', addCatResult);
                   if (addCatResult) {
                     navigation.goBack();
+                  } else {
+                    console.log('등록 실패')
+                    Alert.alert('고양이를 등록할 수 없습니다');
+                    navigation.goBack();
                   }
                 }
+                else {
+                  console.log('주소검증 실패')
+                  Alert.alert('고양이를 등록할 수 없습니다');
+                  navigation.goBack();
+                }
+              }
+              else {
+                console.log('검증 실패')
+                Alert.alert('고양이를 등록할 수 없습니다');
+                navigation.goBack();
               }
             }}
           >

@@ -1,4 +1,6 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
+import {
+  observable, action, computed, decorate, runInAction,
+} from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
@@ -233,12 +235,33 @@ class CatStore {
     reportInfo: null,
   };
 
-  setCatPost = item => {
+  setCatPost = (item) => {
     this.info.selectedPost = item;
   };
 
   // actions
-  getMapInfo = (lat, long) => {
+  /**
+  * 1. 마커 배열과 carousel 배열을 분리
+  * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
+  * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
+  */
+  //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
+  getMapInfo = async () => {
+    const currentBound = this.root.user.currentBoundingBox;
+    console.log(currentBound);
+    await axios.post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
+      .then((res) => {
+        console.log('Response data is : ', res.data);
+        this.markers = res.data;
+        console.log('마커정보는:', this.markers);
+        this.carousels = res.data;
+        console.log('카루셀 정보: ', this.carousels);
+        return true;
+      })
+      .catch((err) => console.dir(err));
+    // if (result) {
+    //   return true;
+    // }
     // axios로 map 정보 get
     // res => this.spot.list에 추가
     // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
@@ -246,22 +269,25 @@ class CatStore {
 
   getSelectedSpotInfo = (lat, long) => {
     const selectedSpotCats = this.spot.list.filter(
-      cat => cat.location[0] === lat && cat.location[1] === long,
+      (cat) => cat.location[0] === lat && cat.location[1] === long,
     );
     this.spot.selected = selectedSpotCats;
   };
 
-  getSelectedCatInfo = catId => {
+  getSelectedCatInfo = (catId) => {
     const { userId } = this.root.user.info.myInfo;
 
     axios
       .get(`${SERVER_URL}/cat/${catId}/${userId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
+        console.log(res.data)
         res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
+        const replacement = this.markers;
+        this.carousels = replacement;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
   followCat = () => {
@@ -269,14 +295,14 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId, userId }, defaultCredential)
-      .then(res => this.getSelectedCatInfo())
-      .catch(err => console.dir(err));
+      .then((res) => this.getSelectedCatInfo())
+      .catch((err) => console.dir(err));
     // test용으로 넣은 코드
     this.info.selectedCat[1].isFollowing = true;
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = e => {
+  onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.addCatBio.location = { latitude, longitude };
   };
@@ -290,7 +316,7 @@ class CatStore {
     }
   };
 
-  pickImage = async type => {
+  pickImage = async (type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -336,11 +362,11 @@ class CatStore {
       cutClicked,
     } = this.addCatBio;
     if (
-      location &&
-      catNickname.length &&
-      catDescription.length &&
-      catSpecies.length &&
-      (cutClicked.Y || cutClicked.N || cutClicked.unknown)
+      location
+      && catNickname.length
+      && catDescription.length
+      && catSpecies.length
+      && (cutClicked.Y || cutClicked.N || cutClicked.unknown)
     ) {
       isValidated = true;
     } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
@@ -402,12 +428,12 @@ class CatStore {
         },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         Alert.alert('등록에 성공하였습니다!');
         this.clearAllInput('addCatBio');
         return true;
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
@@ -415,14 +441,14 @@ class CatStore {
         }
       });
 
-      return result;
+    return result;
   };
 
   toggleRainbowOpen = () => {
     this.info.rainbowOpen = !this.info.rainbowOpen;
   };
 
-  reportRainbow = type => {
+  reportRainbow = (type) => {
     const report = {
       Y: 0,
       YDate: null,
@@ -434,29 +460,29 @@ class CatStore {
 
     axios
       .post(`${SERVER_URL}/cat/rainbow`, report, defaultCredential)
-      .then(res => {
+      .then((res) => {
         if (res.status === 201) {
           this.info.selectedCat[0].rainbow = JSON.parse(res.data);
         }
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
-  disableReportBtn = type => {
+  disableReportBtn = (type) => {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
   };
 
-  postCut = type => {
+  postCut = (type) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     const catId = this.info.selectedCat[0].id;
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/cut`, { catId, request }, defaultCredential)
-        .then(res => {
+        .then((res) => {
           this.info.selectedCat[0].cut = JSON.parse(res.data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response && err.response.status === 409) {
             Alert.alert('중성화 유무 등록에 실패했습니다.');
           } else console.dir(err);
@@ -464,7 +490,7 @@ class CatStore {
     });
   };
 
-  postCatToday = value => {
+  postCatToday = (value) => {
     this.info.today = value;
     const todayInfo = {
       catToday: value,
@@ -473,13 +499,13 @@ class CatStore {
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then(res => {
+        .then((res) => {
           this.info.selectedCat[0].today = res.data.cat_today;
           this.info.selectedCat[0].todayTime = this.makeDateTime(
             res.data.cat_today_time,
           );
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.info.today = undefined;
@@ -490,7 +516,7 @@ class CatStore {
 
   validateTag = () => {
     const { newTag } = this.info;
-    const tags = this.info.selectedCat[2].map(tagInfo => tagInfo.tag.content);
+    const tags = this.info.selectedCat[2].map((tagInfo) => tagInfo.tag.content);
     if (tags.includes(newTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
       this.clearInput({ group: 'info', key: 'newTag' });
@@ -499,7 +525,7 @@ class CatStore {
     }
   };
 
-  postTag = newTag => {
+  postTag = (newTag) => {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(
@@ -507,17 +533,17 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         const { tags } = this.info.selectedCat[0];
         this.info.selectedCat[0].tags = [...tags, res.data];
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
-  getPostList = catId => {
+  getPostList = (catId) => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
   };
@@ -526,7 +552,7 @@ class CatStore {
     this.info.uri = null;
   };
 
-  validateAddInput = type => {
+  validateAddInput = (type) => {
     if (this.info[type]) {
       return true;
     }
@@ -544,13 +570,11 @@ class CatStore {
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then(res =>
-        this.clearInput(
-          { group: 'info', key: 'content' },
-          { group: 'info', key: 'photoPath' },
-        ),
-      )
-      .catch(err => {
+      .then((res) => this.clearInput(
+        { group: 'info', key: 'content' },
+        { group: 'info', key: 'photoPath' },
+      ))
+      .catch((err) => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
@@ -563,7 +587,7 @@ class CatStore {
       });
   };
 
-  getCommentList = postId => {
+  getCommentList = (postId) => {
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   };
 
@@ -572,8 +596,8 @@ class CatStore {
     const commentInfo = { catId, content: this.info.inputComment };
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
-      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
-      .catch(err => {
+      .then((res) => this.clearInput({ group: 'info', key: 'inputComment' }))
+      .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
         } else console.dir(err);
@@ -584,41 +608,39 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
         console.log('서버에서 받은 앨범', res.data);
         const photos = res.data.filter(
-          photo => photo.path !== this.info.selectedCat[3].path,
+          (photo) => photo.path !== this.info.selectedCat[3].path,
         );
         console.log('필터한 앨범', photos);
         this.info.album = photos;
       })
-      .catch(err => {
+      .catch((err) => {
         console.dir(err);
       });
   };
 
-  selectPhoto = photo => {
+  selectPhoto = (photo) => {
     this.info.selectedPhoto = photo;
   };
 
-  getFollowerList = catId => {
+  getFollowerList = (catId) => {
     console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
-      .then(res => (this.info.followerList = res.data))
-      .catch(err => console.dir(err));
+      .then((res) => (this.info.followerList = res.data))
+      .catch((err) => console.dir(err));
   };
 
   makeDateTime = () => {
     const YYYY = new Date().getFullYear();
-    const MM =
-      new Date().getMonth() > 8
-        ? new Date().getMonth()
-        : `0${new Date().getMonth() + 1}`;
-    const DD =
-      new Date().getDate() > 9
-        ? new Date().getDate()
-        : `0${new Date().getDate()}`;
+    const MM = new Date().getMonth() > 8
+      ? new Date().getMonth()
+      : `0${new Date().getMonth() + 1}`;
+    const DD = new Date().getDate() > 9
+      ? new Date().getDate()
+      : `0${new Date().getDate()}`;
     return `${YYYY}-${MM}-${DD}`;
   };
 
@@ -628,13 +650,13 @@ class CatStore {
   };
 
   clearInput = (...pairs) => {
-    pairs.forEach(pair => {
+    pairs.forEach((pair) => {
       const { group, key } = pair;
       this[group][key] = '';
     });
   };
 
-  clearAllInput = type => {
+  clearAllInput = (type) => {
     if (type === 'addCatBio') {
       this.addCatBio = {
         location: null,
@@ -649,41 +671,28 @@ class CatStore {
     }
   };
 
-  markers = [
+
+  carousels = [
     {
-      latitude: 37.802597,
-      longitude: -122.435197,
-      name: 'Best Place',
-      content: 'This is the best place in Portland',
-      img: require('../../img1.jpg'),
-    },
-    {
-      latitude: 37.79552,
-      longitude: -122.41612,
-      name: 'Best Place2222',
-      content: 'This is the best place in Portland2222',
-      img: require('../../img2.jpg'),
-    },
-    {
-      latitude: 37.766552,
-      longitude: -122.416128,
-      name: 'Best Place3333',
-      content: 'This is the best place in Portland3333',
-      img: require('../../img3.jpg'),
-    },
-    {
-      latitude: 37.766552,
-      longitude: 127.416128,
-      name: 'Best Place4444',
-      content: 'This is the best place in Portland4444',
-      img: require('../../img3.jpg'),
-    },
-    {
+      catId: 1,
       latitude: 37.503528,
       longitude: 127.049784,
-      name: '위워크',
-      content: 'This is the best place in Portland4444',
-      img: require('../../img3.jpg'),
+      catNickname: 'Best Place',
+      catAddress: '서울시 선릉',
+      description: 'This is the best place in Portland',
+      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    },
+  ];
+
+  markers = [
+    {
+      catId: 1,
+      latitude: 37.503528,
+      longitude: 127.049784,
+      catNickname: 'Best Place',
+      catAddress: '서울시 선릉',
+      description: 'This is the best place in Portland',
+      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
     },
   ];
 }
@@ -693,6 +702,7 @@ decorate(CatStore, {
   addCatBio: observable,
   info: observable,
   markers: observable,
+  carousels: observable,
   getMapInfo: action,
   getSelectedSpotInfo: action,
   getSelectedCatInfo: action,

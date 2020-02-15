@@ -100,7 +100,7 @@ class UserStore {
 
   signIn = info => {
     axios
-      .post('10.0.2.2:8000/user/signin', info, defaultCredential)
+      .post(`${SERVER_URL}/user/signin`, info, defaultCredential)
       .then(res => {
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
@@ -285,6 +285,7 @@ class UserStore {
           longitude,
           longitudeDelta: 0.005,
         });
+        this.root.cat.getMapInfo();
       },
       (error) => { Alert.alert(error.code, error.message); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
@@ -299,6 +300,7 @@ class UserStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
+    this.root.cat.getMapInfo();
   };
 }
 
