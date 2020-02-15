@@ -525,15 +525,12 @@ class CatStore {
 
   postPage = 1;
 
-  isLoadingPost = false;
-
   isRefreshingPost = false;
 
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
-      this.isLoadingPost = true;
       const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
       const post = await Axios.get(url);
       if (post) {
@@ -544,7 +541,6 @@ class CatStore {
           this.info.postList = this.info.postList.concat(post.data);
           this.isLoadingPost = false;
         }
-        console.log(this.info.postList);
       }
     } catch (error) {
       console.error(error);
@@ -553,7 +549,6 @@ class CatStore {
 
   _handleLoadMorePosts = () => {
     this.postPage += 1;
-    console.log(this.postPage);
     this.getPostList();
   }
 
@@ -561,7 +556,6 @@ class CatStore {
     this.isRefreshingPost = true;
     this.postPage = 1;
     this.getPostList();
-
   }
 
   removePhoto = () => {
