@@ -9,7 +9,7 @@ import {
   Label,
 } from 'native-base';
 import {
-  StyleSheet, Text, TouchableOpacity, View,
+  StyleSheet, Text, TouchableOpacity, View, Alert,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
@@ -48,22 +48,17 @@ const styles = StyleSheet.create({
 });
 
 const emailCertified = ({
-  email,
-  nickName,
-  confirmPW,
-  reConfirmPW,
   updateInput,
-  validateSignUp,
-  updateState,
   navigation,
-  emailCertified,
+  emailCode,
+  emailVerification,
+  signUp,
 }) => (
   <Container>
     <Header />
     <View style={styles.logo}>
       <Text
         style={styles.logoTxt}
-        onPress={() => navigation.navigate('Sign In')}
       >
         Dedicat
       </Text>
@@ -80,20 +75,19 @@ const emailCertified = ({
             이메일 인증 코드
           </Label>
           <Input
-            onChangeText={(text) => updateInput('email', text)}
-            value={email}
+            onChangeText={(text) => updateInput('emailVerification', text)}
+            value={emailVerification}
           />
         </Item>
       </Form>
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const validation = await validateSignUp();
-          if (validation) {
-            const signUpResult = await updateState('SignUp');
-            if (signUpResult) {
-              navigation.navigate('Sign In');
-            }
+          if (emailCode === emailVerification) {
+            const signUpresult = signUp();
+            if (signUpresult) navigation.navigate('Sign In');
+          } else {
+            Alert.alert('이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!');
           }
         }}
       >
@@ -102,16 +96,10 @@ const emailCertified = ({
     </Content>
   </Container>
 );
-// SignUp_Info.navigationOptions = {
-//   title: '회원가입',
-// };
 
 export default inject(({ user }) => ({
-  email: user.info.email,
-  nickName: user.info.nickName,
-  confirmPW: user.info.confirmPW,
-  reConfirmPW: user.info.reConfirmPW,
   updateInput: user.updateInput,
-  validateSignUp: user.validateSignUp,
-  updateState: user.updateState,
+  emailCode: user.info.emailCode,
+  emailVerification: user.info.emailVerification,
+  signUp: user.signUp,
 }))(observer(withNavigation(emailCertified)));

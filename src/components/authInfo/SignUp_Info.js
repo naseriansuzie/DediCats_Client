@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 
 const SignUp_Info = ({
   email,
-  nickName,
+  nickname,
   confirmPW,
   reConfirmPW,
   updateInput,
@@ -85,11 +85,11 @@ const SignUp_Info = ({
         <Item floatingLabel>
           <Label>
             <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
-            Nickname
+            nickname
           </Label>
           <Input
-            onChangeText={(text) => updateInput('nickName', text)}
-            value={nickName}
+            onChangeText={(text) => updateInput('nickname', text)}
+            value={nickname}
           />
         </Item>
         <Item floatingLabel>
@@ -117,6 +117,7 @@ const SignUp_Info = ({
         style={styles.btn}
         onPress={async () => {
           const validation = validateSignUp();
+          console.log(validation);
           if (validation) {
             const emailResult = await updateState('SignUp');
             if (emailResult) {
