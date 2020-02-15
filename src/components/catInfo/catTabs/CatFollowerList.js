@@ -95,8 +95,8 @@ class CatFollowerList extends React.Component {
   }
 }
 
-export default inject(({ cat, user }) => ({
-  myInfo: user.info.myInfo,
+export default inject(({ cat, auth }) => ({
+  myInfo: auth.info.myInfo,
   followerList: cat.info.followerList,
   catId: cat.info.selectedCat[0].id,
   nickname: cat.info.selectedCat[0].nickname,
