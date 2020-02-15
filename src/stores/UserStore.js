@@ -108,22 +108,25 @@ class UserStore {
     const reuslt = await axios
       .post(`${AUTH_SERVER}/auth/signin`, info, defaultCredential)
       .then((res) => {
+        if (res.status !== 201) return false;
+
         this.info.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
         runInAction(() => {
           this.clearInput('email', 'PW');
-          return true;
         });
+
+        return true;
       })
       .catch(err => {
         if (err.response && err.response.status === 401) {
-          Alert.alert(
-            '회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.',
-          );
-        } else {
-          console.dir(err);
-        }
+          Alert.alert('회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.');
+        } else console.dir(err);
+
+
+        return false;
       });
+
     return reuslt;
   };
 
