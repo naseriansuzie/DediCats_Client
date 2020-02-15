@@ -293,6 +293,12 @@ class UserStore {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
+        this.currentPosition = ({
+          latitude,
+          latitudeDelta: 0.0015,
+          longitude,
+          longitudeDelta: 0.0005,
+        });
         this.onRegionChangeComplete({
           latitude,
           latitudeDelta: 0.005,

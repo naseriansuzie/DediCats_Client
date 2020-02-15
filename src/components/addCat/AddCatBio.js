@@ -231,6 +231,7 @@ const AddCatBio = ({
                   console.log('등록 성공', addCatResult);
                   if (addCatResult) {
                     navigation.goBack();
+                    this.props.getMapInfo();
                   } else {
                     console.log('등록 실패')
                     Alert.alert('고양이를 등록할 수 없습니다');
@@ -260,6 +261,7 @@ const AddCatBio = ({
 
 export default inject(({ cat }) => ({
   uri: cat.addCatBio.uri,
+  getMapInfo: cat.getMapInfo,
   catNickname: cat.addCatBio.catNickname,
   catSpecies: cat.addCatBio.catSpecies,
   catDescription: cat.addCatBio.catDescription,

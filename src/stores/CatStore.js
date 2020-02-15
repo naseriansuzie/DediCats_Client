@@ -268,8 +268,9 @@ class CatStore {
       .then((res) => {
         console.log('Response data is : ', res.data);
         this.markers = res.data;
-        console.log('마커정보는:', this.markers);
+        console.log('마커정보는:', this.markers, res.data.length);
         this.carousels = res.data;
+        // this.carousels = res.data;
         console.log('카루셀 정보: ', this.carousels);
         return true;
       })
@@ -289,19 +290,31 @@ class CatStore {
   //   this.spot.selected = selectedSpotCats;
   // };
 
-  // CatStore
-  getSelectedCatInfo = catId => {
-    axios
+  getSelectedCatInfo = async (catId) => {
+    console.log('클릭이되나?:', catId);
+    const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
-      .then(res => {
-        res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
-        res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+      .then((res) => {
+        console.log('고양이 정보', res.data);
+        if (res.data[0].todayTime) {
+          res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
+        }
+        if (res.data[0].rainbow) {
+          res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
+        }
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.info.selectedCat = res.data;
-        const replacement = this.markers;
-        this.carousels = replacement;
+        // const replacement = this.markers;
+        // this.carousels = replacement;
+
+        return true;
       })
-      .catch((err) => console.dir(err));
+      .catch((err) => {
+        console.dir(err);
+        return false;
+      });
+    console.log('함수', result);
+    return result;
   };
 
   // CatStore
@@ -309,8 +322,8 @@ class CatStore {
     const catId = this.info.selectedCat[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
-      .then(res => this.getSelectedCatInfo(catId))
-      .catch(err => console.dir(err));
+      .then((res) => this.getSelectedCatInfo(catId))
+      .catch((err) => console.dir(err));
   };
 
   // MapStore
@@ -493,11 +506,11 @@ class CatStore {
     rainbow[`${type}Date`] = this.makeDateTime();
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     return result;
   };
 
@@ -518,7 +531,7 @@ class CatStore {
           { catId, catCut: request },
           defaultCredential,
         )
-        .then(res => {
+        .then((res) => {
           this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
         })
         .catch((err) => {
@@ -575,14 +588,14 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         const tags = this.info.selectedCat[2];
         tags.push(res.data);
         runInAction(() => {
           this.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
   // * PostStore
@@ -715,7 +728,7 @@ class CatStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  changeToDateTime = timeInfo => {
+  changeToDateTime = (timeInfo) => {
     const dateTimeArr = timeInfo
       .split('T')
       .join(' ')
@@ -724,7 +737,7 @@ class CatStore {
     return dateTimeArr[0];
   };
 
-  convertDateTime = str => {
+  convertDateTime = (str) => {
     let dateStr = `${str.substring(0, 4)}/${str.substring(
       5,
       7,
@@ -732,8 +745,8 @@ class CatStore {
 
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
-        dateStr.substring(13, 19)}`;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
+        + dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }
@@ -766,30 +779,31 @@ class CatStore {
       };
     }
   };
-  // * Helper Store
 
-  // carousels = [
-  //   {
-  //     catId: 1,
-  //     latitude: 37.503528,
-  //     longitude: 127.049784,
-  //     catNickname: 'Best Place',
-  //     catAddress: '서울시 선릉',
-  //     description: 'This is the best place in Portland',
-  //     catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-  //   },
-  // ];
+
+  carousels = [
+    //! sample data
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
+  ];
 
   markers = [
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
   ];
 }
 

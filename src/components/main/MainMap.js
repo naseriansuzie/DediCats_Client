@@ -41,6 +41,7 @@ class MainMap extends React.Component {
 
   componentDidMount() {
     this.props.requestMapPermission();
+    this.props.getMapInfo();
   }
 
   renderCarouselItem = ({ item }) => {
@@ -106,7 +107,7 @@ class MainMap extends React.Component {
             {
               markers.map((marker, index) => (
                 <MainMarker
-                  key={marker.name}
+                  key={marker.longitude + marker.latitude}
                   marker={marker}
                   index={index}
                   onMarkerPressed={this.onMarkerPressed}
@@ -151,6 +152,7 @@ class MainMap extends React.Component {
 export default inject(({ cat, user }) => ({
   carousels: cat.carousels,
   markers: cat.markers,
+  getMapInfo:cat.getMapInfo,
   currentPosition: user.currentPosition,
   currentRegion: user.currentRegion,
   currentBoundingBox: user.currentBoundingBox,
