@@ -1,7 +1,5 @@
 /* eslint-disable arrow-parens */
-import {
-  observable, action, computed, decorate, runInAction,
-} from 'mobx';
+import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
@@ -42,7 +40,7 @@ class UserStore {
     PW: '',
     myInfo:
       // null,
-      { userId: 1, nickname: '김집사', created_at: '2020-02-09' },
+      { userId: 2, nickname: '김집사', created_at: '2020-02-09' },
     myPhoto: defaultPhotoUrl,
   };
 
@@ -51,13 +49,19 @@ class UserStore {
     unFollowed: null,
   };
 
-  emailCertified = async (signUpInfo) => {
+  emailCertified = async signUpInfo => {
     const { email, nickName } = signUpInfo;
-    const result = await axios.post(`${SERVER_URL}/signup/email`, { email, nickName }, defaultCredential)
-      .then((res) => {
+    const result = await axios
+      .post(
+        `${SERVER_URL}/signup/email`,
+        { email, nickName },
+        defaultCredential,
+      )
+      .then(res => {
         Alert.alert(`${email}로 이메일 전송이 성공하였습니다!`);
         return signUpInfo;
-      }).catch(err => {
+      })
+      .catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
           return false;
@@ -66,7 +70,7 @@ class UserStore {
       });
 
     return result;
-  }
+  };
 
   // actions
   signUp = info => {
@@ -154,7 +158,7 @@ class UserStore {
     return isValidated;
   };
 
-  updateState = async (field) => {
+  updateState = async field => {
     if (field === 'SignUp') {
       const signUpInfo = {
         email: this.info.email,
@@ -191,19 +195,16 @@ class UserStore {
   };
 
   unFollowCat = () => {
-    const { userId } = this.info.myInfo;
     const catId = this.root.cat.info.selectedCat[0].id;
     axios
-      .post(`${SERVER_URL}/cat/unfollow`, { userId, catId }, defaultCredential)
+      .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
       .then(res => {
         this.myCat.unFollowed = catId;
         runInAction(() => {
-          this.root.getSelectedCatInfo();
+          this.root.cat.getSelectedCatInfo(catId);
         });
       })
       .catch(err => console.dir(err));
-    // test용으로 넣은 코드
-    this.root.cat.info.selectedCat[1].isFollowing = false;
   };
 
   uploadMyImg = () => {
@@ -286,10 +287,12 @@ class UserStore {
           longitudeDelta: 0.005,
         });
       },
-      (error) => { Alert.alert(error.code, error.message); },
+      error => {
+        Alert.alert(error.code, error.message);
+      },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
-  }
+  };
 
   onRegionChangeComplete = async region => {
     this.currentRegion = { ...region };

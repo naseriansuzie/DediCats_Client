@@ -1,60 +1,72 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body } from 'native-base';
-import CatCommentList from './CatCommentList';
+import {
+  Container,
+  Header,
+  Content,
+  Card,
+  CardItem,
+  Thumbnail,
+  Left,
+  Body,
+  List,
+} from 'native-base';
+import CatComment from './CatComment';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#ececec',
-    alignItems: 'center',
-    paddingTop: 20,
+    flex: 3,
+    width: '100%',
   },
+  image: { flex: 1, height: 300, width: 380 },
+  noComment: { color: '#7f8296', paddingTop: 15, paddingLeft: 15 },
+  flex1: { flex: 1 },
 });
 
-class CatSelectedPost extends React.Component {
-  render() {
-    const { content, createAt, user, photos } = this.props.selectedPost;
-    return (
-      <Container style={{ width: '100%' }}>
-        <Header style={{ display: 'none' }} />
-        <Content>
-          <Card style={{ flex: 0 }}>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{uri: user.photoPath}} />
-                <Body>
-                  <Text>{user.nickname}</Text>
-                  <Text note>{this.props.convertDateTime(createAt)}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Image source={{uri: photos[0].path}} style={{height: 300, width: 380, flex: 1}}/>
-                <Text>{content}</Text>
-              </Body>
-            </CardItem>
-            {this.props.commentList !== null
-              ? (
-                <CardItem style={{ borderTopWidth: 0.5, borderTopColor: 'grey' }}>
-                  <CatCommentList />
-                </CardItem>
-              )
-              : (
-                <CardItem style={{ borderTopWidth: 0.5, borderTopColor: 'grey' }}>
-                  <View>
-                    <Text>첫번째 댓글을 달아주세요!</Text>
-                  </View>
-                </CardItem>
-              )}
-          </Card>
-        </Content>
-      </Container>
-    );
-  }
-}
+const CatSelectedPost = ({ selectedPost, commentList }) => (
+  <Container style={styles.container}>
+    <Header style={{ display: 'none' }} />
+    <Content>
+      <Card style={styles.flex1}>
+        <CardItem style={styles.flex1}>
+          <Left>
+            <Thumbnail
+              style={{ borderWidth: 1, borderColor: 'green' }}
+              source={{uri: selectedPost.user.photoPath}}
+            />
+            <Body>
+                  <Text>{selectedPost.user.nickname}</Text>
+                  <Text note>{props.convertDateTime(createAt)}</Text>
+            </Body>
+          </Left>
+        </CardItem>
+        <CardItem style={styles.flex1}>
+          <Body>
+          <Image source={{uri: selectedPost.photos[0].path}} style={styles.image}/>
+            <Text>{selectedPost.content}</Text>
+          </Body>
+        </CardItem>
+      </Card>
+      <List>
+        {commentList ? (
+          commentList.map((comment, idx) => (
+            <CatComment
+              key={`comment_${comment.id}`}
+              idx={idx}
+              myPhoto={comment.user.photoPath}
+              userNickname={comment.user.nickname}
+              comment={comment.content}
+              date={comment.createAt}
+            />
+          ))
+        ) : (
+          <Text style={styles.noComment}>댓글이 없습니다.</Text>
+        )}
+      </List>
+    </Content>
+  </Container>
+);
 
 export default inject(({ cat }) => ({
   selectedPost: cat.info.selectedPost,
