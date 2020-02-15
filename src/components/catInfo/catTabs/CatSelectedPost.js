@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   flex1: { flex: 1 },
 });
 
-const CatSelectedPost = ({ selectedPost, commentList }) => (
+const CatSelectedPost = ({ selectedPost, commentList, convertDateTime }) => (
   <Container style={styles.container}>
     <Header style={{ display: 'none' }} />
     <Content>
@@ -33,17 +33,20 @@ const CatSelectedPost = ({ selectedPost, commentList }) => (
           <Left>
             <Thumbnail
               style={{ borderWidth: 1, borderColor: 'green' }}
-              source={{uri: selectedPost.user.photoPath}}
+              source={{ uri: selectedPost.user.photoPath }}
             />
             <Body>
-                  <Text>{selectedPost.user.nickname}</Text>
-                  <Text note>{props.convertDateTime(createAt)}</Text>
+              <Text>{selectedPost.user.nickname}</Text>
+              <Text note>{convertDateTime(selectedPost.createAt)}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem style={styles.flex1}>
           <Body>
-          <Image source={{uri: selectedPost.photos[0].path}} style={styles.image}/>
+            <Image
+              source={{ uri: selectedPost.photos[0].path }}
+              style={styles.image}
+            />
             <Text>{selectedPost.content}</Text>
           </Body>
         </CardItem>
@@ -72,6 +75,4 @@ export default inject(({ cat }) => ({
   selectedPost: cat.info.selectedPost,
   commentList: cat.info.commentList,
   convertDateTime: cat.convertDateTime,
-}))(
-  observer(CatSelectedPost),
-);
+}))(observer(CatSelectedPost));
