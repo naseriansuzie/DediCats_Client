@@ -33,26 +33,17 @@ const CatSelectedPost = ({ selectedPost, commentList }) => (
           <Left>
             <Thumbnail
               style={{ borderWidth: 1, borderColor: 'green' }}
-              source={{
-                uri:
-                  '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
-              }}
+              source={{uri: selectedPost.user.photoPath}}
             />
             <Body>
-              <Text>NativeBase</Text>
-              <Text note>April 15, 2016</Text>
+                  <Text>{selectedPost.user.nickname}</Text>
+                  <Text note>{props.convertDateTime(createAt)}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem style={styles.flex1}>
           <Body>
-            <Image
-              source={{
-                uri:
-                  '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img3.jpg',
-              }}
-              style={styles.image}
-            />
+          <Image source={{uri: selectedPost.photos[0].path}} style={styles.image}/>
             <Text>{selectedPost.content}</Text>
           </Body>
         </CardItem>
@@ -80,4 +71,7 @@ const CatSelectedPost = ({ selectedPost, commentList }) => (
 export default inject(({ cat }) => ({
   selectedPost: cat.info.selectedPost,
   commentList: cat.info.commentList,
-}))(observer(CatSelectedPost));
+  convertDateTime: cat.convertDateTime,
+}))(
+  observer(CatSelectedPost),
+);
