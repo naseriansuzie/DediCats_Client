@@ -43,12 +43,13 @@ class CatStore {
   }
 
   // observable
-  spot = {
-    followCatNum: 0, // 어디다 쓰지?
-    list: null,
-    selected: null,
-  };
+  // spot = {
+  //   followCatNum: 0, // 어디다 쓰지?
+  //   list: null,
+  //   selected: null,
+  // };
 
+  // CatStore
   addCatBio = {
     address: '',
     location: { latitude: 127.049784, longitude: 127.049784 },
@@ -61,6 +62,7 @@ class CatStore {
     cutClicked: { Y: false, N: false, unknown: false },
   };
 
+  // CatStore -> info 안의 요소들을 꺼내서 개별적인 observable로 변경 가능
   info = {
     selectedCat:
       // null,
@@ -245,6 +247,7 @@ class CatStore {
     reportInfo: null,
   };
 
+  // CatStore
   setCatPost = (item) => {
     this.info.selectedPost = item;
   };
@@ -256,6 +259,8 @@ class CatStore {
   * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
   */
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
+
+  // MapStore
   getMapInfo = async () => {
     const currentBound = this.root.user.currentBoundingBox;
     console.log(currentBound);
@@ -277,13 +282,14 @@ class CatStore {
     // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
   };
 
-  getSelectedSpotInfo = (lat, long) => {
-    const selectedSpotCats = this.spot.list.filter(
-      (cat) => cat.location[0] === lat && cat.location[1] === long,
-    );
-    this.spot.selected = selectedSpotCats;
-  };
+  // getSelectedSpotInfo = (lat, long) => {
+  //   const selectedSpotCats = this.spot.list.filter(
+  //     (cat) => cat.location[0] === lat && cat.location[1] === long,
+  //   );
+  //   this.spot.selected = selectedSpotCats;
+  // };
 
+  // CatStore
   getSelectedCatInfo = catId => {
     axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
@@ -298,6 +304,7 @@ class CatStore {
       .catch((err) => console.dir(err));
   };
 
+  // CatStore
   followCat = () => {
     const catId = this.info.selectedCat[0].id;
     axios
@@ -306,12 +313,14 @@ class CatStore {
       .catch(err => console.dir(err));
   };
 
+  // MapStore
   // {latitude: Number, longitude: Number}
   onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.addCatBio.location = { latitude, longitude };
   };
 
+  // AuthStore
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -321,6 +330,7 @@ class CatStore {
     }
   };
 
+  // * HelperStore
   pickImage = async (type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -331,11 +341,24 @@ class CatStore {
     });
     if (!result.cancelled) {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this[type].uri = result.uri;
+      this[type].uri = result.uri; 
       this[type].photoPath = imageTarget;
     }
   };
 
+  removePhoto = () => {
+    // if (addCatPhoto) {
+    //   new Photo -> this.cat.removeCatPhoto;
+    // } else if (new post Photo) {
+    //   null this.post.removePostPhoto;
+    // } els if (user) {
+    //   default photo this.user.removeUserPhoto;
+    // }
+    this.info.uri = null;
+  };
+  // * HelperStore
+
+  // CatStore
   selectCut = (observable, type) => {
     this[observable].cut = { Y: 0, N: 0, unknown: 0 };
     runInAction(() => {
@@ -357,6 +380,7 @@ class CatStore {
     });
   };
 
+  // CatStore
   validateAddCat = () => {
     let isValidated = false;
     const {
@@ -378,6 +402,7 @@ class CatStore {
     return isValidated;
   };
 
+  // MapStore
   getAddress = async () => {
     const { latitude, longitude } = this.addCatBio.location;
     console.log(latitude, longitude);
@@ -409,6 +434,7 @@ class CatStore {
     return true;
   };
 
+  // CatStore
   addCat = async () => {
     const {
       address,
@@ -449,10 +475,12 @@ class CatStore {
     return result;
   };
 
+  // CatStore
   toggleRainbowOpen = () => {
     this.info.rainbowOpen = !this.info.rainbowOpen;
   };
 
+  // CatStore
   reportRainbow = async type => {
     const catId = this.info.selectedCat[0].id;
     const rainbow = {
@@ -473,10 +501,12 @@ class CatStore {
     return result;
   };
 
+  // CatStore
   disableReportBtn = (type) => {
     this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
   };
 
+  // CatStore
   postCut = (type) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
@@ -499,6 +529,7 @@ class CatStore {
     });
   };
 
+  // CatStore
   postCatToday = (value) => {
     this.info.today = value;
     const todayInfo = {
@@ -523,6 +554,7 @@ class CatStore {
     });
   };
 
+  // CatStore
   validateTag = () => {
     const { newTag } = this.info;
     const tags = this.info.selectedCat[2].map((tagInfo) => tagInfo.tag.content);
@@ -534,6 +566,7 @@ class CatStore {
     }
   };
 
+  // CatStore
   postTag = (newTag) => {
     const catId = this.info.selectedCat[0].id;
     axios
@@ -552,6 +585,7 @@ class CatStore {
       .catch(err => console.dir(err));
   };
 
+  // * PostStore
   postPage = 1;
 
   isRefreshingPost = false;
@@ -585,10 +619,6 @@ class CatStore {
     this.isRefreshingPost = true;
     this.postPage = 1;
     this.getPostList();
-  };
-
-  removePhoto = () => {
-    this.info.uri = null;
   };
 
   validateAddInput = (type) => {
@@ -625,6 +655,7 @@ class CatStore {
         }
       });
   };
+  // * Post Store
 
   getCommentList = (postId) => {
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
@@ -672,6 +703,7 @@ class CatStore {
       .catch((err) => console.dir(err));
   };
 
+  // * Helper Store
   makeDateTime = () => {
     const YYYY = new Date().getFullYear();
     const MM = new Date().getMonth() > 8
@@ -734,19 +766,19 @@ class CatStore {
       };
     }
   };
+  // * Helper Store
 
-
-  carousels = [
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
-  ];
+  // carousels = [
+  //   {
+  //     catId: 1,
+  //     latitude: 37.503528,
+  //     longitude: 127.049784,
+  //     catNickname: 'Best Place',
+  //     catAddress: '서울시 선릉',
+  //     description: 'This is the best place in Portland',
+  //     catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+  //   },
+  // ];
 
   markers = [
     {
