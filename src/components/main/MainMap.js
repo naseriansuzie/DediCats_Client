@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/state-in-constructor */
 import React from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -61,8 +62,8 @@ class MainMap extends React.Component {
   }
 
   onCarouselItemChange = (index) => {
-    const { markers } = this.props;
-    const location = markers[index];
+    const { carousels } = this.props;
+    const location = carousels[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -89,7 +90,7 @@ class MainMap extends React.Component {
 
   render() {
     console.disableYellowBox = 'true';
-    const { markers, onRegionChangeComplete, getCurrentPosition, currentRegion, permissionState } = this.props;
+    const { markers, carousels, onRegionChangeComplete, getCurrentPosition, currentRegion, permissionState } = this.props;
     if (permissionState === true && currentRegion.longitude !== 0) {
       return (
         <View style={styles.container}>
@@ -128,7 +129,7 @@ class MainMap extends React.Component {
           </TouchableOpacity>
           <Carousel
             ref={(c) => { this._carousel = c; }}
-            data={markers}
+            data={carousels}
             renderItem={this.renderCarouselItem}
             onSnapToItem={(index) => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
@@ -148,6 +149,7 @@ class MainMap extends React.Component {
 }
 
 export default inject(({ cat, user }) => ({
+  carousels: cat.carousels,
   markers: cat.markers,
   currentPosition: user.currentPosition,
   currentRegion: user.currentRegion,

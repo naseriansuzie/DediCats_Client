@@ -291,6 +291,7 @@ class UserStore {
           longitude,
           longitudeDelta: 0.005,
         });
+        this.root.cat.getMapInfo();
       },
       error => {
         Alert.alert(error.code, error.message);
@@ -307,6 +308,7 @@ class UserStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
+    this.root.cat.getMapInfo();
   };
 }
 

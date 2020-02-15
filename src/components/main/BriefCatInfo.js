@@ -83,12 +83,12 @@ const BriefCatInfo = ({ item, navigation, hideCarousel }) => (
         onPress={() => navigation.navigate('CatInfo')}
       >
         <View style={styles.row30}>
-          <Image style={styles.cardImg} source={item.img} />
+          <Image style={styles.cardImg} source={{uri: item.catProfile}} />
         </View>
         <View style={styles.row70}>
-          <Text style={styles.nickName}>{item.name}</Text>
-          <Text style={styles.address}>어느 동네 주소</Text>
-          <Text style={styles.intro}>{item.content}</Text>
+          <Text style={styles.nickName}>{item.catNickname}</Text>
+          <Text style={styles.address}>{item.catAddress}</Text>
+          <Text style={styles.intro}>{item.description}</Text>
           <View style={styles.tagView}>
             <Badge style={styles.tag}>
               <Text>태그</Text>
