@@ -31,6 +31,7 @@ class UserStore {
 
   // observable
   info = {
+    // * AuthStore
     isSignUp: false,
     isSignIn: false,
     email: '',
@@ -40,6 +41,7 @@ class UserStore {
     PW: '',
     emailVerification: '',
     emailCode: '',
+    // * AuthStore
     myInfo:
       // null,
       { userId: 2, nickname: '김집사', created_at: '2020-02-09' },
@@ -51,6 +53,7 @@ class UserStore {
     unFollowed: null,
   };
 
+  // * AuthStore
   emailCertified = async (signUpInfo) => {
     const { email, nickname } = signUpInfo;
     const result = await axios.post(`${SERVER_URL}/signup/email`, { email, nickname }, defaultCredential)
@@ -184,7 +187,9 @@ class UserStore {
     }
     this.signOut();
   };
+  // * AuthStore
 
+  // * Helper Store
   updateInput = (field, text) => {
     console.log('text ', text);
     this.info[field] = text;
@@ -198,6 +203,7 @@ class UserStore {
       });
     });
   };
+  // * Helper Store
 
   unFollowCat = () => {
     const catId = this.root.cat.info.selectedCat[0].id;
@@ -212,15 +218,16 @@ class UserStore {
       .catch(err => console.dir(err));
   };
 
-  uploadMyImg = () => {
-    if (this.info.myPhoto !== defaultPhotoUrl) {
-      const imgInfo = {
-        userId: this.info.myInfo.userId,
-        photoPath: this.info.myPhoto,
-      };
-      axios.post(`${SERVER_URL}/photo/profile`, imgInfo, defaultPhotoUrl);
-    }
-  };
+  // Helper Function
+  // uploadMyImg = () => {
+  //   if (this.info.myPhoto !== defaultPhotoUrl) {
+  //     const imgInfo = {
+  //       userId: this.info.myInfo.userId,
+  //       photoPath: this.info.myPhoto,
+  //     };
+  //     axios.post(`${SERVER_URL}/photo/profile`, imgInfo, defaultPhotoUrl);
+  //   }
+  // };
 
   changePW = () => {
     if (this.confirmPW !== this.reConfirmPW) {
@@ -237,6 +244,7 @@ class UserStore {
     }
   };
 
+  // * MapStore
   // 현재 나의 위치
   currentPosition = {
     latitude: 0,
@@ -316,6 +324,7 @@ class UserStore {
     };
     this.root.cat.getMapInfo();
   };
+    // * MapStore
 }
 
 decorate(UserStore, {
