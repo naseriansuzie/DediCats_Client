@@ -124,12 +124,12 @@ const AddCatBio = ({
           <View style={styles.photoView}>
             <View style={styles.photo}>
               {addCatUri ? (
-                <Image style={styles.catPhoto} source={{ addCatUri }} />
+                <Image style={styles.catPhoto} source={{ uri: addCatUri }} />
               ) : (
                 <Image
                   style={styles.defaultPhoto}
                   source={{
-                    addCatUri: DEFAULT_CAT,
+                    uri: DEFAULT_CAT,
                   }}
                 />
               )}

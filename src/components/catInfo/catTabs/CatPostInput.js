@@ -122,7 +122,7 @@ const CatPostInput = ({
                 >
                   <Text style={styles.removeBtnTxt}>X</Text>
                 </TouchableHighlight>
-                <Image style={styles.image} source={{ selectedCatUri }} />
+                <Image style={styles.image} source={{ uri: selectedCatUri }} />
               </View>
             ) : (
               <TouchableOpacity
