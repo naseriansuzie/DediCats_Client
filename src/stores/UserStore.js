@@ -24,17 +24,18 @@ class UserStore {
   unFollowedCat = null;
 
   changePW = () => {
-    if (this.confirmPW !== this.reConfirmPW) {
+    const { confirmPW, reConfirmPW, myInfo } = this.root.auth;
+    if (confirmPW !== reConfirmPW) {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
     } else {
       const updateInfo = {
-        userId: this.info.myInfo.userId,
-        password: this.info.confirmPW,
+        userId: myInfo.userId,
+        password: confirmPW,
       };
       axios
         .patch(`${SERVER_URL}/user/changepw`, updateInfo, defaultCredential)
-        .then(res => res)
-        .catch(err => console.dir(err));
+        .then((res) => res)
+        .catch((err) => console.dir(err));
     }
   };
 }
