@@ -363,7 +363,7 @@ class CatStore {
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
         .then(res => {
           this.selectedCatBio[0].today = res.data.cat_today;
-          this.selectedCatBio[0].todayTime = this.root.helper.makeDateTime(
+          this.selectedCatBio[0].todayTime = this.root.helper.makeGMTDateTime(
             res.data.cat_today_time,
           );
         })
