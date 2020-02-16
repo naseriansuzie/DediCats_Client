@@ -180,7 +180,7 @@ class CatBio extends React.Component {
                           ) {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
-                            await selectCut('info', 'Y');
+                            await selectCut('selectedCat', 'Y');
                             postCut('Y');
                           }
                         }}
@@ -198,7 +198,7 @@ class CatBio extends React.Component {
                           ) {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
-                            await selectCut('info', 'N');
+                            await selectCut('selectedCat', 'N');
                             postCut('N');
                           }
                         }}
@@ -218,7 +218,7 @@ class CatBio extends React.Component {
                           ) {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
-                            await selectCut('info', 'unknown');
+                            await selectCut('selectedCat', 'unknown');
                             postCut('unknown');
                           }
                         }}

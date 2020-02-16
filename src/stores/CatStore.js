@@ -3,9 +3,6 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
-import Axios from 'axios';
 
 /**
  * 1. spot 관련
@@ -40,211 +37,88 @@ class CatStore {
     this.root = root;
   }
 
-  // observable
-  // spot = {
-  //   followCatNum: 0, // 어디다 쓰지?
-  //   list: null,
-  //   selected: null,
-  // };
+  // 등록할 주소
+  addCatAddress = '';
 
-  // CatStore
-  addCatBio = {
-    address: '',
-    location: { latitude: 127.049784, longitude: 127.049784 },
-    photoPath: null,
-    catNickname: '',
-    catDescription: '',
-    catSpecies: '',
-    cut: { Y: 0, N: 0, unknown: 0 },
-    uri: null,
-    cutClicked: { Y: false, N: false, unknown: false },
-  };
+  // 등록할 위치
+  addCatLocation = { latitude: 37.049784, longitude: 127.049784 };
+
+  // 등록할 사진경로
+  addCatPhotoPath = null;
+
+  // 등록할 닉네임
+  addCatNickname = '';
+
+  // 등록할 소개글
+  addCatDescription = '';
+
+  // 등록할 종
+  addCatSpecies = '';
+
+  // 등록할 중성화
+  addCatCut = { Y: 0, N: 0, unknown: 0 };
+
+  // 등록할 사진 미리보기 uri
+  addCatUri = null;
+
+  // 등록할 중성화 선택
+  addCatCutClicked = { Y: false, N: false, unknown: false };
 
   // CatStore -> info 안의 요소들을 꺼내서 개별적인 observable로 변경 가능
-  info = {
-    selectedCat: null,
-    // [
-    //   {
-    //     id: 2,
-    //     description: '완전 귀염이 넘치는 아이에요.',
-    //     location: 'POINT(1 2)',
-    //     address: '서울시 강남구 대치동',
-    //     nickname: '애옹이',
-    //     cut: { Y: 5, N: 0, unknown: 0 },
-    //     rainbow: {
-    //       Y: 17,
-    //       YDate: '2020-02-05',
-    //       N: 0,
-    //       NDate: null,
-    //     },
-    //     species: '코숏',
-    //     today: null,
-    //     todayTime: '2020-02-11T05:50:43.000Z',
-    //     status: 'Y',
-    //     createAt: '2020-02-05T03:26:25.561Z',
-    //     updateAt: '2020-02-06T11:30:24.000Z',
-    //   },
-    //   {
-    //     isFollowing: false,
-    //   },
-    //   [
-    //     {
-    //       id: 7,
-    //       tag: {
-    //         content: '초큐트',
-    //       },
-    //     },
-    //     {
-    //       id: 4,
-    //       tag: {
-    //         content: '돼냥이',
-    //       },
-    //     },
-    //     {
-    //       id: 11,
-    //       tag: {
-    //         content: '우리동네대장애옹이',
-    //       },
-    //     },
-    //     {
-    //       id: 12,
-    //       tag: {
-    //         content: '귀염뽀짝',
-    //       },
-    //     },
-    //   ],
-    //   {
-    //     path: 'https://source.unsplash.com/nKC772R_qog',
-    //   },
-    // ],
-    today: undefined,
-    newTag: '',
-    postList: [],
-    //   {
-    //     id: 3,
-    //     content: '바보',
-    //     status: 'Y',
-    //     createAt: '2020-02-05T04:15:21.607Z',
-    //     updateAt: '2020-02-05T04:15:21.607Z',
-    //     user: {
-    //       id: 1,
-    //       nickname: 'testUser',
-    //       photoPath:
-    //         '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
-    //     },
-    //     photos: [
-    //       {
-    //         id: 2,
-    //         path:
-    //           '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     id: 1,
-    //     content: '뭐지',
-    //     status: 'Y',
-    //     createAt: '2020-02-05T03:26:25.603Z',
-    //     updateAt: '2020-02-05T03:54:58.000Z',
-    //     user: {
-    //       id: 1,
-    //       nickname: 'testUser',
-    //       photoPath:
-    //         '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
-    //     },
-    //     photos: [
-    //       {
-    //         id: 3,
-    //         path:
-    //           '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img2.jpg',
-    //       },
-    //     ],
-    //   },
-    // ],
-    selectedPost: null,
-    inputContent: '',
-    commentList: null,
-    inputComment: '',
-    album: null,
-    // [
-    //   {
-    //     id: 4,
-    //     path: 'https://source.unsplash.com/hGMvqCyRM9U',
-    //   },
-    //   {
-    //     id: 6,
-    //     path: 'https://source.unsplash.com/nKC772R_qog',
-    //   },
-    //   {
-    //     id: 7,
-    //     path: 'https://source.unsplash.com/hGMvqCyRM9U',
-    //   },
-    // ],
-    uri: null,
-    photoPath: null,
-    followerList: null,
-    // [
-    //   {
-    //     id: 1,
-    //     users: [
-    //       {
-    //         id: 1,
-    //         nickname: 'testUser',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 2,
-    //         nickname: 'Joshua',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 3,
-    //         nickname: 'perry',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 4,
-    //         nickname: 'testUser',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 5,
-    //         nickname: 'Joshua',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 6,
-    //         nickname: 'perry',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 7,
-    //         nickname: 'testUser',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 8,
-    //         nickname: 'Joshua',
-    //         photoPath: null,
-    //       },
-    //       {
-    //         id: 9,
-    //         nickname: 'perry',
-    //         photoPath: null,
-    //       },
-    //     ],
-    //   },
-    // ],
-    rainbowOpen: false,
-    rainbowYReported: false,
-    rainbowNReported: false,
-    cutClicked: { Y: false, N: false, unknown: false },
-    reportInfo: null,
-  };
+  // BriefCatInfo 에서 선택한 cat info
+  selectedCatBio = null; // 다른 스토어도 selectedCat -> selectedCatBio
+
+  // 오늘의 상태 태그
+  selectedCatToday = undefined;
+
+  // 새로 추가하려는 태그
+  selectedCatNewTag = '';
+
+  // postList에서 선택한 post
+  selectedCatPost = null;
+
+  // post를 추가할 때의 content
+  selectedCatInputContent = '';
+
+  // post에 해당하는 commentList
+  selectedCatCommentList = null;
+
+  // 작성하는 댓글
+  selectedCatInputComment = '';
+
+  // 해당 고양이의 앨범
+  selectedCatAlbum = null;
+
+  // 해당 고양이 Uri
+  selectedCatUri = null;
+
+  // 해당 고양이 Photo
+  selectedCatPhoto = null;
+
+  // 해당 고양이 PhotoPath
+  selectedCatPhotoPath = null;
+
+  // 해당 고양이 FollwerList
+  selectedCatFollowerList = null;
+
+  // 해당 고양이 무지개 boolean
+  selectedCatRainbowOpen = false;
+
+  // 해당 고양이 무지개 Y
+  selectedCatRainbowYReported = false;
+
+  // 해당 고양이 무지개 N
+  selectedCatRainbowNReported = false;
+
+  // 해당 고양이 중성화 선택
+  selectedCatCutClicked = { Y: false, N: false, unknown: false };
+
+  // 해당 고양이(포스트) 신고
+  selectedCatReportInfo = null;
 
   // CatStore
-  setCatPost = item => {
-    this.info.selectedPost = item;
+  setCatPost = (item) => {
+    this.selectedCatPost = item;
   };
 
   // actions
@@ -255,51 +129,21 @@ class CatStore {
    */
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
-  // MapStore
-  getMapInfo = async () => {
-    const currentBound = this.root.user.currentBoundingBox;
-    console.log(currentBound);
-    await axios
-      .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
-      .then(res => {
-        console.log('Response data is : ', res.data);
-        this.markers = res.data;
-        console.log('마커정보는:', this.markers, res.data.length);
-        this.carousels = res.data;
-        // this.carousels = res.data;
-        console.log('카루셀 정보: ', this.carousels);
-        return true;
-      })
-      .catch(err => console.dir(err));
-    // if (result) {
-    //   return true;
-    // }
-    // axios로 map 정보 get
-    // res => this.spot.list에 추가
-    // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
-  };
-
-  // getSelectedSpotInfo = (lat, long) => {
-  //   const selectedSpotCats = this.spot.list.filter(
-  //     (cat) => cat.location[0] === lat && cat.location[1] === long,
-  //   );
-  //   this.spot.selected = selectedSpotCats;
-  // };
-
-  getSelectedCatInfo = async catId => {
+  getSelectedCatInfo = async (catId) => {
     console.log('클릭이되나?:', catId);
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then(res => {
         console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
-          res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
+          // Helper Store
+          res.data[0].todayTime = this.root.helper.changeToDateTime(res.data[0].todayTime);
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         }
         res.data[0].cut = JSON.parse(res.data[0].cut);
-        this.info.selectedCat = res.data;
+        this.selectedCatBio = res.data;
         // const replacement = this.markers;
         // this.carousels = replacement;
 
@@ -315,80 +159,42 @@ class CatStore {
 
   // CatStore
   followCat = () => {
-    const catId = this.info.selectedCat[0].id;
+    const catId = this.selectedCatBio[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
-
-  // MapStore
-  // {latitude: Number, longitude: Number}
-  onDragEnd = e => {
-    const { latitude, longitude } = e.nativeEvent.coordinate;
-    this.addCatBio.location = { latitude, longitude };
-  };
-
-  // AuthStore
-  getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        Alert.alert('사진을 올리기 위해 접근 권한이 필요합니다.');
-      }
-    }
-  };
-
-  // * HelperStore
-  pickImage = async type => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 4],
-      quality: 0.2,
-      base64: true,
-    });
-    if (!result.cancelled) {
-      const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this[type].uri = result.uri;
-      this[type].photoPath = imageTarget;
-    }
-  };
-
-  removePhoto = () => {
-    // if (addCatPhoto) {
-    //   new Photo -> this.cat.removeCatPhoto;
-    // } else if (new post Photo) {
-    //   null this.post.removePostPhoto;
-    // } els if (user) {
-    //   default photo this.user.removeUserPhoto;
-    // }
-    this.info.uri = null;
-  };
-  // * HelperStore
 
   // CatStore
-  selectCut = (observable, type) => {
-    this[observable].cut = { Y: 0, N: 0, unknown: 0 };
+  selectCut = (variable, type) => {
+    if (variable === 'addCat') {
+      this[`${variable}Cut`] = { Y: 0, N: 0, unknown: 0 };
+    }
+    // this[variable].cut = { Y: 0, N: 0, unknown: 0 };
     runInAction(() => {
-      const keys = Object.keys(this[observable].cutClicked);
-      const values = Object.values(this[observable].cutClicked);
+      const keys = Object.keys(this[variable].CutClicked);
+      const values = Object.values(this[variable].CutClicked);
       keys.forEach((key, idx) => {
         if (key === type) {
           values.splice(idx, 1, true);
         } else values.splice(idx, 1, false);
       });
-      this[observable].cutClicked = {
+
+      // this[variable].cutClicked = {
+      this[`${variable}CutClicked`] = {
         Y: values[0],
         N: values[1],
         unknown: values[2],
       };
-      runInAction(() => {
-        this[observable].cut[type] = 1;
-      });
+      if (variable === 'addCat') {
+        runInAction(() => {
+          this[`${variable}Cut`][type] = 1;
+        });
+      }
     });
   };
 
@@ -396,18 +202,18 @@ class CatStore {
   validateAddCat = () => {
     let isValidated = false;
     const {
-      location,
-      catNickname,
-      catDescription,
-      catSpecies,
-      cutClicked,
-    } = this.addCatBio;
+      addCatLocation,
+      addCatNickname,
+      addCatDescription,
+      addCatSpecies,
+      addCatCutClicked,
+    } = this;
     if (
-      location &&
-      catNickname.length &&
-      catDescription.length &&
-      catSpecies.length &&
-      (cutClicked.Y || cutClicked.N || cutClicked.unknown)
+      addCatLocation
+      && addCatNickname.length
+      && addCatDescription.length
+      && addCatSpecies.length
+      && (addCatCutClicked.Y || addCatCutClicked.N || addCatCutClicked.unknown)
     ) {
       isValidated = true;
     } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
@@ -416,7 +222,7 @@ class CatStore {
 
   // MapStore
   getAddress = async () => {
-    const { latitude, longitude } = this.addCatBio.location;
+    const { latitude, longitude } = this.addCatLocation;
     console.log(latitude, longitude);
     /* API 제한 때문에 실제로 서버 연동 후에 주석 풀 예정 */
     // axios
@@ -435,48 +241,48 @@ class CatStore {
     //       region_3depth_name,
     //     } = res.data.documents[0].address;
     //     console.log(region_1depth_name, region_2depth_name, region_3depth_name);
-    //     this.addCatBio.address = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
-    //     return this.addCatBio.address;
+    //     this.addCatAddress = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
+    //     return this.addCatAddress;
     //   })
     //   .catch(err => {
     //     console.dir(err);
     //     Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
     //   });
-    this.addCatBio.address = '서울 강남구 대치동';
+    this.addCatAddress = '서울 강남구 대치동';
     return true;
   };
 
   // CatStore
   addCat = async () => {
     const {
-      address,
-      location,
-      photoPath,
-      catNickname,
-      catDescription,
-      catSpecies,
-      cut,
-    } = this.addCatBio;
+      addCatAddress,
+      addCatLocation,
+      addCatPhotoPath,
+      addCatNickname,
+      addCatDescription,
+      addCatSpecies,
+      addCatCut,
+    } = this;
     const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
         {
-          address,
-          location,
-          photoPath,
-          catNickname,
-          catDescription,
-          catSpecies,
-          cut,
+          address: addCatAddress,
+          location: addCatLocation,
+          photoPath: addCatPhotoPath,
+          catNickname: addCatNickname,
+          catDescription: addCatDescription,
+          catSpecies: addCatSpecies,
+          cut: addCatCut,
         },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         Alert.alert('등록에 성공하였습니다!');
-        this.clearAllInput('addCatBio');
+        this.root.helper.clearAddCatBio('addCatBio');
         return true;
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
@@ -489,12 +295,12 @@ class CatStore {
 
   // CatStore
   toggleRainbowOpen = () => {
-    this.info.rainbowOpen = !this.info.rainbowOpen;
+    this.selectedCatRainbowOpen = !this.selectedCatRainbowOpen;
   };
 
   // CatStore
-  reportRainbow = async type => {
-    const catId = this.info.selectedCat[0].id;
+  reportRainbow = async (type) => {
+    const catId = this.selectedCatBio[0].id;
     const rainbow = {
       Y: 0,
       YDate: null,
@@ -502,27 +308,27 @@ class CatStore {
       NDate: null,
     };
     rainbow[type] = 1;
-    rainbow[`${type}Date`] = this.makeDateTime();
+    rainbow[`${type}Date`] = this.root.helper.makeDateTime();
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
-      .then(res => {
-        this.info.selectedCat[0].rainbow = JSON.parse(res.data.rainbow);
+      .then((res) => {
+        this.selectedCatBio[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     return result;
   };
 
   // CatStore
-  disableReportBtn = type => {
-    this.info[`rainbow${type}Reported`] = !this.info[`rainbow${type}Reported`];
+  disableReportBtn = (type) => {
+    this[`selectedCatRainbow${type}Reported`] = !this[`selectedCatRainbow${type}Reported`];
   };
 
   // CatStore
-  postCut = type => {
+  postCut = (type) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
-    const catId = this.info.selectedCat[0].id;
+    const catId = this.selectedCatBio[0].id;
     runInAction(() => {
       axios
         .post(
@@ -531,7 +337,7 @@ class CatStore {
           defaultCredential,
         )
         .then(res => {
-          this.info.selectedCat[0].cut = JSON.parse(res.data.cut);
+          this.selectedCatBio[0].cut = JSON.parse(res.data.cut);
         })
         .catch(err => {
           if (err.response && err.response.status === 409) {
@@ -542,25 +348,25 @@ class CatStore {
   };
 
   // CatStore
-  postCatToday = value => {
-    this.info.today = value;
+  postCatToday = (value) => {
+    this.selectedCatToday = value;
     const todayInfo = {
       catToday: value,
-      catId: this.info.selectedCat[0].id,
+      catId: this.selectedCatBio[0].id,
     };
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then(res => {
-          this.info.selectedCat[0].today = res.data.cat_today;
-          this.info.selectedCat[0].todayTime = this.makeDateTime(
+        .then((res) => {
+          this.selectedCatBio[0].today = res.data.cat_today;
+          this.selectedCatBio[0].todayTime = this.root.helper.makeDateTime(
             res.data.cat_today_time,
           );
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
-            this.info.today = undefined;
+            this.selectedCatToday = undefined;
           } else console.dir(err);
         });
     });
@@ -568,120 +374,46 @@ class CatStore {
 
   // CatStore
   validateTag = () => {
-    const { newTag } = this.info;
-    const tags = this.info.selectedCat[2].map(tagInfo => tagInfo.tag.content);
-    if (tags.includes(newTag)) {
+    const { selectedCatNewTag } = this;
+    const tags = this.selectedCatBio[2].map((tagInfo) => tagInfo.tag.content);
+    if (tags.includes(selectedCatNewTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
-      this.clearInput({ group: 'info', key: 'newTag' });
+      this.root.helper.clearInput('cat', 'selectedCatNewTag');
     } else {
-      this.postTag(newTag);
+      this.postTag(selectedCatNewTag);
     }
   };
 
   // CatStore
-  postTag = newTag => {
-    const catId = this.info.selectedCat[0].id;
+  postTag = (newTag) => {
+    const catId = this.selectedCatBio[0].id;
     axios
       .post(
         `${SERVER_URL}/cat/updateTag`,
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then(res => {
-        const tags = this.info.selectedCat[2];
+      .then((res) => {
+        const tags = this.selectedCatBio[2];
         tags.push(res.data);
         runInAction(() => {
-          this.clearInput({ group: 'info', key: 'newTag' });
+          this.root.helper.clearInput('cat', 'selectedCatNewTag');
         });
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
-  // * PostStore
-  postPage = 1;
-
-  isRefreshingPost = false;
-
-  getPostList = async () => {
-    // 탭 렌더 시 포스트를 받아오는 함수
-    // axios로 catPost들을 get해서 this.info.postList 업데이트
-    try {
-      const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
-      const post = await Axios.get(url);
-      if (post) {
-        if (this.isRefreshingPost) {
-          this.info.postList = post.data;
-          this.isRefreshingPost = false;
-        } else {
-          this.info.postList = this.info.postList.concat(post.data);
-          this.isLoadingPost = false;
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  _handleLoadMorePosts = () => {
-    this.postPage += 1;
-    this.getPostList();
-  };
-
-  _handleRefresh = () => {
-    this.isRefreshingPost = true;
-    this.postPage = 1;
-    this.getPostList();
-  };
-
-  validateAddInput = type => {
-    if (this.info[type]) {
-      return true;
-    }
-    Alert.alert('글을 입력하신 후 등록해주세요!');
-    return false;
-  };
-
-  addPost = () => {
-    const postInfo = {
-      content: this.info.inputContent,
-      catId: this.info.selectedCat[0].id,
-    };
-    if (this.info.photoPath) {
-      postInfo.photoPath = this.info.photoPath;
-    }
-    axios
-      .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then(res =>
-        this.clearInput(
-          { group: 'info', key: 'content' },
-          { group: 'info', key: 'photoPath' },
-        ),
-      )
-      .catch(err => {
-        if (err.response && err.response.status === 405) {
-          Alert.alert(
-            '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
-          );
-          // 로직 확인 필요
-        } else {
-          Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
-          console.dir(err);
-        }
-      });
-  };
-  // * Post Store
-
-  getCommentList = postId => {
+  getCommentList = (postId) => {
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   };
 
   addComment = () => {
-    const catId = this.info.selectedPost.id;
-    const commentInfo = { catId, content: this.info.inputComment };
+    const catId = this.selectedCatPost.id;
+    const commentInfo = { catId, content: this.selectedCatInputComment };
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
-      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
-      .catch(err => {
+      .then((res) => this.root.helper.clearInput('cat', 'selectedCatInputComment'))
+      .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
         } else console.dir(err);
@@ -689,142 +421,67 @@ class CatStore {
   };
 
   getAlbums = () => {
-    const catId = this.info.selectedCat[0].id;
+    const catId = this.selectedCatBio[0].id;
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
         console.log('서버에서 받은 앨범', res.data);
         const photos = res.data.filter(
-          photo => photo.path !== this.info.selectedCat[3].path,
+          (photo) => photo.path !== this.selectedCatBio[3].path,
         );
         console.log('필터한 앨범', photos);
-        this.info.album = photos;
+        this.selectedCatAlbum = photos;
       })
-      .catch(err => {
+      .catch((err) => {
         console.dir(err);
       });
   };
 
-  selectPhoto = photo => {
-    this.info.selectedPhoto = photo;
+  selectPhoto = (photo) => {
+    this.selectedCatPhoto = photo;
   };
 
-  getFollowerList = catId => {
+  getFollowerList = (catId) => {
     console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
-      .then(res => {
-        this.info.followerList = res.data;
-        console.log(this.info.followerList);
+      .then((res) => {
+        this.selectedCatFollowerList = res.data;
+        console.log(this.selectedCatFollowerList);
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
-
-  // * Helper Store
-  makeDateTime = () => {
-    const YYYY = new Date().getFullYear();
-    const MM =
-      new Date().getMonth() > 8
-        ? new Date().getMonth()
-        : `0${new Date().getMonth() + 1}`;
-    const DD =
-      new Date().getDate() > 9
-        ? new Date().getDate()
-        : `0${new Date().getDate()}`;
-    return `${YYYY}-${MM}-${DD}`;
-  };
-
-  changeToDateTime = timeInfo => {
-    const dateTimeArr = timeInfo
-      .split('T')
-      .join(' ')
-      .split('.')[0]
-      .split(' ');
-    return dateTimeArr[0];
-  };
-
-  convertDateTime = str => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(
-      5,
-      7,
-    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
-
-    if (dateStr[11] === '1') {
-      const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
-        dateStr.substring(13, 19)}`;
-    } else {
-      dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
-    }
-    return dateStr;
-  };
-
-  updateInput = (group, key, text) => {
-    this[group][key] = text;
-    console.log(this[group][key]);
-  };
-
-  clearInput = (...pairs) => {
-    pairs.forEach(pair => {
-      const { group, key } = pair;
-      this[group][key] = '';
-    });
-  };
-
-  clearAllInput = type => {
-    if (type === 'addCatBio') {
-      this.addCatBio = {
-        location: null,
-        photoPath: null,
-        uri: null,
-        catNickname: '',
-        catDescription: '',
-        catSpecies: '',
-        cutClicked: { Y: false, N: false, unknown: false },
-        cut: { Y: 0, N: 0, unknown: 0 },
-      };
-    }
-  };
-
-  carousels = [
-    //! sample data
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
-  ];
-
-  markers = [
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
-  ];
 }
 
 decorate(CatStore, {
-  spot: observable,
-  addCatBio: observable,
-  info: observable,
-  markers: observable,
-  carousels: observable,
-  getMapInfo: action,
-  getSelectedSpotInfo: action,
+  addCatAddress: observable,
+  addCatLocation: observable,
+  addCatPhotoPath: observable,
+  addCatNickname: observable,
+  addCatDescription: observable,
+  addCatSpecies: observable,
+  addCatCut: observable,
+  addCatUri: observable,
+  addCatCutClicked: observable,
+  selectedCatBio: observable,
+  selectedCatToday: observable,
+  selectedCatNewTag: observable,
+  selectedCatPost: observable,
+  selectedCatInputContent: observable,
+  selectedCatCommentList: observable,
+  selectedCatInputComment: observable,
+  selectedCatAlbum: observable,
+  selectedCatUri: observable,
+  selectedCatPhoto: observable,
+  selectedCatPhotoPath: observable,
+  selectedCatFollowerList: observable,
+  selectedCatRainbowOpen: observable,
+  selectedCatRainbowYReported: observable,
+  selectedCatRainbowNReported: observable,
+  selectedCatCutClicked: observable,
+  selectedCatReportInfo: observable,
   getSelectedCatInfo: action,
   followCat: action,
-  onDragEnd: action,
-  getPermissionAsync: action,
-  pickImage: action,
   selectCut: action,
   validateAddCat: action,
   getAddress: action,
@@ -836,25 +493,11 @@ decorate(CatStore, {
   postCatToday: action,
   validateTag: action,
   postTag: action,
-  removePhoto: action,
-  postPage: observable,
-  isRefreshingPost: observable,
-  getPostList: action,
-  _handleLoadMorePosts: action,
-  _handleRefresh: action,
-  validateAddInput: action,
-  addPost: action,
   getCommentList: action,
   addComment: action,
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,
-  makeDateTime: action,
-  changeToDateTime: action,
-  convertDateTime: action,
-  updateInput: action,
-  clearInput: action,
-  clearAllInput: action,
   setCatPost: action,
 });
 

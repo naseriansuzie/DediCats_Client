@@ -4,19 +4,15 @@ import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as Permissions from 'expo-permissions';
 
+const defaultCredential = { withCredentials: true };
+
 class MapStore {
   constructor(root) {
     this.root = root;
   }
 
-  // observable
   // 현재 나의 위치
   currentPosition = {
-    latitude: 0,
-    longitude: 0,
-  };
-
-  addCatMarker = {
     latitude: 0,
     longitude: 0,
   };
@@ -39,7 +35,55 @@ class MapStore {
 
   permissionState = false;
 
+  carousels = [
+    //! sample data
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
+  ];
+
+  markers = [
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
+  ];
+
   // actions
+  getMapInfo = async () => {
+    const currentBound = this.root.user.currentBoundingBox;
+    console.log(currentBound);
+    await axios
+      .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
+      .then(res => {
+        console.log('Response data is : ', res.data);
+        this.root.cat.markers = res.data;
+        console.log('마커정보는:', this.root.cat.markers, res.data.length);
+        this.root.cat.carousels = res.data;
+        // this.carousels = res.data;
+        console.log('카루셀 정보: ', this.root.cat.carousels);
+        return true;
+      })
+      .catch((err) => console.dir(err));
+    // if (result) {
+    //   return true;
+    // }
+    // axios로 map 정보 get
+    // res => this.spot.list에 추가
+    // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
+  };
+
   requestMapPermission = async () => {
     try {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -57,7 +101,7 @@ class MapStore {
 
   getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
-      position => {
+      (position) => {
         const { latitude, longitude } = position.coords;
         this.currentPosition = {
           latitude,
@@ -71,16 +115,16 @@ class MapStore {
           longitude,
           longitudeDelta: 0.005,
         });
-        this.root.cat.getMapInfo();
+        this.getMapInfo();
       },
-      error => {
+      (error) => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
-  onRegionChangeComplete = async region => {
+  onRegionChangeComplete = async (region) => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -88,18 +132,27 @@ class MapStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-    this.root.cat.getMapInfo();
+    this.getMapInfo();
+  };
+
+  // {latitude: Number, longitude: Number}
+  onDragEnd = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    this.root.cat.addCatLocation = { latitude, longitude };
   };
 }
 
 decorate(MapStore, {
   currentPosition: observable,
-  addCatMarker: observable,
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
+  carousels: observable,
+  markers: observable,
+  getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,
   onRegionChangeComplete: action,
+  onDragEnd: action,
 });
 export default MapStore;
