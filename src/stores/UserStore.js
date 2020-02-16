@@ -43,7 +43,8 @@ class UserStore {
 }
 
 decorate(UserStore, {
-  myPhoto: observable,
+  myUri: observable,
+  myPhotoPath: observable,
   myCatList: observable,
   unFollowedCat: observable,
   changePW: action,

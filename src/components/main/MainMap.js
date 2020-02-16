@@ -165,10 +165,10 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ cat, map }) => ({
-  carousels: cat.carousels,
-  markers: cat.markers,
-  getMapInfo: cat.getMapInfo,
+export default inject(({ map }) => ({
+  carousels: map.carousels,
+  markers: map.markers,
+  getMapInfo: map.getMapInfo,
   currentPosition: map.currentPosition,
   currentRegion: map.currentRegion,
   currentBoundingBox: map.currentBoundingBox,
