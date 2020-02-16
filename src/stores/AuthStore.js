@@ -2,6 +2,8 @@ import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 const defaultCredential = { withCredentials: true };
 class AuthStore {
@@ -181,6 +183,15 @@ class AuthStore {
     }
     this.signOut();
   };
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        Alert.alert('사진을 올리기 위해 접근 권한이 필요합니다.');
+      }
+    }
+  };
 }
 
 decorate(AuthStore, {
@@ -201,5 +212,6 @@ decorate(AuthStore, {
   signIn: action,
   signOut: action,
   updateState: action,
+  getPermissionAsync: action,
 });
 export default AuthStore;

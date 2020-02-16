@@ -40,6 +40,29 @@ class MapStore {
   permissionState = false;
 
   // actions
+  getMapInfo = async () => {
+    const currentBound = this.root.user.currentBoundingBox;
+    console.log(currentBound);
+    await axios
+      .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
+      .then(res => {
+        console.log('Response data is : ', res.data);
+        this.markers = res.data;
+        console.log('마커정보는:', this.markers, res.data.length);
+        this.carousels = res.data;
+        // this.carousels = res.data;
+        console.log('카루셀 정보: ', this.carousels);
+        return true;
+      })
+      .catch(err => console.dir(err));
+    // if (result) {
+    //   return true;
+    // }
+    // axios로 map 정보 get
+    // res => this.spot.list에 추가
+    // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
+  };
+
   requestMapPermission = async () => {
     try {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -90,6 +113,12 @@ class MapStore {
     };
     this.root.cat.getMapInfo();
   };
+
+  // {latitude: Number, longitude: Number}
+  onDragEnd = e => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    this.addCatBio.location = { latitude, longitude };
+  };
 }
 
 decorate(MapStore, {
@@ -98,8 +127,11 @@ decorate(MapStore, {
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
+  getMapInfo: observable,
+  getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,
   onRegionChangeComplete: action,
+  onDragEnd: action,
 });
 export default MapStore;
