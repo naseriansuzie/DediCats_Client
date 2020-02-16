@@ -327,19 +327,19 @@ class CatBio extends React.Component {
   }
 }
 
-export default inject(({ cat }) => ({
-  cat: cat.info.selectedCat[0],
-  catId: cat.info.selectedCat[0].id,
-  today: cat.info.today,
-  rainbowOpen: cat.info.rainbowOpen,
-  cutClicked: cat.info.cutClicked,
-  tags: cat.info.selectedCat[2],
-  newTag: cat.info.newTag,
+export default inject(({ cat, helper }) => ({
+  cat: cat.selectedCatBio[0],
+  catId: cat.selectedCatBio[0].id,
+  today: cat.selectedCatToday,
+  rainbowOpen: cat.selectedCatRainbowOpen,
+  cutClicked: cat.selectedCatCutClicked,
+  tags: cat.selectedCatBio[2],
+  newTag: cat.selectedCatNewTag,
   getSelectedCatInfo: cat.getSelectedCatInfo,
   toggleRainbowOpen: cat.toggleRainbowOpen,
   selectCut: cat.selectCut,
   postCut: cat.postCut,
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
-  updateInput: cat.updateInput,
+  updateInput: helper.updateInput,
 }))(observer(CatBio));
