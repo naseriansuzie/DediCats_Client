@@ -37,45 +37,47 @@ class MapStore {
 
   carousels = [
     //! sample data
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
+    {
+      catId: 1,
+      latitude: 37.503528,
+      longitude: 127.049784,
+      catNickname: 'Best Place',
+      catAddress: '서울시 선릉',
+      description: 'This is the best place in Portland',
+      catProfile:
+        'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    },
   ];
 
   markers = [
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
+    {
+      catId: 1,
+      latitude: 37.503528,
+      longitude: 127.049784,
+      catNickname: 'Best Place',
+      catAddress: '서울시 선릉',
+      description: 'This is the best place in Portland',
+      catProfile:
+        'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    },
   ];
 
   // actions
   getMapInfo = async () => {
-    const currentBound = this.root.user.currentBoundingBox;
-    console.log(currentBound);
+    const currentBound = this.currentBoundingBox;
+    console.log('현재 바운드', currentBound);
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
       .then(res => {
         console.log('Response data is : ', res.data);
-        this.root.cat.markers = res.data;
-        console.log('마커정보는:', this.root.cat.markers, res.data.length);
-        this.root.cat.carousels = res.data;
+        this.markers = res.data;
+        console.log('마커정보는:', this.markers, res.data.length);
+        this.carousels = res.data;
         // this.carousels = res.data;
-        console.log('카루셀 정보: ', this.root.cat.carousels);
+        console.log('카루셀 정보: ', this.carousels);
         return true;
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
     // if (result) {
     //   return true;
     // }
@@ -101,7 +103,7 @@ class MapStore {
 
   getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         const { latitude, longitude } = position.coords;
         this.currentPosition = {
           latitude,
@@ -117,14 +119,14 @@ class MapStore {
         });
         this.getMapInfo();
       },
-      (error) => {
+      error => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
-  onRegionChangeComplete = async (region) => {
+  onRegionChangeComplete = async region => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -136,7 +138,7 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = (e) => {
+  onDragEnd = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
   };
