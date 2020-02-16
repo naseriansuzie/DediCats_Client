@@ -89,7 +89,7 @@ class HelperStore {
     const time = new Date();
     const month = time.getMonth();
     const date = time.getDate();
-    const YYYY = date.getFullYear();
+    const YYYY = time.getFullYear();
     const MM = month > 8 ? month : `0${month + 1}`;
     const DD = date > 9 ? date : `0${date}`;
     return `${YYYY}-${MM}-${DD}`;
