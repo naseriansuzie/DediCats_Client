@@ -98,11 +98,11 @@ const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
-  uri,
-  catNickname,
-  catSpecies,
-  catDescription,
-  cutClicked,
+  addCatUri,
+  addCatNickname,
+  addCatSpecies,
+  addCatDescription,
+  addCatCutClicked,
   getPermissionAsync,
   pickImage,
   updateInput,
@@ -110,6 +110,7 @@ const AddCatBio = ({
   validateAddCat,
   getAddress,
   addCat,
+  getMapInfo,
   navigation,
 }) => (
   <View style={styles.container}>
@@ -122,13 +123,13 @@ const AddCatBio = ({
         <View style={styles.row}>
           <View style={styles.photoView}>
             <View style={styles.photo}>
-              {uri ? (
-                <Image style={styles.catPhoto} source={{ uri }} />
+              {addCatUri ? (
+                <Image style={styles.catPhoto} source={{ addCatUri }} />
               ) : (
                 <Image
                   style={styles.defaultPhoto}
                   source={{
-                    uri: DEFAULT_CAT,
+                    addCatUri: DEFAULT_CAT,
                   }}
                 />
               )}
@@ -137,7 +138,7 @@ const AddCatBio = ({
               <TouchableOpacity
                 onPress={async () => {
                   await getPermissionAsync();
-                  pickImage('addCatBio');
+                  pickImage('cat', 'addCat');
                 }}
               >
                 <Text style={styles.uploadBtn}>Upload photo</Text>
@@ -148,69 +149,67 @@ const AddCatBio = ({
             <Item stackedLabel last>
               <Label>별명</Label>
               <Input
-                value={catNickname}
+                value={addCatNickname}
                 maxLength={10}
                 onChangeText={text => {
-                  updateInput('addCatBio', 'catNickname', text);
+                  updateInput('cat', 'addCatNickname', text);
                 }}
               />
             </Item>
             <Item stackedLabel last>
               <Label>추정 종(예: 코숏)</Label>
               <Input
-                value={catSpecies}
+                value={addCatSpecies}
                 maxLength={12}
                 onChangeText={text => {
-                  updateInput('addCatBio', 'catSpecies', text);
+                  updateInput('cat', 'addCatSpecies', text);
                 }}
               />
             </Item>
-            {/* <Item stackedLabel last>
-              <Label>대표 태그(예: 소심, 귀염)</Label>
-              <Input
-                value={catTag}
-                maxLength={12}
-                onChangeText={text => {
-                  updateInput('addCatBio', 'catTag', text);
-                }}
-              />
-            </Item> */}
             <Textarea
               rowSpan={3}
               maxLength={30}
               bordered
               placeholder="간략한 고양이 소개(30자 이내)"
               style={styles.intro}
-              value={catDescription}
-              onChangeText={(text) => {
-                updateInput('addCatBio', 'catDescription', text);
+              value={addCatDescription}
+              onChangeText={text => {
+                updateInput('cat', 'addCatDescription', text);
               }}
             />
             <Item stackedLabel last>
               <Label>중성화</Label>
               <View style={styles.peanuts}>
                 <TouchableOpacity
-                  style={cutClicked.Y ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('addCatBio', 'Y')}
+                  style={addCatCutClicked.Y ? styles.peanutT : styles.peanutF}
+                  onPress={() => selectCut('addCat', 'Y')}
                 >
-                  <Text style={cutClicked.Y ? styles.cutTxtT : styles.cutTxtF}>
+                  <Text
+                    style={addCatCutClicked.Y ? styles.cutTxtT : styles.cutTxtF}
+                  >
                     Yes
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={cutClicked.N ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('addCatBio', 'N')}
+                  style={addCatCutClicked.N ? styles.peanutT : styles.peanutF}
+                  onPress={() => selectCut('addCat', 'N')}
                 >
-                  <Text style={cutClicked.N ? styles.cutTxtT : styles.cutTxtF}>
+                  <Text
+                    style={addCatCutClicked.N ? styles.cutTxtT : styles.cutTxtF}
+                  >
                     No
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={cutClicked.unknown ? styles.peanutT : styles.peanutF}
-                  onPress={() => selectCut('addCatBio', 'unknown')}
+                  style={
+                    addCatCutClicked.unknown ? styles.peanutT : styles.peanutF
+                  }
+                  onPress={() => selectCut('addCat', 'unknown')}
                 >
                   <Text
-                    style={cutClicked.unknown ? styles.cutTxtT : styles.cutTxtF}
+                    style={
+                      addCatCutClicked.unknown ? styles.cutTxtT : styles.cutTxtF
+                    }
                   >
                     몰라요
                   </Text>
@@ -231,21 +230,19 @@ const AddCatBio = ({
                   console.log('등록 성공', addCatResult);
                   if (addCatResult) {
                     navigation.goBack();
-                    this.props.getMapInfo();
+                    getMapInfo();
                   } else {
-                    console.log('등록 실패')
+                    console.log('등록 실패');
                     Alert.alert('고양이를 등록할 수 없습니다');
                     navigation.goBack();
                   }
-                }
-                else {
-                  console.log('주소검증 실패')
+                } else {
+                  console.log('주소검증 실패');
                   Alert.alert('고양이를 등록할 수 없습니다');
                   navigation.goBack();
                 }
-              }
-              else {
-                console.log('검증 실패')
+              } else {
+                console.log('검증 실패');
                 Alert.alert('고양이를 등록할 수 없습니다');
                 navigation.goBack();
               }
@@ -259,16 +256,16 @@ const AddCatBio = ({
   </View>
 );
 
-export default inject(({ cat }) => ({
-  uri: cat.addCatBio.uri,
-  getMapInfo: cat.getMapInfo,
-  catNickname: cat.addCatBio.catNickname,
-  catSpecies: cat.addCatBio.catSpecies,
-  catDescription: cat.addCatBio.catDescription,
-  cutClicked: cat.addCatBio.cutClicked,
-  getPermissionAsync: cat.getPermissionAsync,
-  pickImage: cat.pickImage,
-  updateInput: cat.updateInput,
+export default inject(({ cat, map, auth, helper }) => ({
+  addCatUri: cat.addCatUri,
+  addCatNickname: cat.addCatNickname,
+  addCatSpecies: cat.addCatSpecies,
+  addCatDescription: cat.addCatDescription,
+  addCatCutClicked: cat.addCatCutClicked,
+  getMapInfo: map.getMapInfo,
+  getPermissionAsync: auth.getPermissionAsync,
+  pickImage: helper.pickImage,
+  updateInput: helper.updateInput,
   selectCut: cat.selectCut,
   validateAddCat: cat.validateAddCat,
   getAddress: cat.getAddress,

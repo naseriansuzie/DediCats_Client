@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
 const emailCertified = ({
   updateInput,
   navigation,
-  emailCode,
   emailVerification,
+  emailCode,
   signUp,
 }) => (
   <Container>
@@ -69,7 +69,9 @@ const emailCertified = ({
             이메일 인증 코드
           </Label>
           <Input
-            onChangeText={text => updateInput('emailVerification', text)}
+            onChangeText={text =>
+              updateInput('auth', 'emailVerification', text)
+            }
             value={emailVerification}
           />
         </Item>
@@ -78,8 +80,8 @@ const emailCertified = ({
         style={styles.btn}
         onPress={async () => {
           if (emailCode === emailVerification) {
-            const signUpresult = signUp();
-            if (signUpresult) navigation.navigate('Sign In');
+            const signUpResult = signUp();
+            if (signUpResult) navigation.navigate('Sign In');
           } else {
             Alert.alert(
               '이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!',
@@ -94,8 +96,8 @@ const emailCertified = ({
 );
 
 export default inject(({ helper, auth }) => ({
-  emailCode: auth.emailCode,
   emailVerification: auth.emailVerification,
+  emailCode: auth.emailCode,
   signUp: auth.signUp,
   updateInput: helper.updateInput,
 }))(observer(withNavigation(emailCertified)));

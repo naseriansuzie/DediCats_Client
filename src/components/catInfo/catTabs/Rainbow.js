@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
 const Rainbow = ({
   nickName,
   rainbow,
-  rainbowYReported,
-  rainbowNReported,
+  selectedCatRainbowYReported,
+  selectedCatRainbowNReported,
   disableReportBtn,
   reportRainbow,
 }) => (
@@ -72,7 +72,7 @@ const Rainbow = ({
         </Body>
       )}
       <Right>
-        {rainbowYReported ? (
+        {selectedCatRainbowYReported ? (
           <TouchableOpacity
             style={styles.disabledReportBtn}
             onPress={() => Alert.alert('이미 실종 신고를 하셨습니다')}
@@ -127,7 +127,7 @@ const Rainbow = ({
         </Body>
       )}
       <Right>
-        {rainbowNReported ? (
+        {selectedCatRainbowNReported ? (
           <TouchableOpacity
             style={styles.disabledReportBtn}
             onPress={() => Alert.alert('이미 실종 신고를 하셨습니다')}
@@ -165,10 +165,10 @@ const Rainbow = ({
 );
 
 export default inject(({ cat }) => ({
-  nickName: cat.info.selectedCat[0].nickname,
-  rainbow: cat.info.selectedCat[0].rainbow,
-  rainbowYReported: cat.info.rainbowYReported,
-  rainbowNReported: cat.info.rainbowNReported,
+  nickName: cat.selectedCatBio[0].nickname,
+  rainbow: cat.selectedCatBio[0].rainbow,
+  selectedCatRainbowYReported: cat.selectedCatRainbowYReported,
+  selectedCatRainbowNReported: cat.selectedCatRainbowNReported,
   reportRainbow: cat.reportRainbow,
   disableReportBtn: cat.disableReportBtn,
 }))(observer(Rainbow));

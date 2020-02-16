@@ -17,7 +17,9 @@ class UserStore {
   }
 
   // observable
-  myPhoto = defaultPhotoUrl;
+  myUri = defaultPhotoUrl;
+
+  myPhotoPath = '';
 
   myCatList = null;
 
@@ -34,8 +36,8 @@ class UserStore {
       };
       axios
         .patch(`${SERVER_URL}/user/changepw`, updateInfo, defaultCredential)
-        .then((res) => res)
-        .catch((err) => console.dir(err));
+        .then(res => res)
+        .catch(err => console.dir(err));
     }
   };
 }

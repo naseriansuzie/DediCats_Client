@@ -1,7 +1,7 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
+import { observable, action, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL } from 'react-native-dotenv';
+import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
@@ -48,7 +48,7 @@ class AuthStore {
     return isValidated;
   };
 
-  emailCertified = async (signUpInfo) => {
+  emailCertified = async signUpInfo => {
     const { email, nickname } = signUpInfo;
     const result = await axios
       .post(
@@ -56,12 +56,12 @@ class AuthStore {
         { email, nickname },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         this.emailCode = res.data;
         Alert.alert(`${email}로 이메일 전송이 성공하였습니다!`);
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
         } else {
@@ -81,7 +81,7 @@ class AuthStore {
         { email, password: confirmPW, nickname },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         if (res.status !== 201) return false;
 
         this.isSignUp = true;
@@ -99,7 +99,7 @@ class AuthStore {
         });
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         } else {
@@ -126,7 +126,7 @@ class AuthStore {
     return isValidated;
   };
 
-  signIn = async (info) => {
+  signIn = async info => {
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signin`, info, defaultCredential)
       .then(res => {
@@ -140,7 +140,7 @@ class AuthStore {
         });
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert(
             '회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.',
@@ -151,7 +151,7 @@ class AuthStore {
     return result;
   };
 
-  signOut = (id) => {
+  signOut = id => {
     axios
       .post(`${SERVER_URL}/user/signout`, id, defaultCredential)
       .then(async res => {
@@ -163,7 +163,7 @@ class AuthStore {
       .catch(err => console.dir(err));
   };
 
-  updateState = async (field) => {
+  updateState = async field => {
     if (field === 'SignUp') {
       const signUpInfo = {
         email: this.email,

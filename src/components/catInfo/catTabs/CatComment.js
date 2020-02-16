@@ -25,7 +25,7 @@ const CatComment = ({
   userNickname,
   comment,
   date,
-  changeToDateTime,
+  convertDateTime,
 }) => (
   <ListItem thumbnail style={styles.container}>
     <Left>
@@ -42,11 +42,11 @@ const CatComment = ({
       </View>
     </Body>
     <Right style={styles.marginRight10}>
-      <Text>{changeToDateTime(date)}</Text>
+      <Text>{convertDateTime(date)}</Text>
     </Right>
   </ListItem>
 );
 
-export default inject(({ cat }) => ({
-  changeToDateTime: cat.changeToDateTime,
+export default inject(({ helper }) => ({
+  convertDateTime: helper.convertDateTime,
 }))(observer(CatComment));
