@@ -95,14 +95,15 @@ class HelperStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  changeToDateTime = timeInfo => {
-    const dateTimeArr = timeInfo
-      .split('T')
-      .join(' ')
-      .split('.')[0]
-      .split(' ');
-    return dateTimeArr[0];
+  makeGMTDateTime = () => {
+    let time = new Date();
+    const hourGap = time.getTimezoneOffset() / 60;
+    const calculatedGmt = time.setHours(time.getHours() + hourGap);
+    time = new Date(calculatedGmt);
+    return JSON.stringify(time).slice(1, 11);
   };
+
+  changeToDateTime = timeInfo => timeInfo.slice(0, 10);
 
   convertDateTime = str => {
     let dateStr = `${str.substring(0, 4)}/${str.substring(
@@ -132,6 +133,7 @@ decorate(HelperStore, {
   pickImage: action,
   removePhoto: action,
   makeDateTime: action,
+  makeGMTDateTime: action,
   changeToDateTime: action,
   convertDateTime: action,
 });

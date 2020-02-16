@@ -118,11 +118,8 @@ class CatBio extends React.Component {
       postCatToday,
       validateTag,
       updateInput,
+      makeGMTDateTime,
     } = this.props;
-    const yyyy = new Date().getFullYear();
-    const mm = new Date().getMonth() + 1;
-    const dd = new Date().getDate();
-    const dateOfToday = `${yyyy}-${mm}-${dd}`;
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
@@ -170,7 +167,11 @@ class CatBio extends React.Component {
                     <Text style={styles.cut}>중성화 유무</Text>
                     <View style={styles.row}>
                       <TouchableHighlight
-                        style={selectedCatCutClicked.Y ? styles.noPeanut : styles.peanut}
+                        style={
+                          selectedCatCutClicked.Y
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
                         underlayColor="#f38847"
                         onPress={async () => {
                           if (
@@ -185,10 +186,16 @@ class CatBio extends React.Component {
                           }
                         }}
                       >
-                        <Text style={styles.cutTxt}>Yes {selectedCatBio.cut.Y}</Text>
+                        <Text style={styles.cutTxt}>
+                          Yes {selectedCatBio.cut.Y}
+                        </Text>
                       </TouchableHighlight>
                       <TouchableHighlight
-                        style={selectedCatCutClicked.N ? styles.noPeanut : styles.peanut}
+                        style={
+                          selectedCatCutClicked.N
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
                         underlayColor="#f38847"
                         onPress={async () => {
                           if (
@@ -203,11 +210,15 @@ class CatBio extends React.Component {
                           }
                         }}
                       >
-                        <Text style={styles.cutTxt}>No {selectedCatBio.cut.N}</Text>
+                        <Text style={styles.cutTxt}>
+                          No {selectedCatBio.cut.N}
+                        </Text>
                       </TouchableHighlight>
                       <TouchableHighlight
                         style={
-                          selectedCatCutClicked.unknown ? styles.noPeanut : styles.peanut
+                          selectedCatCutClicked.unknown
+                            ? styles.noPeanut
+                            : styles.peanut
                         }
                         underlayColor="#f38847"
                         onPress={async () => {
@@ -235,7 +246,8 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       오늘 {selectedCatBio.nickname}의 건강 상태
                     </Text>
-                    {selectedCatBio.today && selectedCatBio.todayTime === dateOfToday ? (
+                    {selectedCatBio.today &&
+                    selectedCatBio.todayTime === makeGMTDateTime() ? (
                       <Text>{selectedCatBio.today}</Text>
                     ) : (
                       <Form
@@ -302,7 +314,11 @@ class CatBio extends React.Component {
                             value={selectedCatNewTag}
                             onChangeText={text => {
                               const noSpaceText = text.split(' ').join('');
-                              updateInput('cat', 'selectedCatNewTag', noSpaceText);
+                              updateInput(
+                                'cat',
+                                'selectedCatNewTag',
+                                noSpaceText,
+                              );
                             }}
                           />
                           <Right>
@@ -342,4 +358,5 @@ export default inject(({ cat, helper }) => ({
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
   updateInput: helper.updateInput,
+  makeGMTDateTime: helper.makeGMTDateTime,
 }))(observer(CatBio));
