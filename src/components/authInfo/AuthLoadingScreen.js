@@ -1,5 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, AsyncStorage, StatusBar, View } from 'react-native';
+import axios from 'axios';
+import {
+  ActivityIndicator, AsyncStorage, StatusBar, View,
+} from 'react-native';
+import { SERVER_URL } from 'react-native-dotenv';
 
 class AuthLoadingScreen extends React.Component {
   // lifecycle
@@ -8,9 +12,17 @@ class AuthLoadingScreen extends React.Component {
   }
 
   async verifyToken() {
-    const userToken = await AsyncStorage.getItem('userToken');
-    // 토큰 붙으면 아래 지우고 옆의 내용으로 적용 return this.props.navigation.navigate(userToken ? 'App' : 'Auth');
-    return this.props.navigation.navigate(userToken ? 'App' : 'App');
+    const result = await axios.get(`${SERVER_URL}/`)
+      .then((res) => {
+        const { accessToken } = res.data;
+        if (accessToken) AsyncStorage.setItem('accessToken', accessToken);
+        return true;
+      }).catch((e) => {
+        console.log(e);
+        return false;
+      });
+
+    return this.props.navigation.navigate(result ? 'App' : 'Auth');
   }
 
   render() {
