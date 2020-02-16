@@ -66,7 +66,7 @@ class HelperStore {
       .catch((err) => console.dir(err));
   };
 
-  pickImage = async (type) => {
+  pickImage = async (store, type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -76,8 +76,8 @@ class HelperStore {
     });
     if (!result.cancelled) {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this.root.cat[`${type}Uri`] = result.uri;
-      this.root.cat[`${type}PhotoPath`] = imageTarget;
+      this.root[store][`${type}Uri`] = result.uri;
+      this.root[store][`${type}PhotoPath`] = imageTarget;
     }
   };
 
