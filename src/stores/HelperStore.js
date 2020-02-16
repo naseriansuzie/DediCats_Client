@@ -4,7 +4,6 @@ import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 
-
 const defaultCredential = { withCredentials: true };
 
 class HelperStore {
@@ -22,7 +21,7 @@ class HelperStore {
   // auth: 'email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification', 'PW',
   // selectedCatNewTag, inputComment -> selectedCatInputComment
   clearInput = (store, ...variable) => {
-    variable.forEach((el) => {
+    variable.forEach(el => {
       runInAction(() => {
         this.root[store][el] = '';
       });
@@ -43,7 +42,7 @@ class HelperStore {
   };
 
   // selectedCat inputComment, inputContent
-  validateAddInput = (type) => {
+  validateAddInput = type => {
     if (this.root.cat[type]) {
       return true;
     }
@@ -56,17 +55,17 @@ class HelperStore {
     const catId = cat.selectedCatBio[0].id;
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
-      .then((res) => {
+      .then(res => {
         user.unFollowedCat = catId;
         runInAction(() => {
           cat.getSelectedCatInfo(catId);
           cat.getFollowerList(catId);
         });
       })
-      .catch((err) => console.dir(err));
+      .catch(err => console.dir(err));
   };
 
-  pickImage = async (type) => {
+  pickImage = async (store, type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -76,8 +75,8 @@ class HelperStore {
     });
     if (!result.cancelled) {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this.root.cat[`${type}Uri`] = result.uri;
-      this.root.cat[`${type}PhotoPath`] = imageTarget;
+      this.root[store][`${type}Uri`] = result.uri;
+      this.root[store][`${type}PhotoPath`] = imageTarget;
     }
   };
 
@@ -96,7 +95,7 @@ class HelperStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  changeToDateTime = (timeInfo) => {
+  changeToDateTime = timeInfo => {
     const dateTimeArr = timeInfo
       .split('T')
       .join(' ')
@@ -105,13 +104,16 @@ class HelperStore {
     return dateTimeArr[0];
   };
 
-  convertDateTime = (str) => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
+  convertDateTime = str => {
+    let dateStr = `${str.substring(0, 4)}/${str.substring(
+      5,
+      7,
+    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
 
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
-      + dateStr.substring(13, 19)}`;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
+        dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }
