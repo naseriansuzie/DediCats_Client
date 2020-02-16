@@ -50,10 +50,10 @@ class MapStore {
       .then(res => {
         console.log('Response data is : ', res.data);
         this.root.cat.markers = res.data;
-        console.log('마커정보는:', this.markers, res.data.length);
+        console.log('마커정보는:', this.root.cat.markers, res.data.length);
         this.root.cat.carousels = res.data;
         // this.carousels = res.data;
-        console.log('카루셀 정보: ', this.carousels);
+        console.log('카루셀 정보: ', this.root.cat.carousels);
         return true;
       })
       .catch((err) => console.dir(err));
@@ -96,7 +96,7 @@ class MapStore {
           longitude,
           longitudeDelta: 0.005,
         });
-        this.root.cat.getMapInfo();
+        this.getMapInfo();
       },
       (error) => {
         Alert.alert(error.code, error.message);
@@ -113,13 +113,13 @@ class MapStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-    this.root.cat.getMapInfo();
+    this.getMapInfo();
   };
 
   // {latitude: Number, longitude: Number}
   onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
-    this.addCatBio.location = { latitude, longitude };
+    this.addCatLocation = { latitude, longitude };
   };
 }
 
