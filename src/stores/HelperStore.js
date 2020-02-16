@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+
 
 const defaultCredential = { withCredentials: true };
 
@@ -12,40 +12,54 @@ class HelperStore {
     this.root = root;
   }
 
-  updateInput = (field, text) => {
-    // From CatStore
-    console.log('text ', text);
-    this.root.cat[field] = text;
-    console.log(this.root.cat[field]);
+  // info -> selectedCat, inputContent, inputComment, newTag
+  // User -> email, nickname, confirmPW, reConfirmPW, PW, emailVerification
+  // addCatBio -> catNickname, catSpecies, catTag, catDescription
+  updateInput = (store, variable, text) => {
+    this[store][variable] = text;
   };
 
-  clearInput = (...types) => {
-    // From CatStore
-    types.forEach(type => {
+  // updateInput = (field, text) => {
+  //   // From CatStore
+  //   console.log('text ', text);
+  //   this.root.cat[field] = text;
+  //   console.log(this.root.cat[field]);
+  // };
+
+  // Auth: 'email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification', 'PW', 
+  // selectedCatNewTag, inputComment->selectedCatInputComment
+  clearInput = (store, ...variable) => {
+    variable.forEach((el) => {
       runInAction(() => {
-        this.root.cat[type] = '';
+        this.root[store][el] = '';
       });
     });
   };
 
-  clearAllInput = (type) => {
+  // clearInput = (...types) => {
+  //   // From CatStore
+  //   types.forEach((type) => {
+  //     runInAction(() => {
+  //       this.root.cat[type] = '';
+  //     });
+  //   });
+  // };
+
+  clearAddCatBio = () => {
     // From CatStore
-    if (type === 'addCatBio') {
-      this.addCatBio = {
-        location: null,
-        photoPath: null,
-        uri: null,
-        catNickname: '',
-        catDescription: '',
-        catSpecies: '',
-        cutClicked: { Y: false, N: false, unknown: false },
-        cut: { Y: 0, N: 0, unknown: 0 },
-      };
-    }
+    const { cat } = this.root;
+    cat.addCatLocation = { latitude: 37.049784, longitude: 127.049784 };
+    cat.addCatPhotoPath = null;
+    cat.addCatUri = null;
+    cat.addCatNickname = '';
+    cat.addCatDescription = '';
+    cat.addCatSpecies = '';
+    cat.addCatCutClicked = { Y: false, N: false, unknown: false };
+    cat.addCatCut = { Y: 0, N: 0, unknown: 0 };
   };
 
-  validateAddInput = type => {
-    // From CatStore
+  // selectedCat inputComment, inputContent
+  validateAddInput = (type) => {
     if (this.root.cat[type]) {
       return true;
     }
@@ -54,20 +68,21 @@ class HelperStore {
   };
 
   unFollowCat = () => {
-    const catId = this.root.cat.selectedCat[0].id;
+    const { cat, user } = this.root;
+    const catId = cat.selectedCatBio[0].id;
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
-      .then(res => {
-        this.root.user.unFollowedCat = catId;
+      .then((res) => {
+        user.unFollowedCat = catId;
         runInAction(() => {
-          this.root.getSelectedCatInfo(catId);
-          this.root.getFollowerList(catId);
+          cat.getSelectedCatInfo(catId);
+          cat.getFollowerList(catId);
         });
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
-  pickImage = async type => {
+  pickImage = async (type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -91,18 +106,17 @@ class HelperStore {
     //   default photo this.user.removeUserPhoto;
     // }
     // From Cat Store
-    this.uri = null;
+    this.root.cat.selectedCatUri = null;
   };
 
   // * Helper Store from CatStore
   makeDateTime = () => {
-    const YYYY = new Date().getFullYear();
-    const MM = new Date().getMonth() > 8
-      ? new Date().getMonth()
-      : `0${new Date().getMonth() + 1}`;
-    const DD = new Date().getDate() > 9
-      ? new Date().getDate()
-      : `0${new Date().getDate()}`;
+    const time = new Date();
+    const month = time.getMonth();
+    const date = time.getDate();
+    const YYYY = date.getFullYear();
+    const MM = month > 8 ? month : `0${month + 1}`;
+    const DD = date > 9 ? date : `0${date}`;
     return `${YYYY}-${MM}-${DD}`;
   };
 
@@ -116,10 +130,7 @@ class HelperStore {
   };
 
   convertDateTime = (str) => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(
-      5,
-      7,
-    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
+    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
 
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
@@ -137,13 +148,13 @@ class HelperStore {
 decorate(HelperStore, {
   updateInput: action,
   clearInput: action,
-  clearAllInput: action,
+  clearAddCatBio: action,
+  validateAddInput: action,
   unFollowCat: action,
   pickImage: action,
   removePhoto: action,
   makeDateTime: action,
   changeToDateTime: action,
   convertDateTime: action,
-  validateAddInput: action,
 });
 export default HelperStore;
