@@ -3,7 +3,6 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
-import Axios from 'axios';
 
 /**
  * 1. spot 관련
@@ -80,7 +79,6 @@ class CatStore {
   // 등록할 중성화 선택
   addCatCutClicked = { Y: false, N: false, unknown: false };
 
-
   // CatStore -> info 안의 요소들을 꺼내서 개별적인 observable로 변경 가능
   // BriefCatInfo 에서 선택한 cat info
   selectedCatBio = null; // 다른 스토어도 selectedCat -> selectedCatBio
@@ -106,24 +104,32 @@ class CatStore {
   // 해당 고양이의 앨범
   selectedCatAlbum = null;
 
+  // 해당 고양이 Uri
   selectedCatUri = null;
 
+  // 해당 고양이 Photo
   selectedCatPhoto = null;
 
+  // 해당 고양이 PhotoPath
   selectedCatPhotoPath = null;
 
+  // 해당 고양이 FollwerList
   selectedCatFollowerList = null;
 
+  // 해당 고양이 무지개 boolean
   selectedCatRainbowOpen = false;
 
+  // 해당 고양이 무지개 Y
   selectedCatRainbowYReported = false;
 
+  // 해당 고양이 무지개 N
   selectedCatRainbowNReported = false;
 
+  // 해당 고양이 중성화 선택
   selectedCatCutClicked = { Y: false, N: false, unknown: false };
 
+  // 해당 고양이(포스트) 신고
   selectedCatReportInfo = null;
-
 
   // info = {
   // [
@@ -269,37 +275,37 @@ class CatStore {
     const catId = this.selectedCatBio[0].id;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
   // CatStore
-  selectCut = (observable, type) => {
-    if (observable === 'addCatBio') {
-      this[`${observable}Cut`] = { Y: 0, N: 0, unknown: 0 };
+  selectCut = (variable, type) => {
+    if (variable === 'addCatBio') {
+      this[`${variable}Cut`] = { Y: 0, N: 0, unknown: 0 };
     } 
-    // this[observable].cut = { Y: 0, N: 0, unknown: 0 };
+    // this[variable].cut = { Y: 0, N: 0, unknown: 0 };
     runInAction(() => {
-      const keys = Object.keys(this[observable].cutClicked);
-      const values = Object.values(this[observable].cutClicked);
+      const keys = Object.keys(this[variable].cutClicked);
+      const values = Object.values(this[variable].cutClicked);
       keys.forEach((key, idx) => {
         if (key === type) {
           values.splice(idx, 1, true);
         } else values.splice(idx, 1, false);
       });
 
-      // this[observable].cutClicked = {
-      this[`${observable}CutClicked`] = {
+      // this[variable].cutClicked = {
+      this[`${variable}CutClicked`] = {
         Y: values[0],
         N: values[1],
         unknown: values[2],
       };
-      if (observable === 'addCatBio') {
+      if (variable === 'addCatBio') {
         runInAction(() => {
-          this[`${observable}Cut`][type] = 1;
+          this[`${variable}Cut`][type] = 1;
         });
       }
     });
@@ -416,12 +422,12 @@ class CatStore {
         },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         Alert.alert('등록에 성공하였습니다!');
         this.root.helper.clearAllInput('addCatBio');
         return true;
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
@@ -438,7 +444,7 @@ class CatStore {
   };
 
   // CatStore
-  reportRainbow = async type => {
+  reportRainbow = async (type) => {
     const catId = this.selectedCatBio[0].id;
     const rainbow = {
       Y: 0,
@@ -447,24 +453,24 @@ class CatStore {
       NDate: null,
     };
     rainbow[type] = 1;
-    rainbow[`${type}Date`] = this.makeDateTime();
+    rainbow[`${type}Date`] = this.root.helper.makeDateTime();
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.selectedCatBio[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     return result;
   };
 
   // CatStore
-  disableReportBtn = type => {
+  disableReportBtn = (type) => {
     this[`selectedCatRainbow${type}Reported`] = !this[`selectedCatRainbow${type}Reported`];
   };
 
   // CatStore
-  postCut = type => {
+  postCut = (type) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     const catId = this.selectedCatBio[0].id;
@@ -487,7 +493,7 @@ class CatStore {
   };
 
   // CatStore
-  postCatToday = value => {
+  postCatToday = (value) => {
     this.selectedCatToday = value;
     const todayInfo = {
       catToday: value,
@@ -496,13 +502,13 @@ class CatStore {
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then(res => {
+        .then((res) => {
           this.selectedCatBio[0].today = res.data.cat_today;
-          this.selectedCatBio[0].todayTime = this.makeDateTime(
+          this.selectedCatBio[0].todayTime = this.root.helper.makeDateTime(
             res.data.cat_today_time,
           );
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.selectedCatToday = undefined;
@@ -514,7 +520,7 @@ class CatStore {
   // CatStore
   validateTag = () => {
     const { selectedCatNewTag } = this;
-    const tags = this.selectedCatBio[2].map(tagInfo => tagInfo.tag.content);
+    const tags = this.selectedCatBio[2].map((tagInfo) => tagInfo.tag.content);
     if (tags.includes(selectedCatNewTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
       // Helper Store
@@ -525,7 +531,7 @@ class CatStore {
   };
 
   // CatStore
-  postTag = newTag => {
+  postTag = (newTag) => {
     const catId = this.selectedCatBio[0].id;
     axios
       .post(
@@ -533,7 +539,7 @@ class CatStore {
         { catTag: newTag, catId },
         defaultCredential,
       )
-      .then(res => {
+      .then((res) => {
         const tags = this.selectedCatBio[2];
         tags.push(res.data);
         runInAction(() => {
@@ -541,10 +547,10 @@ class CatStore {
           this.root.helper.clearInput({ group: 'info', key: 'newTag' });
         });
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
-  getCommentList = postId => {
+  getCommentList = (postId) => {
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   };
 
@@ -554,8 +560,8 @@ class CatStore {
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
       // Helper Store
-      .then(res => this.root.helper.clearInput({ group: 'info', key: 'inputComment' }))
-      .catch(err => {
+      .then((res) => this.root.helper.clearInput({ group: 'info', key: 'inputComment' }))
+      .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
         } else console.dir(err);
@@ -566,32 +572,32 @@ class CatStore {
     const catId = this.selectedCatBio[0].id;
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
         console.log('서버에서 받은 앨범', res.data);
         const photos = res.data.filter(
-          photo => photo.path !== this.selectedCatBio[3].path,
+          (photo) => photo.path !== this.selectedCatBio[3].path,
         );
         console.log('필터한 앨범', photos);
         this.selectedCatAlbum = photos;
       })
-      .catch(err => {
+      .catch((err) => {
         console.dir(err);
       });
   };
 
-  selectPhoto = photo => {
+  selectPhoto = (photo) => {
     this.selectedCatPhoto = photo;
   };
 
-  getFollowerList = catId => {
+  getFollowerList = (catId) => {
     console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
-      .then(res => {
+      .then((res) => {
         this.selectedCatFollowerList = res.data;
         console.log(this.selectedCatFollowerList);
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
   };
 
   carousels = [
@@ -647,10 +653,8 @@ decorate(CatStore, {
   selectedCatRainbowNReported: observable,
   selectedCatCutClicked: observable,
   selectedCatReportInfo: observable,
-  //
   markers: observable,
   carousels: observable,
-  getSelectedSpotInfo: action,
   getSelectedCatInfo: action,
   followCat: action,
   selectCut: action,
@@ -664,15 +668,11 @@ decorate(CatStore, {
   postCatToday: action,
   validateTag: action,
   postTag: action,
-
-
   getCommentList: action,
   addComment: action,
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,
-
-
   setCatPost: action,
 });
 
