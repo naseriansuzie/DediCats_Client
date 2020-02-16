@@ -50,14 +50,14 @@ class CatAlbum extends React.Component {
   }
 
   render() {
-    const { album, nickname, selectPhoto } = this.props;
-    if (album && album.length) {
+    const { selectedCatAlbum, nickname, selectPhoto } = this.props;
+    if (selectedCatAlbum && selectedCatAlbum.length) {
       return (
         <View style={styles.container}>
           <View style={styles.radiusView}>
             <Content>
               <View style={styles.photoView}>
-                {album.map(photo => (
+                {selectedCatAlbum.map(photo => (
                   <CatPhoto
                     key={photo.id}
                     path={photo.path}
@@ -71,7 +71,7 @@ class CatAlbum extends React.Component {
         </View>
       );
     }
-    if (album && album.length === 0) {
+    if (selectedCatAlbum && selectedCatAlbum.length === 0) {
       return (
         <View style={styles.noPhotoView}>
           <View style={styles.noPhotoRadiusView}>
@@ -88,8 +88,8 @@ class CatAlbum extends React.Component {
 }
 
 export default inject(({ cat }) => ({
-  album: cat.info.album,
-  nickname: cat.info.selectedCat[0].nickname,
+  selectedCatAlbum: cat.selectedCatAlbum,
+  nickname: cat.selectedCatBio[0].nickname,
   getAlbums: cat.getAlbums,
   selectPhoto: cat.selectPhoto,
 }))(observer(CatAlbum));
