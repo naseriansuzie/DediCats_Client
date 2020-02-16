@@ -4,6 +4,8 @@ import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as Permissions from 'expo-permissions';
 
+const defaultCredential = { withCredentials: true };
+
 class MapStore {
   constructor(root) {
     this.root = root;
@@ -47,14 +49,14 @@ class MapStore {
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
       .then(res => {
         console.log('Response data is : ', res.data);
-        this.markers = res.data;
+        this.root.cat.markers = res.data;
         console.log('마커정보는:', this.markers, res.data.length);
-        this.carousels = res.data;
+        this.root.cat.carousels = res.data;
         // this.carousels = res.data;
         console.log('카루셀 정보: ', this.carousels);
         return true;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     // if (result) {
     //   return true;
     // }
@@ -80,7 +82,7 @@ class MapStore {
 
   getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
-      position => {
+      (position) => {
         const { latitude, longitude } = position.coords;
         this.currentPosition = {
           latitude,
@@ -96,14 +98,14 @@ class MapStore {
         });
         this.root.cat.getMapInfo();
       },
-      error => {
+      (error) => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
-  onRegionChangeComplete = async region => {
+  onRegionChangeComplete = async (region) => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -115,7 +117,7 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = e => {
+  onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.addCatBio.location = { latitude, longitude };
   };
@@ -127,7 +129,6 @@ decorate(MapStore, {
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
-  getMapInfo: observable,
   getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,

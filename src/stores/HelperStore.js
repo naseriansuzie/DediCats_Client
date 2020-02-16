@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
 const defaultCredential = { withCredentials: true };
+
 class HelperStore {
   constructor(root) {
     this.root = root;

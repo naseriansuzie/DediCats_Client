@@ -3,6 +3,8 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 
+const defaultCredential = { withCredentials: true };
+
 class PostStore {
   constructor(root) {
     this.root = root;
@@ -48,21 +50,18 @@ class PostStore {
 
   addPost = () => {
     const postInfo = {
-      content: this.root.cat.inputContent,
+      content: this.root.cat.selectedCatInputContent,
       catId: this.root.cat.selectedCat[0].id,
     };
-    if (this.root.cat.photoPath) {
-      postInfo.photoPath = this.root.cat.photoPath;
+    if (this.root.cat.selectedCatPhotoPath) {
+      postInfo.photoPath = this.root.cat.selectedCatPhotoPath;
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then(res =>
-        // Helper Store
-        this.clearInput(
-          { group: 'info', key: 'content' },
-          { group: 'info', key: 'photoPath' },
-        ),
-      )
+      .then((res) => this.root.helper.clearInput(
+        { group: 'info', key: 'content' },
+        { group: 'info', key: 'photoPath' },
+      ))
       .catch(err => {
         if (err.response && err.response.status === 405) {
           Alert.alert(

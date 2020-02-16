@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
 const defaultCredential = { withCredentials: true };
+
 class AuthStore {
   constructor(root) {
     this.root = root;

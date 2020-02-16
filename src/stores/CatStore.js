@@ -39,11 +39,6 @@ class CatStore {
   }
 
   // observable
-  // spot = {
-  //   followCatNum: 0, // 어디다 쓰지?
-  //   list: null,
-  //   selected: null,
-  // };
 
   // CatStore
   // addCatBio = {
@@ -58,57 +53,76 @@ class CatStore {
   //   cutClicked: { Y: false, N: false, unknown: false },
   // };
 
+  // 등록할 주소
   addCatAddress = '';
+
+  // 등록할 위치
   addCatLocation = { latitude: 37.049784, longitude: 127.049784 };
+
+  // 등록할 사진경로
   addCatPhotoPath = null;
+
+  // 등록할 닉네임
   addCatNickname = '';
+
+  // 등록할 소개글
   addCatDescription = '';
+
+  // 등록할 종
   addCatSpecies = '';
+
+  // 등록할 중성화
   addCatCut = { Y: 0, N: 0, unknown: 0 };
+
+  // 등록할 사진 미리보기 uri
   addCatUri = null;
+
+  // 등록할 중성화 선택
   addCatCutClicked = { Y: false, N: false, unknown: false };
 
 
   // CatStore -> info 안의 요소들을 꺼내서 개별적인 observable로 변경 가능
   // BriefCatInfo 에서 선택한 cat info
-  selectedCat = null; // 다른 스토어도 selectedCat -> selectedCatBio
+  selectedCatBio = null; // 다른 스토어도 selectedCat -> selectedCatBio
 
   // 오늘의 상태 태그
-  today = undefined;
+  selectedCatToday = undefined;
 
   // 새로 추가하려는 태그
-  newTag = '';
+  selectedCatNewTag = '';
 
   // postList에서 선택한 post
-  selectedPost = null;
+  selectedCatPost = null;
 
   // post를 추가할 때의 content
-  inputContent = '';
+  selectedCatInputContent = '';
 
   // post에 해당하는 commentList
-  commentList = null;
+  selectedCatCommentList = null;
 
   // 작성하는 댓글
-  inputComment = '';
+  selectedCatInputComment = '';
 
   // 해당 고양이의 앨범
-  album = null;
+  selectedCatAlbum = null;
 
-  uri = null;
+  selectedCatUri = null;
 
-  photoPath = null;
+  selectedCatPhoto = null;
 
-  followerList = null;
+  selectedCatPhotoPath = null;
 
-  rainbowOpen = false;
+  selectedCatFollowerList = null;
 
-  rainbowYReported = false;
+  selectedCatRainbowOpen = false;
 
-  rainbowNReported = false;
+  selectedCatRainbowYReported = false;
 
-  cutClicked = { Y: false, N: false, unknown: false };
+  selectedCatRainbowNReported = false;
 
-  reportInfo = null;
+  selectedCatCutClicked = { Y: false, N: false, unknown: false };
+
+  selectedCatReportInfo = null;
 
 
   // info = {
@@ -204,7 +218,7 @@ class CatStore {
 
   // CatStore
   setCatPost = (item) => {
-    this.selectedPost = item;
+    this.selectedCatPost = item;
   };
 
   // actions
@@ -230,7 +244,7 @@ class CatStore {
         console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
           // Helper Store
-          res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
+          res.data[0].todayTime = this.root.helper.changeToDateTime(res.data[0].todayTime);
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
@@ -264,7 +278,10 @@ class CatStore {
 
   // CatStore
   selectCut = (observable, type) => {
-    this[observable].cut = { Y: 0, N: 0, unknown: 0 };
+    if (observable === 'addCatBio') {
+      this[`${observable}Cut`] = { Y: 0, N: 0, unknown: 0 };
+    } 
+    // this[observable].cut = { Y: 0, N: 0, unknown: 0 };
     runInAction(() => {
       const keys = Object.keys(this[observable].cutClicked);
       const values = Object.values(this[observable].cutClicked);
@@ -273,14 +290,18 @@ class CatStore {
           values.splice(idx, 1, true);
         } else values.splice(idx, 1, false);
       });
-      this[observable].cutClicked = {
+
+      // this[observable].cutClicked = {
+      this[`${observable}CutClicked`] = {
         Y: values[0],
         N: values[1],
         unknown: values[2],
       };
-      runInAction(() => {
-        this[observable].cut[type] = 1;
-      });
+      if (observable === 'addCatBio') {
+        runInAction(() => {
+          this[`${observable}Cut`][type] = 1;
+        });
+      }
     });
   };
 
@@ -397,7 +418,7 @@ class CatStore {
       )
       .then(res => {
         Alert.alert('등록에 성공하였습니다!');
-        this.clearAllInput('addCatBio');
+        this.root.helper.clearAllInput('addCatBio');
         return true;
       })
       .catch(err => {
@@ -413,7 +434,7 @@ class CatStore {
 
   // CatStore
   toggleRainbowOpen = () => {
-    this.rainbowOpen = !this.rainbowOpen;
+    this.selectedCatRainbowOpen = !this.selectedCatRainbowOpen;
   };
 
   // CatStore
@@ -439,7 +460,7 @@ class CatStore {
 
   // CatStore
   disableReportBtn = type => {
-    this[`rainbow${type}Reported`] = !this[`rainbow${type}Reported`];
+    this[`selectedCatRainbow${type}Reported`] = !this[`selectedCatRainbow${type}Reported`];
   };
 
   // CatStore
@@ -467,7 +488,7 @@ class CatStore {
 
   // CatStore
   postCatToday = value => {
-    this.today = value;
+    this.selectedCatToday = value;
     const todayInfo = {
       catToday: value,
       catId: this.selectedCatBio[0].id,
@@ -484,7 +505,7 @@ class CatStore {
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
-            this.today = undefined;
+            this.selectedCatToday = undefined;
           } else console.dir(err);
         });
     });
@@ -492,14 +513,14 @@ class CatStore {
 
   // CatStore
   validateTag = () => {
-    const { newTag } = this;
+    const { selectedCatNewTag } = this;
     const tags = this.selectedCatBio[2].map(tagInfo => tagInfo.tag.content);
-    if (tags.includes(newTag)) {
+    if (tags.includes(selectedCatNewTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
       // Helper Store
-      this.clearInput({ group: 'info', key: 'newTag' });
+      this.root.helper.clearInput({ group: 'info', key: 'newTag' });
     } else {
-      this.postTag(newTag);
+      this.postTag(selectedCatNewTag);
     }
   };
 
@@ -517,7 +538,7 @@ class CatStore {
         tags.push(res.data);
         runInAction(() => {
           // Helper Store
-          this.clearInput({ group: 'info', key: 'newTag' });
+          this.root.helper.clearInput({ group: 'info', key: 'newTag' });
         });
       })
       .catch(err => console.dir(err));
@@ -528,12 +549,12 @@ class CatStore {
   };
 
   addComment = () => {
-    const catId = this.selectedPost.id;
-    const commentInfo = { catId, content: this.inputComment };
+    const catId = this.selectedCatPost.id;
+    const commentInfo = { catId, content: this.selectedCatInputComment };
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
       // Helper Store
-      .then(res => this.clearInput({ group: 'info', key: 'inputComment' }))
+      .then(res => this.root.helper.clearInput({ group: 'info', key: 'inputComment' }))
       .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
@@ -551,7 +572,7 @@ class CatStore {
           photo => photo.path !== this.selectedCatBio[3].path,
         );
         console.log('필터한 앨범', photos);
-        this.album = photos;
+        this.selectedCatAlbum = photos;
       })
       .catch(err => {
         console.dir(err);
@@ -559,7 +580,7 @@ class CatStore {
   };
 
   selectPhoto = photo => {
-    this.selectedPhoto = photo;
+    this.selectedCatPhoto = photo;
   };
 
   getFollowerList = catId => {
@@ -567,8 +588,8 @@ class CatStore {
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => {
-        this.followerList = res.data;
-        console.log(this.followerList);
+        this.selectedCatFollowerList = res.data;
+        console.log(this.selectedCatFollowerList);
       })
       .catch(err => console.dir(err));
   };
@@ -600,9 +621,33 @@ class CatStore {
 }
 
 decorate(CatStore, {
-  spot: observable,
-  addCatBio: observable,
-  info: observable,
+  addCatAddress: observable,
+  addCatLocation: observable,
+  addCatPhotoPath: observable,
+  addCatNickname: observable,
+  addCatDescription: observable,
+  addCatSpecies: observable,
+  addCatCut: observable,
+  addCatUri: observable,
+  addCatCutClicked: observable,
+  selectedCatBio: observable,
+  selectedCatToday: observable,
+  selectedCatNewTag: observable,
+  selectedCatPost: observable,
+  selectedCatInputContent: observable,
+  selectedCatCommentList: observable,
+  selectedCatInputComment: observable,
+  selectedCatAlbum: observable,
+  selectedCatUri: observable,
+  selectedCatPhoto: observable,
+  selectedCatPhotoPath: observable,
+  selectedCatFollowerList: observable,
+  selectedCatRainbowOpen: observable,
+  selectedCatRainbowYReported: observable,
+  selectedCatRainbowNReported: observable,
+  selectedCatCutClicked: observable,
+  selectedCatReportInfo: observable,
+  //
   markers: observable,
   carousels: observable,
   getSelectedSpotInfo: action,
