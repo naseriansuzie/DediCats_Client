@@ -12,22 +12,15 @@ class HelperStore {
     this.root = root;
   }
 
-  // info -> selectedCat, inputContent, inputComment, newTag
-  // User -> email, nickname, confirmPW, reConfirmPW, PW, emailVerification
-  // addCatBio -> catNickname, catSpecies, catTag, catDescription
+  // cat(info) -> selectedCat, inputContent, inputComment, newTag
+  // auth -> email, nickname, confirmPW, reConfirmPW, PW, emailVerification
+  // cat(addCat) -> catNickname, catSpecies, catDescription
   updateInput = (store, variable, text) => {
-    this[store][variable] = text;
+    this.root[store][variable] = text;
   };
 
-  // updateInput = (field, text) => {
-  //   // From CatStore
-  //   console.log('text ', text);
-  //   this.root.cat[field] = text;
-  //   console.log(this.root.cat[field]);
-  // };
-
-  // Auth: 'email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification', 'PW', 
-  // selectedCatNewTag, inputComment->selectedCatInputComment
+  // auth: 'email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification', 'PW',
+  // selectedCatNewTag, inputComment -> selectedCatInputComment
   clearInput = (store, ...variable) => {
     variable.forEach((el) => {
       runInAction(() => {
@@ -35,15 +28,6 @@ class HelperStore {
       });
     });
   };
-
-  // clearInput = (...types) => {
-  //   // From CatStore
-  //   types.forEach((type) => {
-  //     runInAction(() => {
-  //       this.root.cat[type] = '';
-  //     });
-  //   });
-  // };
 
   clearAddCatBio = () => {
     // From CatStore
@@ -92,20 +76,12 @@ class HelperStore {
     });
     if (!result.cancelled) {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
-      this.root.cat[type].uri = result.uri;
-      this.root.cat[type].photoPath = imageTarget;
+      this.root.cat[`${type}Uri`] = result.uri;
+      this.root.cat[`${type}PhotoPath`] = imageTarget;
     }
   };
 
   removePhoto = () => {
-    // if (addCatPhoto) {
-    //   new Photo -> this.cat.removeCatPhoto;
-    // } else if (new post Photo) {
-    //   null this.post.removePostPhoto;
-    // } els if (user) {
-    //   default photo this.user.removeUserPhoto;
-    // }
-    // From Cat Store
     this.root.cat.selectedCatUri = null;
   };
 

@@ -49,6 +49,7 @@ class PostStore {
 
   addPost = () => {
     const { cat, helper } = this.root;
+    const { selectedCatContent, selectedCatPhotoPath } = cat;
     const postInfo = {
       content: cat.selectedCatInputContent,
       catId: cat.selectedCat[0].id,
@@ -58,10 +59,7 @@ class PostStore {
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then((res) => helper.clearInput(
-        { group: 'info', key: 'content' },
-        { group: 'info', key: 'photoPath' },
-      ))
+      .then((res) => helper.clearInput('cat', 'selectedCatContent', 'selectedCatPhotoPath'))
       .catch((err) => {
         if (err.response && err.response.status === 405) {
           Alert.alert(

@@ -37,21 +37,6 @@ class CatStore {
     this.root = root;
   }
 
-  // observable
-
-  // CatStore
-  // addCatBio = {
-  //   address: '',
-  //   location: { latitude: 127.049784, longitude: 127.049784 },
-  //   addCatPhotoPath: null,
-  //   catNickname: '',
-  //   catDescription: '',
-  //   catSpecies: '',
-  //   cut: { Y: 0, N: 0, unknown: 0 },
-  //   addCatUri: null,
-  //   cutClicked: { Y: false, N: false, unknown: false },
-  // };
-
   // 등록할 주소
   addCatAddress = '';
 
@@ -131,97 +116,6 @@ class CatStore {
   // 해당 고양이(포스트) 신고
   selectedCatReportInfo = null;
 
-  // info = {
-  // [
-  //   {
-  //     id: 2,
-  //     description: '완전 귀염이 넘치는 아이에요.',
-  //     location: 'POINT(1 2)',
-  //     address: '서울시 강남구 대치동',
-  //     nickname: '애옹이',
-  //     cut: { Y: 5, N: 0, unknown: 0 },
-  //     rainbow: {
-  //       Y: 17,
-  //       YDate: '2020-02-05',
-  //       N: 0,
-  //       NDate: null,
-  //     },
-  //     species: '코숏',
-  //     today: null,
-  //     todayTime: '2020-02-11T05:50:43.000Z',
-  //     status: 'Y',
-  //     createAt: '2020-02-05T03:26:25.561Z',
-  //     updateAt: '2020-02-06T11:30:24.000Z',
-  //   },
-  //   {
-  //     isFollowing: false,
-  //   },
-  //   [
-  //     {
-  //       id: 7,
-  //       tag: {
-  //         content: '초큐트',
-  //       },
-  //     },
-  //   ],
-  //   {
-  //     path: 'https://source.unsplash.com/nKC772R_qog',
-  //   },
-  // ],
-
-  //   {
-  //     id: 3,
-  //     content: '바보',
-  //     status: 'Y',
-  //     createAt: '2020-02-05T04:15:21.607Z',
-  //     updateAt: '2020-02-05T04:15:21.607Z',
-  //     user: {
-  //       id: 1,
-  //       nickname: 'testUser',
-  //       photoPath:
-  //         '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png',
-  //     },
-  //     photos: [
-  //       {
-  //         id: 2,
-  //         path:
-  //           '/Users/danielkim/Desktop/codestates/IM/DediCats-client/img1.jpg',
-  //       },
-  //     ],
-  //   },
-  // ],
-
-  // [
-  //   {
-  //     id: 4,
-  //     path: 'https://source.unsplash.com/hGMvqCyRM9U',
-  //   },
-  //   {
-  //     id: 6,
-  //     path: 'https://source.unsplash.com/nKC772R_qog',
-  //   },
-  // ],
-
-  // [
-  //   {
-  //     id: 1,
-  //     users: [
-  //       {
-  //         id: 1,
-  //         nickname: 'testUser',
-  //         photoPath: null,
-  //       },
-  //       {
-  //         id: 2,
-  //         nickname: 'Joshua',
-  //         photoPath: null,
-  //       },
-  //       {
-  //     ],
-  //   },
-  // ],
-  // };
-
   // CatStore
   setCatPost = (item) => {
     this.selectedCatPost = item;
@@ -234,13 +128,6 @@ class CatStore {
    * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
    */
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
-
-  // getSelectedSpotInfo = (lat, long) => {
-  //   const selectedSpotCats = this.spot.list.filter(
-  //     (cat) => cat.location[0] === lat && cat.location[1] === long,
-  //   );
-  //   this.spot.selected = selectedSpotCats;
-  // };
 
   getSelectedCatInfo = async (catId) => {
     console.log('클릭이되나?:', catId);
@@ -284,13 +171,13 @@ class CatStore {
 
   // CatStore
   selectCut = (variable, type) => {
-    if (variable === 'addCatBio') {
+    if (variable === 'addCat') {
       this[`${variable}Cut`] = { Y: 0, N: 0, unknown: 0 };
-    } 
+    }
     // this[variable].cut = { Y: 0, N: 0, unknown: 0 };
     runInAction(() => {
-      const keys = Object.keys(this[variable].cutClicked);
-      const values = Object.values(this[variable].cutClicked);
+      const keys = Object.keys(this[variable].CutClicked);
+      const values = Object.values(this[variable].CutClicked);
       keys.forEach((key, idx) => {
         if (key === type) {
           values.splice(idx, 1, true);
@@ -303,7 +190,7 @@ class CatStore {
         N: values[1],
         unknown: values[2],
       };
-      if (variable === 'addCatBio') {
+      if (variable === 'addCat') {
         runInAction(() => {
           this[`${variable}Cut`][type] = 1;
         });
@@ -314,13 +201,6 @@ class CatStore {
   // CatStore
   validateAddCat = () => {
     let isValidated = false;
-    // const {
-    //   location,
-    //   catNickname,
-    //   catDescription,
-    //   catSpecies,
-    //   cutClicked,
-    // } = this.addCatBio;
     const {
       addCatLocation,
       addCatNickname,
@@ -335,13 +215,6 @@ class CatStore {
       && addCatSpecies.length
       && (addCatCutClicked.Y || addCatCutClicked.N || addCatCutClicked.unknown)
     ) {
-    // if (
-    //   location &&
-    //   catNickname.length &&
-    //   catDescription.length &&
-    //   catSpecies.length &&
-    //   (cutClicked.Y || cutClicked.N || cutClicked.unknown)
-    // ) {
       isValidated = true;
     } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
     return isValidated;
@@ -381,15 +254,6 @@ class CatStore {
 
   // CatStore
   addCat = async () => {
-    // const {
-    //   address,
-    //   location,
-    //   addCatPhotoPath,
-    //   catNickname,
-    //   catDescription,
-    //   catSpecies,
-    //   cut,
-    // } = this.addCatBio;
     const {
       addCatAddress,
       addCatLocation,
@@ -402,15 +266,6 @@ class CatStore {
     const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
-        // {
-        //   address,
-        //   location,
-        //   addCatPhotoPath,
-        //   catNickname,
-        //   catDescription,
-        //   catSpecies,
-        //   cut,
-        // },
         {
           address: addCatAddress,
           location: addCatLocation,
@@ -424,7 +279,7 @@ class CatStore {
       )
       .then((res) => {
         Alert.alert('등록에 성공하였습니다!');
-        this.root.helper.clearAllInput('addCatBio');
+        this.root.helper.clearAddCatBio('addCatBio');
         return true;
       })
       .catch((err) => {
@@ -523,8 +378,7 @@ class CatStore {
     const tags = this.selectedCatBio[2].map((tagInfo) => tagInfo.tag.content);
     if (tags.includes(selectedCatNewTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
-      // Helper Store
-      this.root.helper.clearInput({ group: 'info', key: 'newTag' });
+      this.root.helper.clearInput('cat', 'selectedCatNewTag');
     } else {
       this.postTag(selectedCatNewTag);
     }
@@ -543,8 +397,7 @@ class CatStore {
         const tags = this.selectedCatBio[2];
         tags.push(res.data);
         runInAction(() => {
-          // Helper Store
-          this.root.helper.clearInput({ group: 'info', key: 'newTag' });
+          this.root.helper.clearInput('cat', 'selectedCatNewTag');
         });
       })
       .catch((err) => console.dir(err));
@@ -559,8 +412,7 @@ class CatStore {
     const commentInfo = { catId, content: this.selectedCatInputComment };
     axios
       .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
-      // Helper Store
-      .then((res) => this.root.helper.clearInput({ group: 'info', key: 'inputComment' }))
+      .then((res) => this.root.helper.clearInput('cat', 'selectedCatInputComment'))
       .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
@@ -599,31 +451,6 @@ class CatStore {
       })
       .catch((err) => console.dir(err));
   };
-
-  carousels = [
-    //! sample data
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
-  ];
-
-  markers = [
-    // {
-    //   catId: 1,
-    //   latitude: 37.503528,
-    //   longitude: 127.049784,
-    //   catNickname: 'Best Place',
-    //   catAddress: '서울시 선릉',
-    //   description: 'This is the best place in Portland',
-    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    // },
-  ];
 }
 
 decorate(CatStore, {
@@ -653,8 +480,6 @@ decorate(CatStore, {
   selectedCatRainbowNReported: observable,
   selectedCatCutClicked: observable,
   selectedCatReportInfo: observable,
-  markers: observable,
-  carousels: observable,
   getSelectedCatInfo: action,
   followCat: action,
   selectCut: action,

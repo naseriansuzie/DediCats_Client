@@ -11,14 +11,8 @@ class MapStore {
     this.root = root;
   }
 
-  // observable
   // 현재 나의 위치
   currentPosition = {
-    latitude: 0,
-    longitude: 0,
-  };
-
-  addCatMarker = {
     latitude: 0,
     longitude: 0,
   };
@@ -40,6 +34,31 @@ class MapStore {
   };
 
   permissionState = false;
+
+  carousels = [
+    //! sample data
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
+  ];
+
+  markers = [
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile: 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
+  ];
 
   // actions
   getMapInfo = async () => {
@@ -119,16 +138,17 @@ class MapStore {
   // {latitude: Number, longitude: Number}
   onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
-    this.addCatLocation = { latitude, longitude };
+    this.root.cat.addCatLocation = { latitude, longitude };
   };
 }
 
 decorate(MapStore, {
   currentPosition: observable,
-  addCatMarker: observable,
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
+  carousels: observable,
+  markers: observable,
   getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,

@@ -89,6 +89,7 @@ class AuthStore {
 
         runInAction(() => {
           this.root.helper.clearInput(
+            'auth',
             'email',
             'nickname',
             'confirmPW',
@@ -135,7 +136,7 @@ class AuthStore {
         this.isSignIn = true;
         AsyncStorage.setItem('isLogin', true);
         runInAction(() => {
-          this.root.helper.clearInput('email', 'PW');
+          this.root.helper.clearInput('auth', 'email', 'PW');
         });
         return true;
       })
