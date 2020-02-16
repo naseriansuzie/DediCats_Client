@@ -12,7 +12,6 @@ class PostStore {
 
   postList = [];
 
-  // * PostStore
   postPage = 1;
 
   isRefreshingPost = false;
@@ -22,7 +21,7 @@ class PostStore {
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
       const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
-      const post = await Axios.get(url);
+      const post = await axios.get(url);
       if (post) {
         if (this.isRefreshingPost) {
           this.postList = post.data;
@@ -49,20 +48,21 @@ class PostStore {
   };
 
   addPost = () => {
+    const { cat, helper } = this.root;
     const postInfo = {
-      content: this.root.cat.selectedCatInputContent,
-      catId: this.root.cat.selectedCat[0].id,
+      content: cat.selectedCatInputContent,
+      catId: cat.selectedCat[0].id,
     };
-    if (this.root.cat.selectedCatPhotoPath) {
-      postInfo.photoPath = this.root.cat.selectedCatPhotoPath;
+    if (cat.selectedCatPhotoPath) {
+      postInfo.photoPath = cat.selectedCatPhotoPath;
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then((res) => this.root.helper.clearInput(
+      .then((res) => helper.clearInput(
         { group: 'info', key: 'content' },
         { group: 'info', key: 'photoPath' },
       ))
-      .catch(err => {
+      .catch((err) => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
@@ -84,7 +84,6 @@ decorate(PostStore, {
   getPostList: action,
   handleLoadMorePosts: action,
   handleRefresh: action,
-  alidateAddInput: action,
   addPost: action,
 });
 export default PostStore;
