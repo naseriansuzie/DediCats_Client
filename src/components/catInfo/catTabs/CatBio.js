@@ -106,7 +106,7 @@ class CatBio extends React.Component {
 
   render() {
     const {
-      cat,
+      selectedCatBio,
       selectedCatToday,
       selectedCatRainbowOpen,
       toggleRainbowOpen,
@@ -153,16 +153,16 @@ class CatBio extends React.Component {
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      {`추정 종 : ${cat.species}`}
+                      {`추정 종 : ${selectedCatBio.species}`}
                     </Text>
                   </Body>
                 </CardItem>
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      {`${cat.nickname}를 소개해요!`}
+                      {`${selectedCatBio.nickname}를 소개해요!`}
                     </Text>
-                    <Text>{`${cat.description}`}</Text>
+                    <Text>{`${selectedCatBio.description}`}</Text>
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -185,7 +185,7 @@ class CatBio extends React.Component {
                           }
                         }}
                       >
-                        <Text style={styles.cutTxt}>Yes {cat.cut.Y}</Text>
+                        <Text style={styles.cutTxt}>Yes {selectedCatBio.cut.Y}</Text>
                       </TouchableHighlight>
                       <TouchableHighlight
                         style={selectedCatCutClicked.N ? styles.noPeanut : styles.peanut}
@@ -203,7 +203,7 @@ class CatBio extends React.Component {
                           }
                         }}
                       >
-                        <Text style={styles.cutTxt}>No {cat.cut.N}</Text>
+                        <Text style={styles.cutTxt}>No {selectedCatBio.cut.N}</Text>
                       </TouchableHighlight>
                       <TouchableHighlight
                         style={
@@ -224,7 +224,7 @@ class CatBio extends React.Component {
                         }}
                       >
                         <Text style={styles.cutTxt}>
-                          몰라요 {cat.cut.unknown}
+                          몰라요 {selectedCatBio.cut.unknown}
                         </Text>
                       </TouchableHighlight>
                     </View>
@@ -233,10 +233,10 @@ class CatBio extends React.Component {
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      오늘 {cat.nickname}의 건강 상태
+                      오늘 {selectedCatBio.nickname}의 건강 상태
                     </Text>
-                    {cat.today && cat.todayTime === dateOfToday ? (
-                      <Text>{cat.today}</Text>
+                    {selectedCatBio.today && selectedCatBio.todayTime === dateOfToday ? (
+                      <Text>{selectedCatBio.today}</Text>
                     ) : (
                       <Form
                         style={{
@@ -290,7 +290,7 @@ class CatBio extends React.Component {
                           </Badge>
                         ))
                       ) : (
-                        <Text>{cat.nickname}를 표현해주세요.</Text>
+                        <Text>{selectedCatBio.nickname}를 표현해주세요.</Text>
                       )}
                     </View>
                     <KeyboardAvoidingView style={styles.width100}>
@@ -328,7 +328,7 @@ class CatBio extends React.Component {
 }
 
 export default inject(({ cat, helper }) => ({
-  cat: cat.selectedCatBio[0],
+  selectedCatBio: cat.selectedCatBio[0],
   catId: cat.selectedCatBio[0].id,
   selectedCatToday: cat.selectedCatToday,
   selectedCatRainbowOpen: cat.selectedCatRainbowOpen,
