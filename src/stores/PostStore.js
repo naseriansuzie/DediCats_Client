@@ -49,18 +49,20 @@ class PostStore {
 
   addPost = () => {
     const { cat, helper } = this.root;
-    const { selectedCatContent, selectedCatPhotoPath } = cat;
+    const { selectedCatPhotoPath, selectedCatInputContent, selectedCat } = cat;
     const postInfo = {
-      content: cat.selectedCatInputContent,
-      catId: cat.selectedCat[0].id,
+      content: selectedCatInputContent,
+      catId: selectedCat[0].id,
     };
-    if (cat.selectedCatPhotoPath) {
-      postInfo.photoPath = cat.selectedCatPhotoPath;
+    if (selectedCatPhotoPath) {
+      postInfo.photoPath = selectedCatPhotoPath;
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then((res) => helper.clearInput('cat', 'selectedCatContent', 'selectedCatPhotoPath'))
-      .catch((err) => {
+      .then(res =>
+        helper.clearInput('cat', 'selectedCatContent', 'selectedCatPhotoPath'),
+      )
+      .catch(err => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
@@ -72,7 +74,6 @@ class PostStore {
         }
       });
   };
-  // * Post Store
 }
 
 decorate(PostStore, {
