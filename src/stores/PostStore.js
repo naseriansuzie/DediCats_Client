@@ -49,10 +49,14 @@ class PostStore {
 
   addPost = () => {
     const { cat, helper } = this.root;
-    const { selectedCatPhotoPath, selectedCatInputContent, selectedCat } = cat;
+    const {
+      selectedCatPhotoPath,
+      selectedCatInputContent,
+      selectedCatBio,
+    } = cat;
     const postInfo = {
       content: selectedCatInputContent,
-      catId: selectedCat[0].id,
+      catId: selectedCatBio[0].id,
     };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
