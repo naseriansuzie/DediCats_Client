@@ -24,7 +24,11 @@ const styles = StyleSheet.create({
   flex1: { flex: 1 },
 });
 
-const CatSelectedPost = ({ selectedPost, commentList, convertDateTime }) => (
+const CatSelectedPost = ({
+  selectedCatPost,
+  selectedCatCommentList,
+  convertDateTime,
+}) => (
   <Container style={styles.container}>
     <Header style={{ display: 'none' }} />
     <Content>
@@ -33,27 +37,27 @@ const CatSelectedPost = ({ selectedPost, commentList, convertDateTime }) => (
           <Left>
             <Thumbnail
               style={{ borderWidth: 1, borderColor: 'green' }}
-              source={{ uri: selectedPost.user.photoPath }}
+              source={{ uri: selectedCatPost.user.photoPath }}
             />
             <Body>
-              <Text>{selectedPost.user.nickname}</Text>
-              <Text note>{convertDateTime(selectedPost.createAt)}</Text>
+              <Text>{selectedCatPost.user.nickname}</Text>
+              <Text note>{convertDateTime(selectedCatPost.createAt)}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem style={styles.flex1}>
           <Body>
             <Image
-              source={{ uri: selectedPost.photos[0].path }}
+              source={{ uri: selectedCatPost.photos[0].path }}
               style={styles.image}
             />
-            <Text>{selectedPost.content}</Text>
+            <Text>{selectedCatPost.content}</Text>
           </Body>
         </CardItem>
       </Card>
       <List>
-        {commentList ? (
-          commentList.map((comment, idx) => (
+        {selectedCatCommentList ? (
+          selectedCatCommentList.map((comment, idx) => (
             <CatComment
               key={`comment_${comment.id}`}
               idx={idx}
@@ -71,8 +75,8 @@ const CatSelectedPost = ({ selectedPost, commentList, convertDateTime }) => (
   </Container>
 );
 
-export default inject(({ cat }) => ({
-  selectedPost: cat.info.selectedPost,
-  commentList: cat.info.commentList,
-  convertDateTime: cat.convertDateTime,
+export default inject(({ cat, helper }) => ({
+  selectedCatPost: cat.selectedCatPost,
+  selectedCatCommentList: cat.selectedCatCommentList,
+  convertDateTime: helper.convertDateTime,
 }))(observer(CatSelectedPost));

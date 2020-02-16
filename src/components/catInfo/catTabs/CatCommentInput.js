@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 });
 
 const CatCommentInput = ({
-  inputComment,
+  selectedCatInputComment,
   updateInput,
   validateAddInput,
   addComment,
@@ -55,16 +55,18 @@ const CatCommentInput = ({
         <Form style={styles.inputForm}>
           <Textarea
             style={styles.textArea}
-            rowSpan={inputComment.length > 27 ? 3 : 2}
+            rowSpan={selectedCatInputComment.length > 27 ? 3 : 2}
             placeholder="댓글을 입력해주세요."
-            value={inputComment}
-            onChangeText={text => updateInput('info', 'inputComment', text)}
+            value={selectedCatInputComment}
+            onChangeText={text =>
+              updateInput('cat', 'selectedCatInputComment', text)
+            }
           />
         </Form>
         <TouchableOpacity
           style={styles.submitBtn}
           onPress={() => {
-            const validation = validateAddInput('inputComment');
+            const validation = validateAddInput('selectedCatInputComment');
             console.log(validation);
             if (validation) {
               addComment();
@@ -78,9 +80,9 @@ const CatCommentInput = ({
   </View>
 );
 
-export default inject(({ cat }) => ({
-  inputComment: cat.info.inputComment,
-  updateInput: cat.updateInput,
-  validateAddInput: cat.validateAddInput,
+export default inject(({ cat, helper }) => ({
+  selectedCatInputComment: cat.selectedCatInputComment,
   addComment: cat.addComment,
+  validateAddInput: helper.validateAddInput,
+  updateInput: helper.updateInput,
 }))(observer(CatCommentInput));
