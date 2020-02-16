@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
   },
   activeText: { color: 'white', fontSize: 18 },
 });
-const CatInfoTabs = ({ selectedCat }) => (
+const CatInfoTabs = ({ selectedCatBio }) => (
   <Container style={styles.container}>
-    {selectedCat && selectedCat.length > 0 ? (
+    {selectedCatBio && selectedCatBio.length > 0 ? (
       <View>
         <Header hasTabs style={styles.hide} />
         <Tabs tabBarUnderlineStyle={styles.hide}>
@@ -76,5 +76,5 @@ const CatInfoTabs = ({ selectedCat }) => (
 );
 
 export default inject(({ cat }) => ({
-  selectedCat: cat.info.selectedCat,
+  selectedCatBio: cat.selectedCatBio,
 }))(observer(CatInfoTabs));
