@@ -263,18 +263,18 @@ class CatStore {
   // MapStore
   getMapInfo = async () => {
     const currentBound = this.root.user.currentBoundingBox;
-    console.log(currentBound);
-    await axios.post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
+    const result = await axios.post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
       .then((res) => {
-        console.log('Response data is : ', res.data);
         this.markers = res.data;
-        console.log('마커정보는:', this.markers, res.data.length);
         this.carousels = res.data;
         // this.carousels = res.data;
-        console.log('카루셀 정보: ', this.carousels);
         return true;
       })
-      .catch((err) => console.dir(err));
+      .catch((err) => {
+        console.dir(err);
+        return false;
+      });
+  return result;
     // if (result) {
     //   return true;
     // }
@@ -291,11 +291,9 @@ class CatStore {
   // };
 
   getSelectedCatInfo = async (catId) => {
-    console.log('클릭이되나?:', catId);
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then((res) => {
-        console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
           res.data[0].todayTime = this.changeToDateTime(res.data[0].todayTime);
         }
@@ -303,6 +301,7 @@ class CatStore {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         }
         res.data[0].cut = JSON.parse(res.data[0].cut);
+        console.log(this.info.selectedCat);
         this.info.selectedCat = res.data;
         // const replacement = this.markers;
         // this.carousels = replacement;
@@ -313,7 +312,6 @@ class CatStore {
         console.dir(err);
         return false;
       });
-    console.log('함수', result);
     return result;
   };
 
@@ -349,7 +347,7 @@ class CatStore {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 0.2,
+      quality: 1,
       base64: true,
     });
     if (!result.cancelled) {
@@ -545,7 +543,7 @@ class CatStore {
   // CatStore
   postCatToday = (value) => {
     this.info.today = value;
-    const todayInfo = {
+    const todayInfo = { 
       catToday: value,
       catId: this.info.selectedCat[0].id,
     };
