@@ -135,20 +135,18 @@ class CatStore {
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
   getSelectedCatInfo = async (catId) => {
-    console.log('클릭이되나?:', catId);
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then((res) => {
-        console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
           // Helper Store
           res.data[0].todayTime = this.root.helper.changeToDateTime(
             res.data[0].todayTime,
           );
-          console.log(
-            'getSelectedCatInfo 후 변경된 todayTime',
-            res.data[0].todayTime,
-          );
+          // console.log(
+          //   'getSelectedCatInfo 후 변경된 todayTime',
+          //   res.data[0].todayTime,
+          // );
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
@@ -219,8 +217,6 @@ class CatStore {
       addCatCutClicked,
       onDragstate,
     } = this;
-    console.log("수정 후", this.onDragstate)
-    console.log("수정 후", this.addCatLocation.latitude, this.addCatLocation.longitude)
     if (!onDragstate) {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;
@@ -235,8 +231,8 @@ class CatStore {
     ) {
       this.onDragstate = false;
       isValidated = true;
-    } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
-      return isValidated;
+    } else { Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.'); }
+    return isValidated;
   };
 
   // MapStore
@@ -282,7 +278,6 @@ class CatStore {
       addCatSpecies,
       addCatCut,
     } = this;
-    console.log(addCatLocation);
     const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
@@ -370,7 +365,7 @@ class CatStore {
   };
 
   // CatStore
-  postCatToday = value => {
+  postCatToday = (value) => {
     const catId = this.selectedCatBio[0].id;
     this.selectedCatToday = value;
     const todayInfo = {
@@ -380,7 +375,7 @@ class CatStore {
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then(res => {
+        .then((res) => {
           this.getSelectedCatInfo(catId);
         })
         .catch((err) => {

@@ -70,10 +70,12 @@ class MainMap extends React.Component {
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
+    // this.props.syncCarousels();
     this._map.animateToRegion(region);
   };
 
   onMarkerPressed = (location, index) => {
+    console.log("클릭된 마커:", index);
     const { isShowingCarousel } = this.state;
     const region = {
       latitude: location.latitude,
@@ -81,6 +83,7 @@ class MainMap extends React.Component {
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
+    this.props.syncCarousels();
     this._map.animateToRegion(region);
     this._carousel.snapToItem(index);
     if (!isShowingCarousel) {
@@ -92,6 +95,7 @@ class MainMap extends React.Component {
     console.disableYellowBox = 'true';
     const {
       markers,
+      carousels,
       onRegionChangeComplete,
       getCurrentPosition,
       currentRegion,
@@ -111,7 +115,7 @@ class MainMap extends React.Component {
           >
             {markers.map((marker, index) => (
               <MainMarker
-                key={marker.longitude + marker.latitude}
+                key={marker.catNickname + marker.longitude + marker.latitude}
                 marker={marker}
                 index={index}
                 onMarkerPressed={this.onMarkerPressed}
@@ -145,7 +149,7 @@ class MainMap extends React.Component {
             ref={c => {
               this._carousel = c;
             }}
-            data={markers}
+            data={[...carousels]}
             renderItem={this.renderCarouselItem}
             onSnapToItem={index => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
@@ -165,7 +169,9 @@ class MainMap extends React.Component {
 }
 
 export default inject(({ map }) => ({
+  syncCarousels: map.syncCarousels,
   markers: map.markers,
+  carousels: map.carousels,
   getMapInfo: map.getMapInfo,
   currentPosition: map.currentPosition,
   currentRegion: map.currentRegion,
