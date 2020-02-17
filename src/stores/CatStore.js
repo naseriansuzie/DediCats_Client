@@ -41,7 +41,7 @@ class CatStore {
   addCatAddress = '';
 
   // 등록할 위치
-  addCatLocation = { latitude: 37.049784, longitude: 127.049784 };
+  addCatLocation = { latitude: 0, longitude: 0 };
 
   // 등록할 사진경로
   addCatPhotoPath = null;
@@ -140,6 +140,10 @@ class CatStore {
           res.data[0].todayTime = this.root.helper.changeToDateTime(
             res.data[0].todayTime,
           );
+          console.log(
+            'getSelectedCatInfo 후 변경된 todayTime',
+            res.data[0].todayTime,
+          );
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
@@ -209,6 +213,7 @@ class CatStore {
       addCatSpecies,
       addCatCutClicked,
     } = this;
+    console.log('validate 함수 내 로케이션', addCatLocation);
     if (
       addCatLocation &&
       addCatNickname.length &&
@@ -352,19 +357,17 @@ class CatStore {
 
   // CatStore
   postCatToday = value => {
+    const catId = this.selectedCatBio[0].id;
     this.selectedCatToday = value;
     const todayInfo = {
       catToday: value,
-      catId: this.selectedCatBio[0].id,
+      catId,
     };
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
         .then(res => {
-          this.selectedCatBio[0].today = res.data.cat_today;
-          this.selectedCatBio[0].todayTime = this.root.helper.makeGMTDateTime(
-            res.data.cat_today_time,
-          );
+          this.getSelectedCatInfo(catId);
         })
         .catch(err => {
           if (err.response && err.response.status === 409) {
