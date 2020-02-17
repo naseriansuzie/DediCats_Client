@@ -231,7 +231,7 @@ const AddCatBio = ({
                   const addCatResult = await addCat();
                   // console.log('등록 성공', addCatResult);
                   if (addCatResult) {
-                    Alert.alert('등록에 성공하였습니다!');
+                    // Alert.alert('등록에 성공하였습니다!');
                     navigation.goBack();
                     await getMapInfo();
                   } else {
@@ -246,8 +246,8 @@ const AddCatBio = ({
                 }
               } else {
                 console.log('검증 실패');
-                Alert.alert('고양이를 등록할 수 없습니다');
-                navigation.goBack();
+                // Alert.alert('고양이를 등록할 수 없습니다');
+                // navigation.goBack();
               }
             }}
           >
