@@ -230,7 +230,7 @@ const AddCatBio = ({
                   const addCatResult = await addCat();
                   // console.log('등록 성공', addCatResult);
                   if (addCatResult) {
-                    Alert.alert('등록에 성공하였습니다!');
+                    // Alert.alert('등록에 성공하였습니다!');
                     navigation.goBack();
                     await getMapInfo();
                   } else {

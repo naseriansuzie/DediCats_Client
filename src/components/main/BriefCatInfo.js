@@ -87,9 +87,9 @@ const BriefCatInfo = ({
       <TouchableWithoutFeedback
         style={styles.row}
         onPress={async () => {
-          console.log('카루셀 클릭시: ', item.catId);
+          // console.log('카루셀 클릭시: ', item.catId);
           const result = await getSelectedCatInfo(item.catId);
-          console.log('카드', result);
+          // console.log('카드', result);
           if (result) {
             navigation.navigate('CatInfo');
           }
