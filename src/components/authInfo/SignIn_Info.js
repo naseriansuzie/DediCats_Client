@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet, Text, TouchableOpacity, View, Alert,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -55,7 +57,7 @@ const SignIn_Info = ({
   PW,
   updateInput,
   validateSignIn,
-  updateState,
+  signIn,
   clearInput,
   navigation,
 }) => (
@@ -75,7 +77,7 @@ const SignIn_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={text => {
+            onChangeText={(text) => {
               updateInput('auth', 'email', text);
             }}
             value={email}
@@ -87,7 +89,7 @@ const SignIn_Info = ({
             Password
           </Label>
           <Input
-            onChangeText={text => updateInput('auth', 'PW', text)}
+            onChangeText={(text) => updateInput('auth', 'PW', text)}
             value={PW}
           />
         </Item>
@@ -95,22 +97,23 @@ const SignIn_Info = ({
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const validation = await validateSignIn();
-          if (validation) {
-            const signInResult = await updateState('SignIn');
-            console.log('signInResult :', signInResult);
-            if (signInResult) {
-              clearInput('auth', 'email', 'PW');
-              navigation.navigate('AuthLoading');
-            }
+          if (email && PW) {
+            const signInResult = await signIn();
+            if (signInResult) navigation.navigate('AuthLoading');
+            return;
           }
+
+          Alert.alert('모든 정보를 입력해주세요.');
         }}
       >
         <Text style={styles.white}>Log In</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.signUpBtn}
-        onPress={() => navigation.navigate('Sign Up')}
+        onPress={() => {
+          clearInput('auth', 'email', 'PW');
+          navigation.navigate('Sign Up');
+        }}
       >
         <Text style={styles.light}>Sign Up</Text>
       </TouchableOpacity>
@@ -122,7 +125,7 @@ export default inject(({ auth, helper }) => ({
   email: auth.email,
   PW: auth.PW,
   validateSignIn: auth.validateSignIn,
-  updateState: auth.updateState,
+  signIn: auth.signIn,
   updateInput: helper.updateInput,
   clearInput: helper.clearInput,
 }))(observer(withNavigation(SignIn_Info)));

@@ -8,7 +8,9 @@ import {
   Input,
   Label,
 } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import {
+  StyleSheet, Text, TouchableOpacity, View, Alert,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -69,9 +71,7 @@ const emailCertified = ({
             이메일 인증 코드
           </Label>
           <Input
-            onChangeText={text =>
-              updateInput('auth', 'emailVerification', text)
-            }
+            onChangeText={(text) => updateInput('auth', 'emailVerification', text)}
             value={emailVerification}
           />
         </Item>
@@ -82,11 +82,7 @@ const emailCertified = ({
           if (emailCode === emailVerification) {
             const signUpResult = signUp();
             if (signUpResult) navigation.navigate('Sign In');
-          } else {
-            Alert.alert(
-              '이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!',
-            );
-          }
+          } else Alert.alert('이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!');
         }}
       >
         <Text style={styles.white}>Submit</Text>

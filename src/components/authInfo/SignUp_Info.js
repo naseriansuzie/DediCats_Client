@@ -8,7 +8,9 @@ import {
   Input,
   Label,
 } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet, Text, TouchableOpacity, View,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -52,8 +54,7 @@ const SignUp_Info = ({
   reConfirmPW,
   updateInput,
   validateSignUp,
-  updateState,
-  clearInput,
+  emailCertified,
   navigation,
 }) => (
   <Container>
@@ -78,7 +79,7 @@ const SignUp_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={text => updateInput('auth', 'email', text)}
+            onChangeText={(text) => updateInput('auth', 'email', text)}
             value={email}
           />
         </Item>
@@ -88,7 +89,7 @@ const SignUp_Info = ({
             nickname
           </Label>
           <Input
-            onChangeText={text => updateInput('auth', 'nickname', text)}
+            onChangeText={(text) => updateInput('auth', 'nickname', text)}
             value={nickname}
           />
         </Item>
@@ -98,7 +99,7 @@ const SignUp_Info = ({
             Password
           </Label>
           <Input
-            onChangeText={text => updateInput('auth', 'confirmPW', text)}
+            onChangeText={(text) => updateInput('auth', 'confirmPW', text)}
             value={confirmPW}
           />
         </Item>
@@ -108,7 +109,7 @@ const SignUp_Info = ({
             Password 재확인
           </Label>
           <Input
-            onChangeText={text => updateInput('auth', 'reConfirmPW', text)}
+            onChangeText={(text) => updateInput('auth', 'reConfirmPW', text)}
             value={reConfirmPW}
           />
         </Item>
@@ -117,20 +118,10 @@ const SignUp_Info = ({
         style={styles.btn}
         onPress={async () => {
           const validation = validateSignUp();
-          console.log(validation);
-          if (validation) {
-            const emailResult = await updateState('SignUp');
-            if (emailResult) {
-              clearInput(
-                'auth',
-                'email',
-                'nickname',
-                'confirmPW',
-                'reconfirmPW',
-              );
-              navigation.navigate('Email Certified');
-            }
-          }
+          if (!validation) return;
+
+          const emailResult = await emailCertified();
+          if (emailResult) navigation.navigate('Email Certified');
         }}
       >
         <Text style={styles.white}>Submit</Text>
@@ -150,7 +141,7 @@ export default inject(({ auth, helper }) => ({
   confirmPW: auth.confirmPW,
   reConfirmPW: auth.reConfirmPW,
   validateSignUp: auth.validateSignUp,
-  updateState: auth.updateState,
+  emailCertified: auth.emailCertified,
   updateInput: helper.updateInput,
   clearInput: helper.clearInput,
 }))(observer(withNavigation(SignUp_Info)));
