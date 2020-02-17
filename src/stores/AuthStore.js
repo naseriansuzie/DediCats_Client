@@ -3,9 +3,10 @@ import {
 } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
+import { SERVER_URL, AUTH_SERVER, JWT_SECRET_ACCESS } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import jwt from 'jsonwebtoken';
 
 const defaultCredential = { withCredentials: true };
 
@@ -85,16 +86,12 @@ class AuthStore {
       .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
-        } else {
-          console.dir(err);
-          return false;
         }
+        console.dzir(err);
+        return false;
       });
 
-    if (!result) {
-      Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
-      return false;
-    }
+    if (!result) Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
 
     runInAction(() => {
       this.root.helper.clearInput(
@@ -116,6 +113,8 @@ class AuthStore {
       .post(`${AUTH_SERVER}/auth/signin`, { email, password: PW }, defaultCredential)
       .then((res) => {
         if (res.status !== 201) return false;
+
+        this.updateToken(res.data.accessToken);
         runInAction(() => {
           this.root.helper.clearInput('auth', 'email', 'PW');
         });
@@ -130,13 +129,26 @@ class AuthStore {
     return result;
   };
 
+  updatemyInfo = (accessToken) => {
+    const decode = jwt.verify(accessToken, JWT_SECRET_ACCESS);
+
+    const {
+      id, nickname, email, createAt,
+    } = decode;
+
+    this.myInfo = {
+      id, nickname, email, createAt,
+    };
+
+    return this.myInfo;
+  }
+
   signOut = (id) => {
     axios
       .post(`${AUTH_SERVER}/auth/signout`, id, defaultCredential)
       .then(async (res) => {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
-        this.signIn = false;
         this.myInfo = null;
       })
       .catch((err) => console.dir(err));
