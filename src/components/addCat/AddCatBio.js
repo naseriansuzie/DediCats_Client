@@ -7,8 +7,11 @@ import {
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
-import { Content, Item, Label, Input, Textarea } from 'native-base';
+import {
+  Content, Item, Label, Input, Textarea,
+} from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -94,8 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
   addCatUri,
@@ -105,12 +107,12 @@ const AddCatBio = ({
   addCatCutClicked,
   getPermissionAsync,
   pickImage,
+  getMapInfo,
   updateInput,
   selectCut,
   validateAddCat,
   getAddress,
   addCat,
-  getMapInfo,
   navigation,
 }) => (
   <View style={styles.container}>
@@ -224,13 +226,14 @@ const AddCatBio = ({
               const validation = await validateAddCat();
               if (validation) {
                 const addressResult = await getAddress();
-                console.log('주소검증 성공', addressResult);
+                // console.log('주소검증 성공', addressResult);
                 if (addressResult) {
                   const addCatResult = await addCat();
-                  console.log('등록 성공', addCatResult);
+                  // console.log('등록 성공', addCatResult);
                   if (addCatResult) {
+                    Alert.alert('등록에 성공하였습니다!');
                     navigation.goBack();
-                    getMapInfo();
+                    await getMapInfo();
                   } else {
                     console.log('등록 실패');
                     Alert.alert('고양이를 등록할 수 없습니다');

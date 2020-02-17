@@ -155,7 +155,6 @@ class CatStore {
         console.dir(err);
         return false;
       });
-    console.log('함수', result);
     return result;
   };
 

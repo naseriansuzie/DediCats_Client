@@ -282,9 +282,9 @@ class CatBio extends React.Component {
                           />
                           <Picker.Item
                             label="😾가까이 가지 마세요"
-                            value="😾가까이"
+                            value="😾가까이 가지 마세요"
                           />
-                          <Picker.Item label="😿기운이 없어요" value="없어요" />
+                          <Picker.Item label="😿기운이 없어요" value="😿기운이 없어요" />
                           <Picker.Item label="🙀아파요" value="🙀아파요" />
                         </Picker>
                       </Form>
