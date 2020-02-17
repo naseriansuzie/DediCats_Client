@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet, Text, TouchableOpacity, View, Alert,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   Container,
   Header,
@@ -24,6 +22,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: '600',
   },
+  scrollView: { paddingLeft: 10, paddingRight: 10 },
   btn: {
     alignItems: 'center',
     padding: 15,
@@ -57,14 +56,15 @@ const SignIn_Info = ({
   updateInput,
   validateSignIn,
   updateState,
+  clearInput,
   navigation,
 }) => (
   <Container>
     <Header />
     <View style={styles.logo}>
-      <Text style={styles.logoTxt}>Dedicat</Text>
+      <Text style={styles.logoTxt}>Dedicats</Text>
     </View>
-    <Content style={{ paddingLeft: 10, paddingRight: 10 }}>
+    <Content style={styles.scrollView}>
       <Form>
         <Item floatingLabel>
           <Label>
@@ -75,8 +75,8 @@ const SignIn_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={(text) => {
-              updateInput('email', text);
+            onChangeText={text => {
+              updateInput('auth', 'email', text);
             }}
             value={email}
           />
@@ -86,7 +86,10 @@ const SignIn_Info = ({
             <MaterialCommunityIcons style={styles.font16} name="lock-outline" />{' '}
             Password
           </Label>
-          <Input onChangeText={(text) => updateInput('PW', text)} value={PW} />
+          <Input
+            onChangeText={text => updateInput('auth', 'PW', text)}
+            value={PW}
+          />
         </Item>
       </Form>
       <TouchableOpacity
@@ -97,6 +100,7 @@ const SignIn_Info = ({
             const signInResult = await updateState('SignIn');
             console.log('signInResult :', signInResult);
             if (signInResult) {
+              clearInput('auth', 'email', 'PW');
               navigation.navigate('AuthLoading');
             }
           }
@@ -114,10 +118,11 @@ const SignIn_Info = ({
   </Container>
 );
 
-export default inject(({ user }) => ({
-  email: user.info.email,
-  PW: user.info.PW,
-  updateInput: user.updateInput,
-  validateSignIn: user.validateSignIn,
-  updateState: user.updateState,
+export default inject(({ auth, helper }) => ({
+  email: auth.email,
+  PW: auth.PW,
+  validateSignIn: auth.validateSignIn,
+  updateState: auth.updateState,
+  updateInput: helper.updateInput,
+  clearInput: helper.clearInput,
 }))(observer(withNavigation(SignIn_Info)));

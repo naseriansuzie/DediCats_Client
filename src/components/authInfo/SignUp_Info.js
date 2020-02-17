@@ -9,7 +9,6 @@ import {
   Label,
 } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -54,6 +53,7 @@ const SignUp_Info = ({
   updateInput,
   validateSignUp,
   updateState,
+  clearInput,
   navigation,
 }) => (
   <Container>
@@ -63,7 +63,7 @@ const SignUp_Info = ({
         style={styles.logoTxt}
         onPress={() => navigation.navigate('Sign In')}
       >
-        Dedicat
+        Dedicats
       </Text>
       <Text style={styles.title}>회원가입</Text>
     </View>
@@ -78,7 +78,7 @@ const SignUp_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={(text) => updateInput('email', text)}
+            onChangeText={text => updateInput('auth', 'email', text)}
             value={email}
           />
         </Item>
@@ -88,7 +88,7 @@ const SignUp_Info = ({
             nickname
           </Label>
           <Input
-            onChangeText={(text) => updateInput('nickname', text)}
+            onChangeText={text => updateInput('auth', 'nickname', text)}
             value={nickname}
           />
         </Item>
@@ -98,7 +98,7 @@ const SignUp_Info = ({
             Password
           </Label>
           <Input
-            onChangeText={(text) => updateInput('confirmPW', text)}
+            onChangeText={text => updateInput('auth', 'confirmPW', text)}
             value={confirmPW}
           />
         </Item>
@@ -108,7 +108,7 @@ const SignUp_Info = ({
             Password 재확인
           </Label>
           <Input
-            onChangeText={(text) => updateInput('reConfirmPW', text)}
+            onChangeText={text => updateInput('auth', 'reConfirmPW', text)}
             value={reConfirmPW}
           />
         </Item>
@@ -121,6 +121,13 @@ const SignUp_Info = ({
           if (validation) {
             const emailResult = await updateState('SignUp');
             if (emailResult) {
+              clearInput(
+                'auth',
+                'email',
+                'nickname',
+                'confirmPW',
+                'reconfirmPW',
+              );
               navigation.navigate('Email Certified');
             }
           }
@@ -136,13 +143,14 @@ SignUp_Info.navigationOptions = {
   title: '회원가입',
 };
 
-export default inject(({ user }) => ({
-  isSignUp: user.info.isSignUp,
-  email: user.info.email,
-  nickName: user.info.nickName,
-  confirmPW: user.info.confirmPW,
-  reConfirmPW: user.info.reConfirmPW,
-  updateInput: user.updateInput,
-  validateSignUp: user.validateSignUp,
-  updateState: user.updateState,
+export default inject(({ auth, helper }) => ({
+  isSignUp: auth.isSignUp,
+  email: auth.email,
+  nickName: auth.nickName,
+  confirmPW: auth.confirmPW,
+  reConfirmPW: auth.reConfirmPW,
+  validateSignUp: auth.validateSignUp,
+  updateState: auth.updateState,
+  updateInput: helper.updateInput,
+  clearInput: helper.clearInput,
 }))(observer(withNavigation(SignUp_Info)));

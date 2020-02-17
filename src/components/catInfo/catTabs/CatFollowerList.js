@@ -50,8 +50,8 @@ class CatFollowerList extends React.Component {
   }
 
   render() {
-    const { myInfo, followerList, nickname } = this.props;
-    if (myInfo && followerList && followerList[0].users.length) {
+    const { myInfo, selectedCatFollowerList, nickname } = this.props;
+    if (myInfo && selectedCatFollowerList && selectedCatFollowerList[0].users.length) {
       return (
         <View style={styles.container}>
           <Container style={styles.radiusView}>
@@ -59,11 +59,11 @@ class CatFollowerList extends React.Component {
               <Header style={{ display: 'none' }} />
               <List style={styles.listView}>
                 <Text style={styles.txt}>
-                  {followerList[0].users.length === 1
-                    ? `${followerList[0].users.length} follower`
-                    : `${followerList[0].users.length} followers`}
+                  {selectedCatFollowerList[0].users.length === 1
+                    ? `${selectedCatFollowerList[0].users.length} follower`
+                    : `${selectedCatFollowerList[0].users.length} followers`}
                 </Text>
-                {followerList[0].users.map((follower, idx) => (
+                {selectedCatFollowerList[0].users.map((follower, idx) => (
                   <CatFollower
                     key={`${follower.id}_${follower.nickname}`}
                     idx={idx}
@@ -95,10 +95,10 @@ class CatFollowerList extends React.Component {
   }
 }
 
-export default inject(({ cat, user }) => ({
-  myInfo: user.info.myInfo,
-  followerList: cat.info.followerList,
-  catId: cat.info.selectedCat[0].id,
-  nickname: cat.info.selectedCat[0].nickname,
+export default inject(({ cat, auth }) => ({
+  myInfo: auth.myInfo,
+  selectedCatFollowerList: cat.selectedCatFollowerList,
+  catId: cat.selectedCatBio[0].id,
+  nickname: cat.selectedCatBio[0].nickname,
   getFollowerList: cat.getFollowerList,
 }))(observer(CatFollowerList));

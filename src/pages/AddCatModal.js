@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 class AddCatModal extends React.Component {
   // lifecycle
   componentDidMount() {
-    this.props.clearAllInput('addCatBio');
+    this.props.clearAddCatBio();
   }
 
   render() {
@@ -55,6 +55,6 @@ AddCatModal.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default inject(({ cat }) => ({
-  clearAllInput: cat.clearAllInput,
+export default inject(({ helper }) => ({
+  clearAddCatBio: helper.clearAddCatBio,
 }))(observer(AddCatModal));

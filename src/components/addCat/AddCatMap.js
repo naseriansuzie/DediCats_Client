@@ -104,11 +104,7 @@ class AddCatMap extends React.Component {
   }
 }
 
-export default inject(({ cat, user }) => ({ 
-  onDragEnd: cat.onDragEnd,
-  currentPosition: user.currentPosition,
-
-
-}))(
-  observer(AddCatMap),
-);
+export default inject(({ map }) => ({
+  currentPosition: map.currentPosition,
+  onDragEnd: map.onDragEnd,
+}))(observer(AddCatMap));
