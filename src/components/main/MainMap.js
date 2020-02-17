@@ -62,8 +62,8 @@ class MainMap extends React.Component {
   };
 
   onCarouselItemChange = index => {
-    const { carousels } = this.props;
-    const location = carousels[index];
+    const { markers } = this.props;
+    const location = markers[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -92,7 +92,6 @@ class MainMap extends React.Component {
     console.disableYellowBox = 'true';
     const {
       markers,
-      carousels,
       onRegionChangeComplete,
       getCurrentPosition,
       currentRegion,
@@ -146,7 +145,7 @@ class MainMap extends React.Component {
             ref={c => {
               this._carousel = c;
             }}
-            data={carousels}
+            data={markers}
             renderItem={this.renderCarouselItem}
             onSnapToItem={index => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
@@ -166,7 +165,6 @@ class MainMap extends React.Component {
 }
 
 export default inject(({ map }) => ({
-  carousels: map.carousels,
   markers: map.markers,
   getMapInfo: map.getMapInfo,
   currentPosition: map.currentPosition,

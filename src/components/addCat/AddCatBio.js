@@ -9,9 +9,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import {
-  Content, Item, Label, Input, Textarea,
-} from 'native-base';
+import { Content, Item, Label, Input, Textarea } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -97,7 +95,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+const DEFAULT_CAT =
+  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
   addCatUri,
@@ -231,7 +230,7 @@ const AddCatBio = ({
                   const addCatResult = await addCat();
                   // console.log('등록 성공', addCatResult);
                   if (addCatResult) {
-                    Alert.alert('등록에 성공하였습니다!');
+                    // Alert.alert('등록에 성공하였습니다!');
                     navigation.goBack();
                     await getMapInfo();
                   } else {
@@ -246,8 +245,6 @@ const AddCatBio = ({
                 }
               } else {
                 console.log('검증 실패');
-                Alert.alert('고양이를 등록할 수 없습니다');
-                navigation.goBack();
               }
             }}
           >
