@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import {
-  ActivityIndicator, AsyncStorage, StatusBar, View,
+  ActivityIndicator, StatusBar, View,
 } from 'react-native';
+
 import { SERVER_URL } from 'react-native-dotenv';
 
 class AuthLoadingScreen extends React.Component {
@@ -13,14 +14,7 @@ class AuthLoadingScreen extends React.Component {
 
   async verifyToken() {
     const result = await axios.get(`${SERVER_URL}/`)
-      .then((res) => {
-        const { accessToken } = res.data;
-        if (accessToken) AsyncStorage.setItem('accessToken', accessToken);
-        return true;
-      }).catch((e) => {
-        console.log(e);
-        return false;
-      });
+      .then((res) => (!!res.data.accessToken)).catch(() => false);
 
     return this.props.navigation.navigate(result ? 'App' : 'Auth');
   }
