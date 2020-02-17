@@ -95,15 +95,15 @@ class HelperStore {
     return `${YYYY}-${MM}-${DD}`;
   };
 
-  makeGMTDateTime = () => {
-    let time = new Date();
-    const hourGap = time.getTimezoneOffset() / 60;
-    const calculatedGmt = time.setHours(time.getHours() + hourGap);
-    time = new Date(calculatedGmt);
-    return JSON.stringify(time).slice(1, 11);
+  changeToDateTime = timeInfo => {
+    if (timeInfo === 'today') {
+      console.log('today');
+      timeInfo = new Date();
+      console.log('time = ', JSON.stringify(new Date()).slice(1, 11));
+      return JSON.stringify(new Date()).slice(1, 11);
+    }
+    return timeInfo.slice(0, 10);
   };
-
-  changeToDateTime = timeInfo => timeInfo.slice(0, 10);
 
   convertDateTime = str => {
     let dateStr = `${str.substring(0, 4)}/${str.substring(
@@ -133,7 +133,6 @@ decorate(HelperStore, {
   pickImage: action,
   removePhoto: action,
   makeDateTime: action,
-  makeGMTDateTime: action,
   changeToDateTime: action,
   convertDateTime: action,
 });

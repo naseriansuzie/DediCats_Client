@@ -145,6 +145,10 @@ class CatStore {
           res.data[0].todayTime = this.root.helper.changeToDateTime(
             res.data[0].todayTime,
           );
+          console.log(
+            'getSelectedCatInfo 후 변경된 todayTime',
+            res.data[0].todayTime,
+          );
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
@@ -366,20 +370,18 @@ class CatStore {
   };
 
   // CatStore
-  postCatToday = (value) => {
+  postCatToday = value => {
+    const catId = this.selectedCatBio[0].id;
     this.selectedCatToday = value;
     const todayInfo = {
       catToday: value,
-      catId: this.selectedCatBio[0].id,
+      catId,
     };
     runInAction(() => {
       axios
         .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then((res) => {
-          this.selectedCatBio[0].today = res.data.cat_today;
-          this.selectedCatBio[0].todayTime = this.root.helper.makeGMTDateTime(
-            res.data.cat_today_time,
-          );
+        .then(res => {
+          this.getSelectedCatInfo(catId);
         })
         .catch((err) => {
           if (err.response && err.response.status === 409) {
