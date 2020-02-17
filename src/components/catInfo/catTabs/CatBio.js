@@ -118,7 +118,7 @@ class CatBio extends React.Component {
       postCatToday,
       validateTag,
       updateInput,
-      makeGMTDateTime,
+      changeToDateTime,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -247,7 +247,7 @@ class CatBio extends React.Component {
                       오늘 {selectedCatBio.nickname}의 건강 상태
                     </Text>
                     {selectedCatBio.today &&
-                    selectedCatBio.todayTime === makeGMTDateTime() ? (
+                    selectedCatBio.todayTime === changeToDateTime('today') ? (
                       <Text>{selectedCatBio.today}</Text>
                     ) : (
                       <Form
@@ -284,7 +284,10 @@ class CatBio extends React.Component {
                             label="😾가까이 가지 마세요"
                             value="😾가까이 가지 마세요"
                           />
-                          <Picker.Item label="😿기운이 없어요" value="😿기운이 없어요" />
+                          <Picker.Item
+                            label="😿기운이 없어요"
+                            value="😿기운이 없어요"
+                          />
                           <Picker.Item label="🙀아파요" value="🙀아파요" />
                         </Picker>
                       </Form>
@@ -358,5 +361,5 @@ export default inject(({ cat, helper }) => ({
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
   updateInput: helper.updateInput,
-  makeGMTDateTime: helper.makeGMTDateTime,
+  changeToDateTime: helper.changeToDateTime,
 }))(observer(CatBio));
