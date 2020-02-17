@@ -1,6 +1,16 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
+import { Text } from 'native-base';
+import { AntDesign } from '@expo/vector-icons';
+import ReportStore from '../../stores/ReportStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +25,7 @@ const styles = StyleSheet.create({
     width: '50%',
     height: '100%',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   defaultPhoto: {
     width: 160,
@@ -66,8 +76,103 @@ const styles = StyleSheet.create({
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
-const CatProfile = ({ selectedCatBio, followCat, unFollowCat }) => (
+const CatProfile = ({
+  selectedCatBio,
+  followCat,
+  unFollowCat,
+  catReportVisible,
+  setCatReportVisible,
+  reportCatBio,
+}) => (
   <View style={styles.container}>
+    <View
+      style={{
+        width: '100%',
+        alignItems: 'flex-end',
+        backgroundColor: '#6772f1',
+      }}
+    >
+      <TouchableOpacity
+        onPress={() => {
+          setCatReportVisible(true);
+          console.log(catReportVisible);
+        }}
+      >
+        <AntDesign name="ellipsis1" style={{ fontSize: 24, color: 'white' }} />
+      </TouchableOpacity>
+    </View>
+    <Modal
+      transparent
+      visible={catReportVisible}
+      onRequestClose={() => {
+        setCatReportVisible(false);
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'flex-end',
+          marginTop: 87,
+        }}
+      >
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              setCatReportVisible(false);
+              console.log(catReportVisible);
+            }}
+          >
+            <AntDesign
+              name="ellipsis1"
+              style={{ fontSize: 24, color: 'white' }}
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 5,
+            height: '15%',
+            width: '60%',
+            paddingTop: 5,
+            marginRight: 10,
+          }}
+        >
+          <Text style={{ paddingVertical: 5 }}>
+            <AntDesign name="warning" size="17" /> 고양이 등록 정보 신고
+          </Text>
+          <Text note style={{ paddingVertical: 5 }}>
+            고양이 정보에 부적절한 내용이 게시되어 신고합니다.
+          </Text>
+          <View
+            style={{
+              backgroundColor: '#f38847',
+              marginVertical: 10,
+              marginLeft: 5,
+              marginRight: 200,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <TouchableOpacity
+              onPress={async () => {
+                const result = await reportCatBio();
+                if (result) {
+                  Alert.alert('신고 완료', '해당 신고 요청이 처리되었습니다.', [
+                    { text: '확인', onPress: () => setCatReportVisible(false) },
+                  ]);
+                }
+              }}
+            >
+              <Text style={{ color: 'white', textAlign: 'center' }}>신고</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+
     {selectedCatBio && selectedCatBio.length > 0 ? (
       <View style={styles.profileView}>
         <View style={styles.photoView}>
@@ -89,11 +194,17 @@ const CatProfile = ({ selectedCatBio, followCat, unFollowCat }) => (
           <Text style={styles.nickName}>{selectedCatBio[0].nickname}</Text>
           <Text style={styles.address}>{selectedCatBio[0].address}..</Text>
           {selectedCatBio[1].isFollowing ? (
-            <TouchableOpacity style={styles.btn} onPress={unFollowCat}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => unFollowCat(selectedCatBio[0].id)}
+            >
               <Text style={styles.btnTxt}>Unfollow</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.btn} onPress={followCat}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => followCat(selectedCatBio[0].id)}
+            >
               <Text style={styles.btnTxt}>Follow</Text>
             </TouchableOpacity>
           )}
@@ -104,9 +215,11 @@ const CatProfile = ({ selectedCatBio, followCat, unFollowCat }) => (
     )}
   </View>
 );
-
-export default inject(({ cat, helper }) => ({
+export default inject(({ cat, helper, report }) => ({
   selectedCatBio: cat.selectedCatBio,
   followCat: cat.followCat,
   unFollowCat: helper.unFollowCat,
+  catReportVisible: report.catReportVisible,
+  setCatReportVisible: report.setCatReportVisible,
+  reportCatBio: report.reportCatBio,
 }))(observer(CatProfile));
