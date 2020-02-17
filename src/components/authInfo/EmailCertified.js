@@ -8,9 +8,7 @@ import {
   Input,
   Label,
 } from 'native-base';
-import {
-  StyleSheet, Text, TouchableOpacity, View, Alert,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -50,18 +48,14 @@ const styles = StyleSheet.create({
 const emailCertified = ({
   updateInput,
   navigation,
-  emailCode,
   emailVerification,
+  emailCode,
   signUp,
 }) => (
   <Container>
     <Header />
     <View style={styles.logo}>
-      <Text
-        style={styles.logoTxt}
-      >
-        Dedicat
-      </Text>
+      <Text style={styles.logoTxt}>Dedicat</Text>
       <Text style={styles.title}>회원가입</Text>
     </View>
     <Content>
@@ -75,7 +69,9 @@ const emailCertified = ({
             이메일 인증 코드
           </Label>
           <Input
-            onChangeText={(text) => updateInput('emailVerification', text)}
+            onChangeText={text =>
+              updateInput('auth', 'emailVerification', text)
+            }
             value={emailVerification}
           />
         </Item>
@@ -84,10 +80,12 @@ const emailCertified = ({
         style={styles.btn}
         onPress={async () => {
           if (emailCode === emailVerification) {
-            const signUpresult = signUp();
-            if (signUpresult) navigation.navigate('Sign In');
+            const signUpResult = signUp();
+            if (signUpResult) navigation.navigate('Sign In');
           } else {
-            Alert.alert('이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!');
+            Alert.alert(
+              '이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!',
+            );
           }
         }}
       >
@@ -97,9 +95,9 @@ const emailCertified = ({
   </Container>
 );
 
-export default inject(({ user }) => ({
-  updateInput: user.updateInput,
-  emailCode: user.info.emailCode,
-  emailVerification: user.info.emailVerification,
-  signUp: user.signUp,
+export default inject(({ helper, auth }) => ({
+  emailVerification: auth.emailVerification,
+  emailCode: auth.emailCode,
+  signUp: auth.signUp,
+  updateInput: helper.updateInput,
 }))(observer(withNavigation(emailCertified)));

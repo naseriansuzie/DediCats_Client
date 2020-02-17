@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
 
 class CatInfo extends React.Component {
   render() {
-    const { selectedCat } = this.props;
-    if (selectedCat) {
+    const { selectedCatBio } = this.props;
+    if (selectedCatBio) {
       return (
         <Container>
           <View style={styles.profile}>
@@ -38,5 +38,5 @@ class CatInfo extends React.Component {
   }
 }
 export default inject(({ cat }) => ({
-  selectedCat: cat.info.selectedCat,
+  selectedCatBio: cat.selectedCatBio,
 }))(observer(CatInfo));

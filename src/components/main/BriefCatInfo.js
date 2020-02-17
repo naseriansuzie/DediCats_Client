@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Badge, Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
+import { inject, observer } from 'mobx-react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
@@ -70,7 +71,12 @@ const styles = StyleSheet.create({
   row70: { width: '70%' },
 });
 
-const BriefCatInfo = ({ item, navigation, hideCarousel }) => (
+const BriefCatInfo = ({
+  getSelectedCatInfo,
+  item,
+  navigation,
+  hideCarousel,
+}) => (
   <View style={styles.card}>
     <View>
       <View style={styles.closeBtn}>
@@ -80,15 +86,22 @@ const BriefCatInfo = ({ item, navigation, hideCarousel }) => (
       </View>
       <TouchableWithoutFeedback
         style={styles.row}
-        onPress={() => navigation.navigate('CatInfo')}
+        onPress={async () => {
+          console.log('카루셀 클릭시: ', item.catId);
+          const result = await getSelectedCatInfo(item.catId);
+          console.log('카드', result);
+          if (result) {
+            navigation.navigate('CatInfo');
+          }
+        }}
       >
         <View style={styles.row30}>
-          <Image style={styles.cardImg} source={item.img} />
+          <Image style={styles.cardImg} source={{ uri: item.catProfile }} />
         </View>
         <View style={styles.row70}>
-          <Text style={styles.nickName}>{item.name}</Text>
-          <Text style={styles.address}>어느 동네 주소</Text>
-          <Text style={styles.intro}>{item.content}</Text>
+          <Text style={styles.nickName}>{item.catNickname}</Text>
+          <Text style={styles.address}>{item.catAddress}</Text>
+          <Text style={styles.intro}>{item.description}</Text>
           <View style={styles.tagView}>
             <Badge style={styles.tag}>
               <Text>태그</Text>
@@ -106,4 +119,6 @@ const BriefCatInfo = ({ item, navigation, hideCarousel }) => (
   </View>
 );
 
-export default withNavigation(BriefCatInfo);
+export default inject(({ cat }) => ({
+  getSelectedCatInfo: cat.getSelectedCatInfo,
+}))(observer(withNavigation(BriefCatInfo)));

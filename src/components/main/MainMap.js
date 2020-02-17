@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/state-in-constructor */
 import React from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -6,7 +7,6 @@ import {
   View,
   Dimensions,
   Text,
-  Image,
   TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -40,6 +40,7 @@ class MainMap extends React.Component {
 
   componentDidMount() {
     this.props.requestMapPermission();
+    this.props.getMapInfo();
   }
 
   renderCarouselItem = ({ item }) => {
@@ -58,11 +59,11 @@ class MainMap extends React.Component {
 
   hideCarousel = () => {
     this.setState({ isShowingCarousel: false });
-  }
+  };
 
-  onCarouselItemChange = (index) => {
-    const { markers } = this.props;
-    const location = markers[index];
+  onCarouselItemChange = index => {
+    const { carousels } = this.props;
+    const location = carousels[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -70,7 +71,7 @@ class MainMap extends React.Component {
       longitudeDelta: 0.0035,
     };
     this._map.animateToRegion(region);
-  }
+  };
 
   onMarkerPressed = (location, index) => {
     const { isShowingCarousel } = this.state;
@@ -85,52 +86,69 @@ class MainMap extends React.Component {
     if (!isShowingCarousel) {
       this.setState({ isShowingCarousel: true });
     }
-  }
+  };
 
   render() {
     console.disableYellowBox = 'true';
-    const { markers, onRegionChangeComplete, getCurrentPosition, currentRegion, permissionState } = this.props;
+    const {
+      markers,
+      carousels,
+      onRegionChangeComplete,
+      getCurrentPosition,
+      currentRegion,
+      permissionState,
+    } = this.props;
     if (permissionState === true && currentRegion.longitude !== 0) {
       return (
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
-            ref={(map) => this._map = map}
+            ref={map => (this._map = map)}
             style={styles.map}
-            showsUserLocation={true}
+            showsUserLocation
             region={{ ...currentRegion }}
             onRegionChangeComplete={onRegionChangeComplete}
             maxZoomLevel={18}
           >
-            {
-              markers.map((marker, index) => (
-                <MainMarker
-                  key={marker.name}
-                  marker={marker}
-                  index={index}
-                  onMarkerPressed={this.onMarkerPressed}
-                  currentRegion={currentRegion}
-                />
-              ))
-            }
+            {markers.map((marker, index) => (
+              <MainMarker
+                key={marker.longitude + marker.latitude}
+                marker={marker}
+                index={index}
+                onMarkerPressed={this.onMarkerPressed}
+                currentRegion={currentRegion}
+              />
+            ))}
           </MapView>
           <TouchableOpacity
             onPress={() => getCurrentPosition()}
             style={{
-              width: 50, height: 50, position: 'absolute', top: 20, left: 20, borderRadius: 30, backgroundColor: '#d2d2d2',
+              width: 50,
+              height: 50,
+              position: 'absolute',
+              top: 20,
+              left: 20,
+              borderRadius: 30,
+              backgroundColor: '#d2d2d2',
             }}
           >
-            {/* <Image
-              style={{ width: 40, height: 40, margin: 10 }}
-              source={{ uri: '/Users/danielkim/Desktop/codestates/IM/DediCats-client/userLocation.png' }}
-            /> */}
-            <MaterialIcons name="my-location" style={{ fontSize: 30, width: 30, height: 40, margin: 10 }} />
+            <MaterialIcons
+              name="my-location"
+              style={{
+                fontSize: 30,
+                width: 30,
+                height: 40,
+                margin: 10,
+              }}
+            />
           </TouchableOpacity>
           <Carousel
-            ref={(c) => { this._carousel = c; }}
-            data={markers}
+            ref={c => {
+              this._carousel = c;
+            }}
+            data={carousels}
             renderItem={this.renderCarouselItem}
-            onSnapToItem={(index) => this.onCarouselItemChange(index)}
+            onSnapToItem={index => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
             sliderWidth={width}
             itemWidth={width * 0.9}
@@ -147,16 +165,15 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ cat, user }) => ({
-  markers: cat.markers,
-  currentPosition: user.currentPosition,
-  currentRegion: user.currentRegion,
-  currentBoundingBox: user.currentBoundingBox,
-  onRegionChangeComplete: user.onRegionChangeComplete,
-  permissionState: user.permissionState,
-  watchId: user.watchId,
-  requestMapPermission: user.requestMapPermission,
-  getCurrentPosition: user.getCurrentPosition,
-}))(
-  observer(MainMap),
-);
+export default inject(({ map }) => ({
+  carousels: map.carousels,
+  markers: map.markers,
+  getMapInfo: map.getMapInfo,
+  currentPosition: map.currentPosition,
+  currentRegion: map.currentRegion,
+  currentBoundingBox: map.currentBoundingBox,
+  permissionState: map.permissionState,
+  requestMapPermission: map.requestMapPermission,
+  getCurrentPosition: map.getCurrentPosition,
+  onRegionChangeComplete: map.onRegionChangeComplete,
+}))(observer(MainMap));

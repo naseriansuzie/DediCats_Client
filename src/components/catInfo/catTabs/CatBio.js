@@ -106,23 +106,20 @@ class CatBio extends React.Component {
 
   render() {
     const {
-      cat,
-      today,
-      rainbowOpen,
+      selectedCatBio,
+      selectedCatToday,
+      selectedCatRainbowOpen,
       toggleRainbowOpen,
-      cutClicked,
+      selectedCatCutClicked,
       tags,
-      newTag,
+      selectedCatNewTag,
       selectCut,
       postCut,
       postCatToday,
       validateTag,
       updateInput,
+      makeGMTDateTime,
     } = this.props;
-    const yyyy = new Date().getFullYear();
-    const mm = new Date().getMonth() + 1;
-    const dd = new Date().getDate();
-    const dateOfToday = `${yyyy}-${mm}-${dd}`;
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
@@ -137,7 +134,7 @@ class CatBio extends React.Component {
                   <Text style={styles.font18}>
                     <SimpleLineIcons style={styles.font20} name="directions" />
                     {'신고 '}
-                    {rainbowOpen ? (
+                    {selectedCatRainbowOpen ? (
                       <SimpleLineIcons style={styles.font15} name="arrow-up" />
                     ) : (
                       <SimpleLineIcons
@@ -148,21 +145,21 @@ class CatBio extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              {rainbowOpen ? <Rainbow /> : <View />}
+              {selectedCatRainbowOpen ? <Rainbow /> : <View />}
               <Card transparent>
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      {`추정 종 : ${cat.species}`}
+                      {`추정 종 : ${selectedCatBio.species}`}
                     </Text>
                   </Body>
                 </CardItem>
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      {`${cat.nickname}를 소개해요!`}
+                      {`${selectedCatBio.nickname}를 소개해요!`}
                     </Text>
-                    <Text>{`${cat.description}`}</Text>
+                    <Text>{`${selectedCatBio.description}`}</Text>
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -170,61 +167,75 @@ class CatBio extends React.Component {
                     <Text style={styles.cut}>중성화 유무</Text>
                     <View style={styles.row}>
                       <TouchableHighlight
-                        style={cutClicked.Y ? styles.noPeanut : styles.peanut}
-                        underlayColor="#f38847"
-                        onPress={async () => {
-                          if (
-                            cutClicked.Y ||
-                            cutClicked.N ||
-                            cutClicked.unknown
-                          ) {
-                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
-                          } else {
-                            await selectCut('info', 'Y');
-                            postCut('Y');
-                          }
-                        }}
-                      >
-                        <Text style={styles.cutTxt}>Yes {cat.cut.Y}</Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight
-                        style={cutClicked.N ? styles.noPeanut : styles.peanut}
-                        underlayColor="#f38847"
-                        onPress={async () => {
-                          if (
-                            cutClicked.Y ||
-                            cutClicked.N ||
-                            cutClicked.unknown
-                          ) {
-                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
-                          } else {
-                            await selectCut('info', 'N');
-                            postCut('N');
-                          }
-                        }}
-                      >
-                        <Text style={styles.cutTxt}>No {cat.cut.N}</Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight
                         style={
-                          cutClicked.unknown ? styles.noPeanut : styles.peanut
+                          selectedCatCutClicked.Y
+                            ? styles.noPeanut
+                            : styles.peanut
                         }
                         underlayColor="#f38847"
                         onPress={async () => {
                           if (
-                            cutClicked.Y ||
-                            cutClicked.N ||
-                            cutClicked.unknown
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
                           ) {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
-                            await selectCut('info', 'unknown');
+                            await selectCut('selectedCat', 'Y');
+                            postCut('Y');
+                          }
+                        }}
+                      >
+                        <Text style={styles.cutTxt}>
+                          Yes {selectedCatBio.cut.Y}
+                        </Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight
+                        style={
+                          selectedCatCutClicked.N
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
+                        underlayColor="#f38847"
+                        onPress={async () => {
+                          if (
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
+                          ) {
+                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
+                          } else {
+                            await selectCut('selectedCat', 'N');
+                            postCut('N');
+                          }
+                        }}
+                      >
+                        <Text style={styles.cutTxt}>
+                          No {selectedCatBio.cut.N}
+                        </Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight
+                        style={
+                          selectedCatCutClicked.unknown
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
+                        underlayColor="#f38847"
+                        onPress={async () => {
+                          if (
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
+                          ) {
+                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
+                          } else {
+                            await selectCut('selectedCat', 'unknown');
                             postCut('unknown');
                           }
                         }}
                       >
                         <Text style={styles.cutTxt}>
-                          몰라요 {cat.cut.unknown}
+                          몰라요 {selectedCatBio.cut.unknown}
                         </Text>
                       </TouchableHighlight>
                     </View>
@@ -233,10 +244,11 @@ class CatBio extends React.Component {
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      오늘 {cat.nickname}의 건강 상태
+                      오늘 {selectedCatBio.nickname}의 건강 상태
                     </Text>
-                    {cat.today && cat.todayTime === dateOfToday ? (
-                      <Text>{cat.today}</Text>
+                    {selectedCatBio.today &&
+                    selectedCatBio.todayTime === makeGMTDateTime() ? (
+                      <Text>{selectedCatBio.today}</Text>
                     ) : (
                       <Form
                         style={{
@@ -256,7 +268,7 @@ class CatBio extends React.Component {
                           }}
                           placeholder="오늘의 건강 상태 선택하기"
                           placeholderStyle={{ fontSize: 15 }}
-                          selectedValue={today}
+                          selectedValue={selectedCatToday}
                           onValueChange={postCatToday}
                         >
                           <Picker.Item
@@ -290,7 +302,7 @@ class CatBio extends React.Component {
                           </Badge>
                         ))
                       ) : (
-                        <Text>{cat.nickname}를 표현해주세요.</Text>
+                        <Text>{selectedCatBio.nickname}를 표현해주세요.</Text>
                       )}
                     </View>
                     <KeyboardAvoidingView style={styles.width100}>
@@ -299,10 +311,14 @@ class CatBio extends React.Component {
                           <Input
                             placeholder="ex) 귀염, 도도, 츄르만먹음"
                             maxLength={11}
-                            value={newTag}
+                            value={selectedCatNewTag}
                             onChangeText={text => {
                               const noSpaceText = text.split(' ').join('');
-                              updateInput('info', 'newTag', noSpaceText);
+                              updateInput(
+                                'cat',
+                                'selectedCatNewTag',
+                                noSpaceText,
+                              );
                             }}
                           />
                           <Right>
@@ -327,19 +343,20 @@ class CatBio extends React.Component {
   }
 }
 
-export default inject(({ cat }) => ({
-  cat: cat.info.selectedCat[0],
-  catId: cat.info.selectedCat[0].id,
-  today: cat.info.today,
-  rainbowOpen: cat.info.rainbowOpen,
-  cutClicked: cat.info.cutClicked,
-  tags: cat.info.selectedCat[2],
-  newTag: cat.info.newTag,
+export default inject(({ cat, helper }) => ({
+  selectedCatBio: cat.selectedCatBio[0],
+  catId: cat.selectedCatBio[0].id,
+  selectedCatToday: cat.selectedCatToday,
+  selectedCatRainbowOpen: cat.selectedCatRainbowOpen,
+  selectedCatCutClicked: cat.selectedCatCutClicked,
+  tags: cat.selectedCatBio[2],
+  selectedCatNewTag: cat.selectedCatNewTag,
   getSelectedCatInfo: cat.getSelectedCatInfo,
   toggleRainbowOpen: cat.toggleRainbowOpen,
   selectCut: cat.selectCut,
   postCut: cat.postCut,
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
-  updateInput: cat.updateInput,
+  updateInput: helper.updateInput,
+  makeGMTDateTime: helper.makeGMTDateTime,
 }))(observer(CatBio));

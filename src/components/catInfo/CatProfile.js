@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
-const CatProfile = ({ selectedCat, followCat, unFollowCat }) => (
+const CatProfile = ({ selectedCatBio, followCat, unFollowCat }) => (
   <View style={styles.container}>
-    {selectedCat && selectedCat.length > 0 ? (
+    {selectedCatBio && selectedCatBio.length > 0 ? (
       <View style={styles.profileView}>
         <View style={styles.photoView}>
-          {selectedCat[3].path ? (
+          {selectedCatBio[3].path ? (
             <Image
               style={styles.catPhoto}
-              source={{ uri: selectedCat[3].path }}
+              source={{ uri: selectedCatBio[3].path }}
             />
           ) : (
             <Image
@@ -86,9 +86,9 @@ const CatProfile = ({ selectedCat, followCat, unFollowCat }) => (
           )}
         </View>
         <View style={styles.infoView}>
-          <Text style={styles.nickName}>{selectedCat[0].nickname}</Text>
-          <Text style={styles.address}>{selectedCat[0].address}..</Text>
-          {selectedCat[1].isFollowing ? (
+          <Text style={styles.nickName}>{selectedCatBio[0].nickname}</Text>
+          <Text style={styles.address}>{selectedCatBio[0].address}..</Text>
+          {selectedCatBio[1].isFollowing ? (
             <TouchableOpacity style={styles.btn} onPress={unFollowCat}>
               <Text style={styles.btnTxt}>Unfollow</Text>
             </TouchableOpacity>
@@ -105,9 +105,8 @@ const CatProfile = ({ selectedCat, followCat, unFollowCat }) => (
   </View>
 );
 
-export default inject(({ cat, user }) => ({
-  selectedCat: cat.info.selectedCat,
+export default inject(({ cat, helper }) => ({
+  selectedCatBio: cat.selectedCatBio,
   followCat: cat.followCat,
-  unFollowCat: user.unFollowCat,
-  test: cat.test,
+  unFollowCat: helper.unFollowCat,
 }))(observer(CatProfile));

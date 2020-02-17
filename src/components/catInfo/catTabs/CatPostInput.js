@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
 });
 
 const CatPostInput = ({
-  inputContent,
-  uri,
+  selectedCatInputContent,
+  selectedCatUri,
   updateInput,
   getPermissionAsync,
   pickImage,
@@ -102,16 +102,18 @@ const CatPostInput = ({
     <View style={styles.inputView}>
       <Form style={styles.inputForm}>
         <Textarea
-          rowSpan={inputContent.length > 27 ? 4 : 2}
+          rowSpan={selectedCatInputContent.length > 27 ? 4 : 2}
           placeholder="글을 입력해주세요."
-          value={inputContent}
-          onChangeText={text => updateInput('info', 'inputContent', text)}
+          value={selectedCatInputContent}
+          onChangeText={text =>
+            updateInput('cat', 'selectedCatInputContent', text)
+          }
         />
       </Form>
       <View>
         <View style={styles.inputBottomView}>
           <View style={styles.imageView}>
-            {uri ? (
+            {selectedCatUri ? (
               <View>
                 <TouchableHighlight
                   style={styles.removeBtn}
@@ -120,14 +122,14 @@ const CatPostInput = ({
                 >
                   <Text style={styles.removeBtnTxt}>X</Text>
                 </TouchableHighlight>
-                <Image style={styles.image} source={{ uri }} />
+                <Image style={styles.image} source={{ uri: selectedCatUri }} />
               </View>
             ) : (
               <TouchableOpacity
                 style={styles.addImageBtn}
                 onPress={async () => {
                   await getPermissionAsync();
-                  pickImage('info');
+                  pickImage('cat', 'selectedCat');
                 }}
               >
                 <SimpleLineIcons style={styles.imageIcon} name="picture" />
@@ -139,7 +141,7 @@ const CatPostInput = ({
             <TouchableOpacity
               style={styles.submitBtn}
               onPress={() => {
-                const validation = validateAddInput('inputContent');
+                const validation = validateAddInput('selectedCatInputContent');
                 console.log(validation);
                 if (validation) {
                   addPost();
@@ -156,13 +158,13 @@ const CatPostInput = ({
   </View>
 );
 
-export default inject(({ cat }) => ({
-  inputContent: cat.info.inputContent,
-  uri: cat.info.uri,
-  updateInput: cat.updateInput,
-  getPermissionAsync: cat.getPermissionAsync,
-  pickImage: cat.pickImage,
-  removePhoto: cat.removePhoto,
-  validateAddInput: cat.validateAddInput,
-  addPost: cat.addPost,
+export default inject(({ cat, helper, auth, post }) => ({
+  selectedCatInputContent: cat.selectedCatInputContent,
+  selectedCatUri: cat.selectedCatUri,
+  updateInput: helper.updateInput,
+  getPermissionAsync: auth.getPermissionAsync,
+  pickImage: helper.pickImage,
+  removePhoto: helper.removePhoto,
+  validateAddInput: helper.validateAddInput,
+  addPost: post.addPost,
 }))(observer(CatPostInput));

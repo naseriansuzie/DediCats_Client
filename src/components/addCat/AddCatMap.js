@@ -20,7 +20,12 @@ const styles = StyleSheet.create({
 class AddCatMap extends React.Component {
   // eslint-disable-next-line react/state-in-constructor
   state = {
-    currentPosition: {},
+    currentPosition: {
+      latitude: 0,
+      latitudeDelta: 0.0015,
+      longitude: 0,
+      longitudeDelta: 0.005,
+    },
     markerData: {
       latitude: 0,
       longitude: 0,
@@ -29,6 +34,15 @@ class AddCatMap extends React.Component {
 
   componentDidMount() {
     this.getCurrentPosition();
+    // const currentPosition = this.props.currentPosition;
+    // const markerData = {
+    //   latitude: this.props.currentPosition.latitude,
+    //   longitude: this.props.currentPosition.longitude,
+    // };
+    // this.setState({
+    //   currentPosition,
+    //   markerData,
+    // });
   }
 
   getCurrentPosition() {
@@ -40,6 +54,7 @@ class AddCatMap extends React.Component {
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0005,
         };
+        // const currentPosition = this.props.currentPosition;
         const markerData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -61,7 +76,8 @@ class AddCatMap extends React.Component {
   };
 
   render() {
-    const { currentPosition, markerData } = this.state;
+    const { markerData, currentPosition } = this.state;
+    console.log(currentPosition);
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <Text style={styles.spotTxt}>자주 만나는 장소</Text>
@@ -88,6 +104,7 @@ class AddCatMap extends React.Component {
   }
 }
 
-export default inject(({ cat }) => ({ onDragEnd: cat.onDragEnd }))(
-  observer(AddCatMap),
-);
+export default inject(({ map }) => ({
+  currentPosition: map.currentPosition,
+  onDragEnd: map.onDragEnd,
+}))(observer(AddCatMap));

@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const PhotoModal = ({ selectedPhoto }) => {
-  if (selectedPhoto) {
+const PhotoModal = ({ selectedCatPhoto }) => {
+  if (selectedCatPhoto) {
     return (
       <View style={styles.container}>
-        <CatPhotoLarge path={selectedPhoto.path} />
+        <CatPhotoLarge path={selectedCatPhoto.path} />
       </View>
     );
   }
@@ -24,5 +24,5 @@ const PhotoModal = ({ selectedPhoto }) => {
 };
 
 export default inject(({ cat }) => ({
-  selectedPhoto: cat.info.selectedPhoto,
+  selectedCatPhoto: cat.selectedCatPhoto,
 }))(observer(PhotoModal));
