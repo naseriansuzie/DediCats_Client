@@ -1,4 +1,4 @@
-import { observable, action, decorate, runInAction } from 'mobx';
+import { observable, action, decorate } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
@@ -12,6 +12,10 @@ class ReportStore {
 
   // observable
   catReportVisible = false;
+
+  canReportPost = true;
+
+  canReportComment = true;
 
   // action
   setCatReportVisible = boolean => {
@@ -29,6 +33,10 @@ class ReportStore {
     return result;
   };
 
+  setCanReportPost = boolean => {
+    this.canReportPost = boolean;
+  };
+
   reportPost = async () => {
     const { cat } = this.root;
     const postId = cat.selectedCatPost.id;
@@ -38,6 +46,10 @@ class ReportStore {
       .then(res => true)
       .catch(err => this.alertFailure(err));
     return result;
+  };
+
+  setCanReportComment = boolean => {
+    this.canReportComment = boolean;
   };
 
   reportComment = async () => {
@@ -66,9 +78,13 @@ class ReportStore {
 
 decorate(ReportStore, {
   catReportVisible: observable,
+  canReportPost: observable,
+  canReportComment: observable,
   setCatReportVisible: action,
   reportCatBio: action,
+  setCanReportPost: action,
   reportPost: action,
+  setCanReportComment: action,
   reportComment: action,
   alertFailure: action,
 });
