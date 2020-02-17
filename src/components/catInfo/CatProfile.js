@@ -10,12 +10,41 @@ import {
 } from 'react-native';
 import { Text } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
-import ReportStore from '../../stores/ReportStore';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  reportView: {
+    width: '100%',
+    alignItems: 'flex-end',
+    backgroundColor: '#6772f1',
+  },
+  ellipsis: { fontSize: 24, color: 'white' },
+  modalView: {
+    flex: 1,
+    alignItems: 'flex-end',
+    marginTop: 87,
+  },
+  reportBox: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    height: '15%',
+    width: '60%',
+    paddingTop: 5,
+    marginRight: 10,
+  },
+  reportBtn: {
+    backgroundColor: '#f38847',
+    marginVertical: 10,
+    marginLeft: 5,
+    marginRight: 200,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  reportTxt: { color: 'white', textAlign: 'center' },
   profileView: {
     flex: 1,
     flexDirection: 'row',
@@ -71,6 +100,7 @@ const styles = StyleSheet.create({
     color: '#677ef1',
     fontWeight: 'bold',
   },
+  paddingVertical5: { paddingVertical: 5 },
 });
 
 const DEFAULT_CAT =
@@ -85,20 +115,14 @@ const CatProfile = ({
   reportCatBio,
 }) => (
   <View style={styles.container}>
-    <View
-      style={{
-        width: '100%',
-        alignItems: 'flex-end',
-        backgroundColor: '#6772f1',
-      }}
-    >
+    <View style={styles.reportView}>
       <TouchableOpacity
         onPress={() => {
           setCatReportVisible(true);
           console.log(catReportVisible);
         }}
       >
-        <AntDesign name="ellipsis1" style={{ fontSize: 24, color: 'white' }} />
+        <AntDesign name="ellipsis1" style={styles.ellipsis} />
       </TouchableOpacity>
     </View>
     <Modal
@@ -108,13 +132,7 @@ const CatProfile = ({
         setCatReportVisible(false);
       }}
     >
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'flex-end',
-          marginTop: 87,
-        }}
-      >
+      <View style={styles.modalView}>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -122,40 +140,17 @@ const CatProfile = ({
               console.log(catReportVisible);
             }}
           >
-            <AntDesign
-              name="ellipsis1"
-              style={{ fontSize: 24, color: 'white' }}
-            />
+            <AntDesign name="ellipsis1" style={styles.ellipsis} />
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            backgroundColor: 'white',
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 5,
-            height: '15%',
-            width: '60%',
-            paddingTop: 5,
-            marginRight: 10,
-          }}
-        >
-          <Text style={{ paddingVertical: 5 }}>
+        <View style={styles.reportBox}>
+          <Text style={styles.paddingVertical5}>
             <AntDesign name="warning" size="17" /> 고양이 등록 정보 신고
           </Text>
-          <Text note style={{ paddingVertical: 5 }}>
+          <Text note style={styles.paddingVertical5}>
             고양이 정보에 부적절한 내용이 게시되어 신고합니다.
           </Text>
-          <View
-            style={{
-              backgroundColor: '#f38847',
-              marginVertical: 10,
-              marginLeft: 5,
-              marginRight: 200,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
+          <View style={styles.reportBtn}>
             <TouchableOpacity
               onPress={async () => {
                 const result = await reportCatBio();
@@ -166,7 +161,7 @@ const CatProfile = ({
                 }
               }}
             >
-              <Text style={{ color: 'white', textAlign: 'center' }}>신고</Text>
+              <Text style={styles.reportTxt}>신고</Text>
             </TouchableOpacity>
           </View>
         </View>
