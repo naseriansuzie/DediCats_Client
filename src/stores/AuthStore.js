@@ -3,9 +3,10 @@ import {
 } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
+import { SERVER_URL, AUTH_SERVER, JWT_SECRET_ACCESS } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import jwt from 'jsonwebtoken';
 
 const defaultCredential = { withCredentials: true };
 
@@ -13,11 +14,6 @@ class AuthStore {
   constructor(root) {
     this.root = root;
   }
-
-  // observable
-  isSignUp = false;
-
-  isSignIn = false;
 
   email = '';
 
@@ -33,9 +29,7 @@ class AuthStore {
 
   emailCode = '';
 
-  myInfo =
-    // null;
-    { userId: 2, nickname: '김집사', created_at: '2020-02-09' };
+  myInfo = null;
 
   // actions
   validateSignUp = () => {
@@ -50,8 +44,8 @@ class AuthStore {
     return isValidated;
   };
 
-  emailCertified = async (signUpInfo) => {
-    const { email, nickname } = signUpInfo;
+  emailCertified = async () => {
+    const { email, nickname } = this;
     const result = await axios
       .post(
         `${SERVER_URL}/signup/email`,
@@ -64,11 +58,10 @@ class AuthStore {
         return true;
       })
       .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
-        } else {
-          console.dir(err);
-        }
+        if (err.response && err.response.status === 401) Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
+        else Alert.alert('이메일 전송에 실패하였습니다. 관리자에게 문의해주세요.');
+
+        console.dir(err);
         return false;
       });
 
@@ -88,69 +81,67 @@ class AuthStore {
 
         this.isSignUp = true;
         Alert.alert('회원가입에 성공했습니다!');
-
-        runInAction(() => {
-          this.root.helper.clearInput(
-            'auth',
-            'email',
-            'nickname',
-            'confirmPW',
-            'reConfirmPW',
-            'emailVerification',
-          );
-        });
         return true;
       })
       .catch((err) => {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
-        } else {
-          console.dir(err);
-          return false;
         }
+        console.dzir(err);
+        return false;
       });
 
-    if (!result) {
-      Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
-      return false;
-    }
+    if (!result) Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
+
+    runInAction(() => {
+      this.root.helper.clearInput(
+        'auth',
+        'email',
+        'nickname',
+        'confirmPW',
+        'reConfirmPW',
+        'emailVerification',
+      );
+    });
+
     return true;
   };
 
-  validateSignIn = () => {
-    let isValidated = false;
-    if (this.email && this.PW) {
-      isValidated = true;
-    } else {
-      Alert.alert('모든 정보를 입력해주세요.');
-    }
-    return isValidated;
-  };
-
-  signIn = async (info) => {
+  signIn = async () => {
+    const { email, PW } = this;
     const result = await axios
-      .post(`${AUTH_SERVER}/auth/signin`, info, defaultCredential)
+      .post(`${AUTH_SERVER}/auth/signin`, { email, password: PW }, defaultCredential)
       .then((res) => {
-        if (res.status !== 201) {
-          return false;
-        }
-        this.isSignIn = true;
-        AsyncStorage.setItem('isLogin', true);
+        if (res.status !== 201) return false;
+
+        this.updateToken(res.data.accessToken);
         runInAction(() => {
           this.root.helper.clearInput('auth', 'email', 'PW');
         });
         return true;
       })
       .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          Alert.alert(
-            '회원 정보가 일치하지 않습니다. 이메일주소와 비밀번호를 확인해주세요.',
-          );
-        } else console.dir(err);
+        if (err.response && err.response.status === 401) Alert.alert('회원 정보가 일치하지 않습니다. 이메일 또는 비밀번호를 확인해주세요.');
+        console.dir(err);
         return false;
       });
+
     return result;
   };
+
+  updatemyInfo = (accessToken) => {
+    const decode = jwt.verify(accessToken, JWT_SECRET_ACCESS);
+
+    const {
+      id, nickname, email, createAt,
+    } = decode;
+
+    this.myInfo = {
+      id, nickname, email, createAt,
+    };
+
+    return this.myInfo;
+  }
 
   signOut = (id) => {
     axios
@@ -158,33 +149,9 @@ class AuthStore {
       .then(async (res) => {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
-        this.signIn = false;
         this.myInfo = null;
       })
       .catch((err) => console.dir(err));
-  };
-
-  updateState = async (field) => {
-    if (field === 'SignUp') {
-      const signUpInfo = {
-        email: this.email,
-        password: this.confirmPW,
-        nickname: this.nickname,
-      };
-      // 실패시 false return
-      // 성공시 obj return -> Signup info param로 넣어주면 됨
-      const result = await this.emailCertified(signUpInfo);
-      return result;
-    }
-    if (field === 'SignIn') {
-      const signInInfo = {
-        email: this.email,
-        password: this.PW,
-      };
-      const result = await this.signIn(signInInfo);
-      return result;
-    }
-    this.signOut();
   };
 
   getPermissionAsync = async () => {
