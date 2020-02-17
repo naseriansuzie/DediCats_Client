@@ -35,19 +35,19 @@ class MapStore {
 
   permissionState = false;
 
-  carousels = [
-    //! sample data
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile:
-        'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
-  ];
+  // carousels = [
+  //   //! sample data
+  //   {
+  //     catId: 1,
+  //     latitude: 37.503528,
+  //     longitude: 127.049784,
+  //     catNickname: 'Best Place',
+  //     catAddress: '서울시 선릉',
+  //     description: 'This is the best place in Portland',
+  //     catProfile:
+  //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+  //   },
+  // ];
 
   markers = [
     {
@@ -65,16 +65,16 @@ class MapStore {
   // actions
   getMapInfo = async () => {
     const currentBound = this.currentBoundingBox;
-    console.log('현재 바운드', currentBound);
+    // console.log('현재 바운드', currentBound);
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
       .then(res => {
-        console.log('Response data is : ', res.data);
+        // console.log('Response data is : ', res.data);
         this.markers = res.data;
-        console.log('마커정보는:', this.markers, res.data.length);
-        this.carousels = res.data;
+        // console.log('마커정보는:', this.markers, res.data.length);
         // this.carousels = res.data;
-        console.log('카루셀 정보: ', this.carousels);
+        // this.carousels = res.data;
+        // console.log('카루셀 정보: ', this.carousels);
         return true;
       })
       .catch(err => console.dir(err));
@@ -141,6 +141,8 @@ class MapStore {
   onDragEnd = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
+    this.root.cat.onDragstate = true;
+    console.log("이동 후:", this.root.cat.onDragstate)
   };
 }
 
@@ -149,7 +151,7 @@ decorate(MapStore, {
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
-  carousels: observable,
+  // carousels: observable,
   markers: observable,
   getMapInfo: action,
   requestMapPermission: action,
