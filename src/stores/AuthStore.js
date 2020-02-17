@@ -6,7 +6,7 @@ import axios from 'axios';
 import { SERVER_URL, AUTH_SERVER, JWT_SECRET_ACCESS } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
 const defaultCredential = { withCredentials: true };
 
@@ -114,7 +114,7 @@ class AuthStore {
       .then((res) => {
         if (res.status !== 201) return false;
 
-        this.updateToken(res.data.accessToken);
+        // this.updateToken(res.data.accessToken);
         runInAction(() => {
           this.root.helper.clearInput('auth', 'email', 'PW');
         });
@@ -129,19 +129,19 @@ class AuthStore {
     return result;
   };
 
-  updatemyInfo = (accessToken) => {
-    const decode = jwt.verify(accessToken, JWT_SECRET_ACCESS);
+  // updatemyInfo = (accessToken) => {
+  //   const decode = jwt.verify(accessToken, JWT_SECRET_ACCESS);
 
-    const {
-      id, nickname, email, createAt,
-    } = decode;
+  //   const {
+  //     id, nickname, email, createAt,
+  //   } = decode;
 
-    this.myInfo = {
-      id, nickname, email, createAt,
-    };
+  //   this.myInfo = {
+  //     id, nickname, email, createAt,
+  //   };
 
-    return this.myInfo;
-  }
+  //   return this.myInfo;
+  // }
 
   signOut = (id) => {
     axios
