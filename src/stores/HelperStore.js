@@ -50,9 +50,9 @@ class HelperStore {
     return false;
   };
 
-  unFollowCat = () => {
+  unFollowCat = catId => {
     const { cat, user } = this.root;
-    const catId = cat.selectedCatBio[0].id;
+    console.log('캣 아이디는', catId);
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
       .then(res => {
