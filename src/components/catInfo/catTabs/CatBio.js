@@ -102,6 +102,7 @@ class CatBio extends React.Component {
     const { catId } = this.props;
     console.log('bio 정보를 불러올 고양이 id: ', catId);
     this.props.getSelectedCatInfo(catId);
+    this.props.getMyInfo();
   }
 
   render() {
@@ -348,7 +349,7 @@ class CatBio extends React.Component {
   }
 }
 
-export default inject(({ cat, helper }) => ({
+export default inject(({ cat, helper, auth }) => ({
   selectedCatBio: cat.selectedCatBio[0],
   catId: cat.selectedCatBio[0].id,
   selectedCatToday: cat.selectedCatToday,
@@ -364,4 +365,5 @@ export default inject(({ cat, helper }) => ({
   validateTag: cat.validateTag,
   updateInput: helper.updateInput,
   changeToDateTime: helper.changeToDateTime,
+  getMyInfo: auth.getMyInfo,
 }))(observer(CatBio));
