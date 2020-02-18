@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   inputBottomView: {
     flexDirection: 'row',
-    paddingTop: 5,
+    paddingVertical: 5,
   },
   imageView: {
     width: '80%',
@@ -97,6 +97,7 @@ const CatPostInput = ({
   removePhoto,
   validateAddInput,
   addPost,
+  getPostList,
 }) => (
   <View style={styles.container}>
     <View style={styles.inputView}>
@@ -140,11 +141,18 @@ const CatPostInput = ({
           <View>
             <TouchableOpacity
               style={styles.submitBtn}
-              onPress={() => {
-                const validation = validateAddInput('selectedCatInputContent');
-                console.log(validation);
-                if (validation) {
-                  addPost();
+              onPress={async () => {
+                try {
+                  const validation = validateAddInput(
+                    'selectedCatInputContent',
+                  );
+                  console.log(validation);
+                  if (validation) {
+                    await addPost();
+                    getPostList();
+                  }
+                } catch {
+                  console.log('something is wrong');
                 }
               }}
             >
@@ -167,4 +175,5 @@ export default inject(({ cat, helper, auth, post }) => ({
   removePhoto: helper.removePhoto,
   validateAddInput: helper.validateAddInput,
   addPost: post.addPost,
+  getPostList: post.getPostList,
 }))(observer(CatPostInput));
