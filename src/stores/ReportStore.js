@@ -59,26 +59,43 @@ class ReportStore {
   alertFailure = err => {
     console.dir(err);
     if (err.response && err.response.status === 409) {
-      Alert.alert('신고 등록이 실패되었습니다. 다시 시도해주세요.');
+      Alert.alert('등록이 실패되었습니다. 다시 시도해주세요.');
     }
     return false;
   };
 
-  processPostActions = (idx, item) => {
+  deletePost = item => {
+    cat.selectedCatPost = item;
+    axios
+      .post(
+        `${SERVER_URL}/post/delete`,
+        { postId: cat.selectedCatPost.id },
+        defaultCredential,
+      )
+      .then(res => Alert.alert('게시글이 삭제되었습니다.'))
+      .catch(err => {
+        this.alertFailure(err);
+      });
+  };
+
+  processPostActions = (isMyPost, idx, item) => {
     const { cat } = this.root;
-    if (idx === 0) {
-      cat.postModifyState = true;
-      cat.selectedCatPost = item;
-      cat.selectedCatInputContent = item.content;
-      // cat.selectedCatPhotoPath =
-      //   item.photos && item.photos.length > 0 ? item.photos[0].path : null;
-      // cat.selectedCatUri = photos && photos.length > 0 ? photos[0].path : null;
-    }
-    if (idx === 1) {
-      // 게시글 삭제
-      console.log('삭제');
-    }
-    if (idx === 2) {
+    if (isMyPost) {
+      if (idx === 0) {
+        // 게시글 수정
+        cat.postModifyState = true;
+        cat.selectedCatPost = item;
+        cat.selectedCatInputContent = item.content;
+        /* 사진도 수정하려면 아래 내용 포함 */
+        // cat.selectedCatPhotoPath = item.photos && item.photos.length > 0 ? item.photos[0].path : null;
+        // cat.selectedCatUri = photos && photos.length > 0 ? photos[0].path : null;
+      }
+      if (idx === 1) {
+        // 게시글 삭제
+        this.deletePost(item);
+      }
+    } else if (isMyPost !== true && idx === 0) {
+      // 게시물 신고
       Alert.alert('부적절한 게시글 신고', '해당 포스트를 신고하시겠습니까?', [
         {
           text: '취소',
@@ -87,7 +104,7 @@ class ReportStore {
         },
         {
           text: '신고',
-          onPress: () => this.reportPost(id),
+          onPress: () => this.reportPost(item.id),
         },
       ]);
     }
@@ -101,6 +118,7 @@ decorate(ReportStore, {
   reportPost: action,
   reportComment: action,
   alertFailure: action,
+  deletePost: action,
   processPostActions: action,
 });
 
