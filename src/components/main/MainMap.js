@@ -40,7 +40,7 @@ class MainMap extends React.Component {
 
   componentDidMount() {
     this.props.requestMapPermission();
-    this.props.getMapInfo();
+    // this.props.getMapInfo();
   }
 
   renderCarouselItem = ({ item }) => {
@@ -62,8 +62,8 @@ class MainMap extends React.Component {
   };
 
   onCarouselItemChange = index => {
-    const { markers } = this.props;
-    const location = markers[index];
+    const { carousels } = this.props;
+    const location = carousels[index];
     const region = {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -74,6 +74,7 @@ class MainMap extends React.Component {
   };
 
   onMarkerPressed = (location, index) => {
+    this.props.syncCarousel();
     const { isShowingCarousel } = this.state;
     const region = {
       latitude: location.latitude,
@@ -92,6 +93,7 @@ class MainMap extends React.Component {
     console.disableYellowBox = 'true';
     const {
       markers,
+      carousels,
       onRegionChangeComplete,
       getCurrentPosition,
       currentRegion,
@@ -113,6 +115,7 @@ class MainMap extends React.Component {
               <MainMarker
                 key={marker.longitude + marker.latitude}
                 marker={marker}
+                carousel={carousels[index]}
                 index={index}
                 onMarkerPressed={this.onMarkerPressed}
                 currentRegion={currentRegion}
@@ -145,7 +148,7 @@ class MainMap extends React.Component {
             ref={c => {
               this._carousel = c;
             }}
-            data={markers}
+            data={carousels}
             renderItem={this.renderCarouselItem}
             onSnapToItem={index => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
@@ -166,6 +169,7 @@ class MainMap extends React.Component {
 
 export default inject(({ map }) => ({
   markers: map.markers,
+  carousels: map.carousels,
   getMapInfo: map.getMapInfo,
   currentPosition: map.currentPosition,
   currentRegion: map.currentRegion,
@@ -174,4 +178,5 @@ export default inject(({ map }) => ({
   requestMapPermission: map.requestMapPermission,
   getCurrentPosition: map.getCurrentPosition,
   onRegionChangeComplete: map.onRegionChangeComplete,
+  syncCarousel: map.syncCarousel,
 }))(observer(MainMap));
