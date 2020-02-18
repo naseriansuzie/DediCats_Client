@@ -300,7 +300,7 @@ class CatBio extends React.Component {
                     <View style={styles.tagView}>
                       {tags.length > 0 ? (
                         tags.map(tagInfo => (
-                          <Badge style={styles.tag} key={tagInfo.id}>
+                          <Badge style={styles.tag} key={`tag_${tagInfo.id}`}>
                             <Text>{`#${tagInfo.tag.content}`}</Text>
                           </Badge>
                         ))
