@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 
 class CatPostList extends React.Component {
   componentDidMount() {
+    console.log('CatPostList mount');
     this.props.getPostList();
   }
 
