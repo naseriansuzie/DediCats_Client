@@ -10,10 +10,6 @@ import {
 } from 'react-native';
 import { Text } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
-import {
-  TouchableWithoutFeedback,
-  TouchableHighlight,
-} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +34,7 @@ const styles = StyleSheet.create({
     height: '15%',
     width: '60%',
     paddingTop: 5,
+    paddingLeft: 5,
     marginRight: 10,
   },
   warningIcon: {
