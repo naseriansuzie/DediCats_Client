@@ -67,9 +67,14 @@ class PostStore {
     }
     axios
       .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
-      .then(res =>
-        helper.clearInput('cat', 'selectedCatContent', 'selectedCatPhotoPath'),
-      )
+      .then(res => {
+        helper.clearInput(
+          'cat',
+          'selectedCatInputContent',
+          'selectedCatPhotoPath',
+          'selectedCatUri',
+        );
+      })
       .catch(err => {
         if (err.response && err.response.status === 405) {
           Alert.alert(

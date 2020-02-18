@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   keyboard: { width: '95%' },
+  safeArea: {
+    flex: 3,
+    width: '100%',
+    backgroundColor: 'white',
+  },
 });
 
 class CatPostList extends React.Component {
@@ -44,14 +49,12 @@ class CatPostList extends React.Component {
     />
   );
 
-
-  renderFooter = () => (
+  renderFooter = () =>
     this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
-    ) : null
-  )
+    ) : null;
 
   render() {
     const { postList } = this.props;
@@ -61,14 +64,14 @@ class CatPostList extends React.Component {
           <KeyboardAvoidingView style={styles.keyboard}>
             <CatPostInput />
           </KeyboardAvoidingView>
-          <SafeAreaView>
+          <SafeAreaView style={styles.safeArea}>
             <FlatList
               data={postList}
               renderItem={this._renderItem}
-              keyExtractor={(item) => `${item.id}`}
+              keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
               showsVerticalScrollIndicator={false}
               onEndReached={this.props._handleLoadMorePosts}
-              onEndReachedThreshold={1}
+              onEndReachedThreshold={0}
               ListFooterComponent={this.renderFooter}
               refreshing={this.props.isRefreshingPost}
               onRefresh={this.props._handleRefresh}
