@@ -31,26 +31,30 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
-  // componentDidMount() {
-  //   this.props.getPostList(); //  --> this.props._getData();
-  // }
+  componentDidMount() {
+    this.props.getPostList();
+  }
 
   _renderItem = ({ item }) => (
     <CatPost
+      catId={this.props.catId}
       item={item}
       setCatPost={this.props.setCatPost}
       convertDateTime={this.props.convertDateTime}
     />
   );
 
+
   renderFooter = () => (
-    <View style={styles.loader}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
+    this.props.isLoadingPost ? (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" />
+      </View>
+    ) : null
+  )
 
   render() {
-    const { selectedCatPost } = this.props;
+    const { postList } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
@@ -59,15 +63,15 @@ class CatPostList extends React.Component {
           </KeyboardAvoidingView>
           <SafeAreaView>
             <FlatList
-              data={selectedCatPost}
+              data={postList}
               renderItem={this._renderItem}
-              keyExtractor={item => `${item.id}`}
+              keyExtractor={(item) => `${item.id}`}
               showsVerticalScrollIndicator={false}
-              // onEndReached={this.props._handleLoadMorePosts}
-              // onEndReachedThreshold={1}
-              // ListFooterComponent={this.renderFooter}
-              // refreshing={this.props.isRefreshingPost}
-              // onRefresh={this.props._handleRefresh}
+              onEndReached={this.props._handleLoadMorePosts}
+              onEndReachedThreshold={1}
+              ListFooterComponent={this.renderFooter}
+              refreshing={this.props.isRefreshingPost}
+              onRefresh={this.props._handleRefresh}
             />
           </SafeAreaView>
         </View>
@@ -77,11 +81,13 @@ class CatPostList extends React.Component {
 }
 
 export default inject(({ cat, post, helper }) => ({
-  selectedCatPost: cat.selectedCatPost,
+  catId: cat.selectedCatBio[0].id,
   setCatPost: cat.setCatPost,
+  postList: post.postList,
   getPostList: post.getPostList,
   _handleLoadMorePosts: post._handleLoadMorePosts,
   _handleRefresh: post._handleRefresh,
-  isRefreshingPost: helper.isRefreshingPost,
+  isLoadingPost: post.isLoadingPost,
+  isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
 }))(observer(CatPostList));
