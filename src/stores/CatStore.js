@@ -220,8 +220,8 @@ class CatStore {
   // MapStore
   getAddress = async () => {
     const { latitude, longitude } = this.addCatLocation;
-    console.log(latitude, longitude);
-    axios
+    console.log('카카오로 보낼 좌표', latitude, longitude);
+    const address = await axios
       .get(
         `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
         {
@@ -236,15 +236,21 @@ class CatStore {
           region_2depth_name,
           region_3depth_name,
         } = res.data.documents[0].address;
-        console.log(region_1depth_name, region_2depth_name, region_3depth_name);
+        console.log(
+          '받은 주소는',
+          region_1depth_name,
+          region_2depth_name,
+          region_3depth_name,
+        );
         this.addCatAddress = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
-        return this.addCatAddress;
+        return true;
       })
       .catch(err => {
         console.dir(err);
         Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
+        return false;
       });
-    return true;
+    return address;
   };
 
   // CatStore

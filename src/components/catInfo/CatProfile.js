@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { Text } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
+import {
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,6 +39,9 @@ const styles = StyleSheet.create({
     width: '60%',
     paddingTop: 5,
     marginRight: 10,
+  },
+  warningIcon: {
+    fontSize: 17,
   },
   reportBtn: {
     backgroundColor: '#f38847',
@@ -145,7 +152,8 @@ const CatProfile = ({
         </View>
         <View style={styles.reportBox}>
           <Text style={styles.paddingVertical5}>
-            <AntDesign name="warning" size="17" /> 고양이 등록 정보 신고
+            <AntDesign name="warning" style={styles.warningIcon} /> 고양이 등록
+            정보 신고
           </Text>
           <Text note style={styles.paddingVertical5}>
             고양이 정보에 부적절한 내용이 게시되어 신고합니다.
@@ -165,6 +173,10 @@ const CatProfile = ({
             </TouchableOpacity>
           </View>
         </View>
+        <TouchableOpacity
+          style={{ width: '100%', height: '100%' }}
+          onPress={() => setCatReportVisible(false)}
+        />
       </View>
     </Modal>
 
