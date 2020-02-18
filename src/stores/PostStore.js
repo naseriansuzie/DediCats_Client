@@ -12,17 +12,21 @@ class PostStore {
 
   postList = [];
 
-  postPage = 1;
+  postPage = 0;
 
   isRefreshingPost = false;
+
+  isLoadingPost = false;
 
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
-      const url = `https://jsonplaceholder.typicode.com/photos?_limit=6&_page=${this.postPage}`;
+      const catId = this.root.cat.selectedCatBio[0].id;
+      const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
       const post = await axios.get(url);
       if (post) {
+        this.isLoadingPost = true;
         if (this.isRefreshingPost) {
           this.postList = post.data;
           this.isRefreshingPost = false;
@@ -43,7 +47,7 @@ class PostStore {
 
   _handleRefresh = () => {
     this.isRefreshingPost = true;
-    this.postPage = 1;
+    this.postPage = 0;
     this.getPostList();
   };
 
@@ -83,6 +87,7 @@ class PostStore {
 decorate(PostStore, {
   postList: observable,
   postPage: observable,
+  isLoadingPost: observable,
   isRefreshingPost: observable,
   getPostList: action,
   handleLoadMorePosts: action,

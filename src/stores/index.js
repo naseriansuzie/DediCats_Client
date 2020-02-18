@@ -3,6 +3,7 @@ import CatStore from './CatStore';
 import HelperStore from './HelperStore';
 import MapStore from './MapStore';
 import PostStore from './PostStore';
+import ReportStore from './ReportStore';
 import UserStore from './UserStore';
 
 class RootStore {
@@ -12,6 +13,7 @@ class RootStore {
     this.helper = new HelperStore(this);
     this.map = new MapStore(this);
     this.post = new PostStore(this);
+    this.report = new ReportStore(this);
     this.user = new UserStore(this);
   }
 }

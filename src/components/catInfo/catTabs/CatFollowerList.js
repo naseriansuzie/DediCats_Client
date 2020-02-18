@@ -51,7 +51,10 @@ class CatFollowerList extends React.Component {
 
   render() {
     const { myInfo, selectedCatFollowerList, nickname } = this.props;
-    if (myInfo && selectedCatFollowerList && selectedCatFollowerList[0].users.length) {
+    if (
+      selectedCatFollowerList &&
+      selectedCatFollowerList[0].users.length > 0
+    ) {
       return (
         <View style={styles.container}>
           <Container style={styles.radiusView}>
@@ -79,7 +82,10 @@ class CatFollowerList extends React.Component {
         </View>
       );
     }
-    if (myInfo) {
+    if (
+      selectedCatFollowerList &&
+      selectedCatFollowerList[0].users.length === 0
+    ) {
       return (
         <View style={styles.noFollowerView}>
           <View style={styles.noFollowerRadiusView}>
@@ -95,8 +101,7 @@ class CatFollowerList extends React.Component {
   }
 }
 
-export default inject(({ cat, auth }) => ({
-  myInfo: auth.myInfo,
+export default inject(({ cat }) => ({
   selectedCatFollowerList: cat.selectedCatFollowerList,
   catId: cat.selectedCatBio[0].id,
   nickname: cat.selectedCatBio[0].nickname,
