@@ -1,9 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { withNavigation } from 'react-navigation';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { StyleSheet, View, Image } from 'react-native';
 import {
+  Text,
   Card,
   CardItem,
   Thumbnail,
@@ -13,6 +12,8 @@ import {
   Body,
   Right,
 } from 'native-base';
+import { withNavigation } from 'react-navigation';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +23,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'skyblue',
     borderRadius: 20,
   },
+  userImg: {
+    borderRadius: 10,
+    height: 50,
+    width: 50,
+  },
 });
+
+const defaultPhotoUrl = [
+  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512',
+  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512',
+][Math.floor(Math.random() * 2)];
 
 class CatPost extends React.Component {
   setCatPostHere = item => {
@@ -31,8 +42,9 @@ class CatPost extends React.Component {
   };
 
   render() {
-    const { content, createAt, user, photos } = this.props.item;
-    const usrImgUri = user.photoPath !== null ? user.photoPath : '';
+    const { content, createAt, user, photos, id } = this.props.item;
+    const usrImgUri =
+      user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
     const { canReportPost, setCanReportPost, reportPost } = this.props;
 
     return (
@@ -42,7 +54,11 @@ class CatPost extends React.Component {
         <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{ uri: usrImgUri }} />
+              <Thumbnail
+                square
+                style={styles.userImg}
+                source={{ uri: usrImgUri }}
+              />
               <Body>
                 <Text>{user.nickname}</Text>
               </Body>
@@ -57,20 +73,44 @@ class CatPost extends React.Component {
             {photos.length > 0 ? (
               <Image
                 source={{ uri: photos[0].path }}
-                style={{ height: 200, width: null, flex: 1 }}
+                style={{ height: 300, width: null, flex: 1 }}
               />
             ) : (
               <View />
             )}
           </CardItem>
           <CardItem>
-            <Text note>{content}</Text>
+            <Text>{content}</Text>
           </CardItem>
-          <CardItem style={{ marginLeft: 260 }}>
+          <CardItem style={{ alignSelf: 'flex-end' }}>
+            <Left />
             <Right>
               <Button transparent>
-                <Icon active name="chatbubbles" style={{ marginRight: 10 }} />
-                <Text>4 Comments</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View style={{ width: '10%' }}>
+                    <Icon
+                      active
+                      name="chatbubbles"
+                      style={{ color: '#6772f1' }}
+                    />
+                  </View>
+                  <View style={{ width: '45%' }}>
+                    <Text note style={{ paddingLeft: 5, paddingRight: 0 }}>
+                      n 개의 댓글
+                    </Text>
+                  </View>
+                  <View style={{ width: '45%' }}>
+                    <Text note style={{ paddingLeft: 5 }}>
+                      댓글달기
+                    </Text>
+                  </View>
+                </View>
               </Button>
             </Right>
           </CardItem>
@@ -80,7 +120,7 @@ class CatPost extends React.Component {
   }
 }
 
-export default inject(({ report }) => ({
+export default inject(({ report, cat }) => ({
   canReportPost: report.canReportPost,
   setCanReportPost: report.setCanReportPost,
   reportPost: report.reportPost,
