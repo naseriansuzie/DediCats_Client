@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text } from 'react-native';
-import { ListItem, Left, Body, Right, Thumbnail } from 'native-base';
+import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
+import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +26,9 @@ const CatComment = ({
   comment,
   date,
   convertDateTime,
+  canReportComment,
+  reportComment,
+  setCanReportComment,
 }) => (
   <ListItem thumbnail style={styles.container}>
     <Left>
@@ -39,6 +42,43 @@ const CatComment = ({
       <View>
         <Text>{userNickname}</Text>
         <Text>{comment}</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity>
+            <Text note>수정</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text note>삭제</Text>
+          </TouchableOpacity>
+          {canReportComment ? (
+            <TouchableOpacity>
+              <Text
+                note
+                onPress={() => {
+                  Alert.alert('댓글 신고', '이 댓글 내용을 신고하시겠습니까?', [
+                    {
+                      text: '취소',
+                      onPress: () => {},
+                      style: 'cancel',
+                    },
+                    {
+                      text: '신고',
+                      onPress: async () => {
+                        const result = await reportComment();
+                        if (result) {
+                          setCanReportComment(false);
+                        }
+                      },
+                    },
+                  ]);
+                }}
+              >
+                신고
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+        </View>
       </View>
     </Body>
     <Right style={styles.marginRight10}>
@@ -47,6 +87,9 @@ const CatComment = ({
   </ListItem>
 );
 
-export default inject(({ helper }) => ({
+export default inject(({ helper, report }) => ({
   convertDateTime: helper.convertDateTime,
+  canReportComment: report.canReportComment,
+  reportComment: report.reportComment,
+  setCanReportComment: report.setCanReportComment,
 }))(observer(CatComment));

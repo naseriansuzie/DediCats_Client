@@ -157,7 +157,7 @@ class CatBio extends React.Component {
                 <CardItem>
                   <Body>
                     <Text style={styles.width100}>
-                      {`${selectedCatBio.nickname}를 소개해요!`}
+                      {`${selectedCatBio.nickname} 고양이를 소개해요!`}
                     </Text>
                     <Text>{`${selectedCatBio.description}`}</Text>
                   </Body>
@@ -305,7 +305,9 @@ class CatBio extends React.Component {
                           </Badge>
                         ))
                       ) : (
-                        <Text>{selectedCatBio.nickname}를 표현해주세요.</Text>
+                        <Text>
+                          {selectedCatBio.nickname} 고양이를 표현해주세요.
+                        </Text>
                       )}
                     </View>
                     <KeyboardAvoidingView style={styles.width100}>
