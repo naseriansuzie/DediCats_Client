@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { inject, observer } from 'mobx-react';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import {
   Text,
   Card,
@@ -13,25 +14,28 @@ import {
 } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import ActionSheet from 'react-native-actionsheet';
+import { AntDesign } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-  },
+  container: { width: 400, borderRadius: 20, overflow: 'hidden' },
+  reportView: { alignItems: 'flex-end' },
+  ellipsis: { fontSize: 24 },
   userImg: {
     borderRadius: 10,
     height: 50,
     width: 50,
   },
+  date: { color: 'grey' },
+  photo: { height: 300, width: null, flex: 1 },
 });
 
 const defaultPhotoUrl =
   'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 class CatPost extends React.Component {
+  _showActionSheet = () => this.ActionSheet.show();
+
   setCatPostHere = item => {
     this.props.setCatPost(item);
     this.props.navigation.navigate('SelectedPost');
@@ -39,14 +43,39 @@ class CatPost extends React.Component {
 
   render() {
     const { content, createAt, user, photos, id } = this.props.item;
+    const { processPostActions, userInfo } = this.props;
     const usrImgUri =
       user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
-
+    console.log('userInfo = ', userInfo);
+    console.log('user = ', user);
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.setCatPostHere(this.props.item)}
-      >
-        <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
+      <Card style={styles.container}>
+        <View style={styles.reportView}>
+          <TouchableOpacity
+            onPress={() => {
+              this._showActionSheet();
+            }}
+          >
+            <AntDesign name="ellipsis1" style={styles.ellipsis} />
+          </TouchableOpacity>
+        </View>
+        <ActionSheet
+          ref={o => (this.ActionSheet = o)}
+          title="Which one do you like ?"
+          options={
+            userInfo && userInfo.id === user.id
+              ? ['수정', '삭제', '취소']
+              : ['수정', '삭제', '게시물 신고', '취소']
+          }
+          cancelButtonIndex={userInfo && userInfo.id === user.id ? 2 : 3}
+          destructiveButtonIndex={1}
+          onPress={index => {
+            processPostActions(index, id);
+          }}
+        />
+        <TouchableWithoutFeedback
+          onPress={() => this.setCatPostHere(this.props.item)}
+        >
           <CardItem>
             <Left>
               <Thumbnail
@@ -59,17 +88,14 @@ class CatPost extends React.Component {
               </Body>
             </Left>
             <Right>
-              <Text style={{ color: 'grey' }}>
+              <Text style={styles.date}>
                 {this.props.convertDateTime(createAt)}
               </Text>
             </Right>
           </CardItem>
           <CardItem cardBody>
             {photos.length > 0 ? (
-              <Image
-                source={{ uri: photos[0].path }}
-                style={{ height: 300, width: null, flex: 1 }}
-              />
+              <Image source={{ uri: photos[0].path }} style={styles.photo} />
             ) : (
               <View />
             )}
@@ -109,10 +135,13 @@ class CatPost extends React.Component {
               </Button>
             </Right>
           </CardItem>
-        </Card>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Card>
     );
   }
 }
 
-export default withNavigation(CatPost);
+export default inject(({ report, auth }) => ({
+  processPostActions: report.processPostActions,
+  userInfo: auth.userInfo,
+}))(observer(withNavigation(CatPost)));
