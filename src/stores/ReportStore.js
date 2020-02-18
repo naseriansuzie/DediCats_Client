@@ -18,8 +18,8 @@ class ReportStore {
   canReportComment = true;
 
   // action
-  setCatReportVisible = boolean => {
-    this.catReportVisible = boolean;
+  setCatReportVisible = flag => {
+    this.catReportVisible = flag;
   };
 
   reportCatBio = async () => {
@@ -33,8 +33,8 @@ class ReportStore {
     return result;
   };
 
-  setCanReportPost = boolean => {
-    this.canReportPost = boolean;
+  setCanReportPost = flag => {
+    this.canReportPost = flag;
   };
 
   reportPost = async () => {
@@ -48,8 +48,8 @@ class ReportStore {
     return result;
   };
 
-  setCanReportComment = boolean => {
-    this.canReportComment = boolean;
+  setCanReportComment = flag => {
+    this.canReportComment = flag;
   };
 
   reportComment = async () => {
