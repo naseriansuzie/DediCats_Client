@@ -35,7 +35,7 @@ class MapStore {
 
   permissionState = false;
 
-  // carousels = [
+  carousels = [
   //   //! sample data
   //   {
   //     catId: 1,
@@ -47,7 +47,7 @@ class MapStore {
   //     catProfile:
   //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
   //   },
-  // ];
+  ];
 
   markers = [
     {
@@ -117,7 +117,7 @@ class MapStore {
           longitude,
           longitudeDelta: 0.005,
         });
-        this.getMapInfo();
+        // this.getMapInfo();
       },
       error => {
         Alert.alert(error.code, error.message);
@@ -144,6 +144,10 @@ class MapStore {
     this.root.cat.onDragstate = true;
     console.log("이동 후:", this.root.cat.onDragstate)
   };
+
+  syncCarousel = () => {
+    this.carousels = this.markers;
+  }
 }
 
 decorate(MapStore, {
@@ -151,12 +155,13 @@ decorate(MapStore, {
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
-  // carousels: observable,
+  carousels: observable,
   markers: observable,
   getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,
   onRegionChangeComplete: action,
   onDragEnd: action,
+  syncCarousel: action,
 });
 export default MapStore;
