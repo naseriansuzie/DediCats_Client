@@ -1,14 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Alert,
-} from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import {
   Container,
   Header,
@@ -20,7 +12,6 @@ import {
   Body,
   List,
 } from 'native-base';
-import { AntDesign } from '@expo/vector-icons';
 import CatComment from './CatComment';
 
 const defaultPhotoUrl =
@@ -43,29 +34,6 @@ const styles = StyleSheet.create({
     marginRight: 2,
     marginTop: 93,
   },
-  reportBox: {
-    backgroundColor: '#edf1f5',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    height: '10%',
-    width: '60%',
-    paddingTop: 5,
-    paddingLeft: 5,
-    marginRight: 10,
-  },
-  warningIcon: {
-    fontSize: 17,
-  },
-  reportBtn: {
-    backgroundColor: '#f38847',
-    marginVertical: 10,
-    marginLeft: 5,
-    marginRight: 200,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  reportTxt: { color: 'white', textAlign: 'center' },
   userImg: {
     borderRadius: 10,
     height: 50,
@@ -82,6 +50,8 @@ const styles = StyleSheet.create({
 });
 
 class CatSelectedPost extends React.Component {
+  _showActionSheet = () => this.ActionSheet.show();
+
   componentDidMount() {
     console.log('CatSelectedPost mount');
     console.log('selectedCatPost = ', this.props.selectedCatPost);
@@ -92,9 +62,6 @@ class CatSelectedPost extends React.Component {
       selectedCatPost,
       selectedCatCommentList,
       convertDateTime,
-      canReportPost,
-      setCanReportPost,
-      reportPost,
     } = this.props;
 
     const usrImgUri =
@@ -107,70 +74,6 @@ class CatSelectedPost extends React.Component {
         <Header style={{ display: 'none' }} />
         <Content>
           <Card style={styles.cardView}>
-            <View style={styles.reportView}>
-              <TouchableOpacity
-                onPress={() => {
-                  setCanReportPost(true);
-                  console.log(canReportPost);
-                }}
-              >
-                <AntDesign name="ellipsis1" style={styles.ellipsis} />
-              </TouchableOpacity>
-            </View>
-            <Modal
-              transparent
-              visible={canReportPost}
-              onRequestClose={() => {
-                setCanReportPost(false);
-              }}
-            >
-              <View style={styles.modalView}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setCanReportPost(false);
-                      console.log(canReportPost);
-                    }}
-                  >
-                    <AntDesign name="ellipsis1" style={styles.ellipsis} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.reportBox}>
-                  <Text style={styles.paddingVertical5}>
-                    <AntDesign name="warning" style={styles.warningIcon} />{' '}
-                    게시글 신고
-                  </Text>
-                  <Text note style={styles.paddingVertical5}>
-                    이 게시글에 부적절한 내용이 있습니다.
-                  </Text>
-                  <View style={styles.reportBtn}>
-                    <TouchableOpacity
-                      onPress={async () => {
-                        const result = await reportPost();
-                        if (result) {
-                          Alert.alert(
-                            '신고 완료',
-                            '해당 신고 요청이 관리자에게 접수되었습니다.',
-                            [
-                              {
-                                text: '확인',
-                                onPress: () => setCanReportPost(false),
-                              },
-                            ],
-                          );
-                        }
-                      }}
-                    >
-                      <Text style={styles.reportTxt}>신고</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <TouchableOpacity
-                  style={{ width: '100%', height: '100%' }}
-                  onPress={() => setCanReportPost(false)}
-                />
-              </View>
-            </Modal>
             <CardItem style={styles.flex1}>
               <Left>
                 <Thumbnail
@@ -222,11 +125,8 @@ class CatSelectedPost extends React.Component {
   }
 }
 
-export default inject(({ cat, helper, report }) => ({
+export default inject(({ cat, helper }) => ({
   selectedCatPost: cat.selectedCatPost,
   selectedCatCommentList: cat.selectedCatCommentList,
   convertDateTime: helper.convertDateTime,
-  canReportPost: report.canReportPost,
-  setCanReportPost: report.setCanReportPost,
-  reportPost: report.reportPost,
 }))(observer(CatSelectedPost));
