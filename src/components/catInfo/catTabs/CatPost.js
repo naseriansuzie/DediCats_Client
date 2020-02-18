@@ -72,7 +72,11 @@ class CatPost extends React.Component {
             userInfo && userInfo.id === user.id ? 1 : null
           }
           onPress={index => {
-            processPostActions(index, this.props.item);
+            processPostActions(
+              userInfo && userInfo.id === user.id,
+              index,
+              this.props.item,
+            );
           }}
         />
         <TouchableWithoutFeedback
