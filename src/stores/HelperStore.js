@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
+import moment from 'moment';
 
 const defaultCredential = { withCredentials: true };
 
@@ -86,13 +87,7 @@ class HelperStore {
 
   // * Helper Store from CatStore
   makeDateTime = () => {
-    const time = new Date();
-    const month = time.getMonth();
-    const date = time.getDate();
-    const YYYY = time.getFullYear();
-    const MM = month > 8 ? month : `0${month + 1}`;
-    const DD = date > 9 ? date : `0${date}`;
-    return `${YYYY}-${MM}-${DD}`;
+    return moment().format('YYYY-MM-DD');
   };
 
   changeToDateTime = timeInfo => {
@@ -105,17 +100,9 @@ class HelperStore {
     return timeInfo.slice(0, 10);
   };
 
-  convertDateTime = str => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}
-      /${str.substring(8, 10)} ${str.substring(11, 16)}`;
-    if (dateStr[11] === '1') {
-      const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
-      + dateStr.substring(13, 19)}`;
-    } else {
-      dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
-    }
-    return dateStr;
+  // 'YYYY/MM/DD HH:MM a/pm
+  convertDateTime = (str) => {
+    return moment(str).format('YY/MM/DD h:mm a');
   };
 
   // * Helper Store from CatStore
