@@ -1,5 +1,4 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
 import { StyleSheet, View, Image } from 'react-native';
 import {
   Text,
@@ -20,7 +19,6 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'skyblue',
     borderRadius: 20,
   },
   userImg: {
@@ -30,10 +28,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const defaultPhotoUrl = [
-  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512',
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512',
-][Math.floor(Math.random() * 2)];
+const defaultPhotoUrl =
+  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 class CatPost extends React.Component {
   setCatPostHere = item => {
@@ -45,7 +41,6 @@ class CatPost extends React.Component {
     const { content, createAt, user, photos, id } = this.props.item;
     const usrImgUri =
       user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
-    const { canReportPost, setCanReportPost, reportPost } = this.props;
 
     return (
       <TouchableWithoutFeedback
@@ -120,8 +115,4 @@ class CatPost extends React.Component {
   }
 }
 
-export default inject(({ report, cat }) => ({
-  canReportPost: report.canReportPost,
-  setCanReportPost: report.setCanReportPost,
-  reportPost: report.reportPost,
-}))(observer(withNavigation(CatPost)));
+export default withNavigation(CatPost);
