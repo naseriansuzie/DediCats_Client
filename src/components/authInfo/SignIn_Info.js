@@ -56,7 +56,6 @@ const SignIn_Info = ({
   email,
   PW,
   updateInput,
-  validateSignIn,
   signIn,
   clearInput,
   navigation,
@@ -124,7 +123,6 @@ const SignIn_Info = ({
 export default inject(({ auth, helper }) => ({
   email: auth.email,
   PW: auth.PW,
-  validateSignIn: auth.validateSignIn,
   signIn: auth.signIn,
   updateInput: helper.updateInput,
   clearInput: helper.clearInput,
