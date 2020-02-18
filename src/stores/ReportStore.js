@@ -1,4 +1,4 @@
-import { observable, action, decorate } from 'mobx';
+import { action, decorate } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
@@ -10,21 +10,18 @@ class ReportStore {
     this.root = root;
   }
 
-  // observable
-  catReportVisible = false;
-
   // action
-  setCatReportVisible = flag => {
-    this.catReportVisible = flag;
-  };
-
   reportCatBio = async () => {
     const { cat } = this.root;
     const catId = cat.selectedCatBio[0].id;
-    // criminalId?? 어떻게 찾아서 body 에 담지?
+    const criminalId = cat.selectedCatBio[0].userId;
     const result = await axios
-      .post(`${SERVER_URL}/report`, { catId }, defaultCredential)
-      .then(res => true)
+      .post(`${SERVER_URL}/report`, { catId, criminalId }, defaultCredential)
+      .then(res =>
+        Alert.alert('신고 완료', '해당 신고 요청이 처리되었습니다.', [
+          { text: '확인', onPress: () => {} },
+        ]),
+      )
       .catch(err => this.alertFailure(err));
     return result;
   };
@@ -112,8 +109,6 @@ class ReportStore {
 }
 
 decorate(ReportStore, {
-  catReportVisible: observable,
-  setCatReportVisible: action,
   reportCatBio: action,
   reportPost: action,
   reportComment: action,
