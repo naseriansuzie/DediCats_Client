@@ -30,6 +30,8 @@ class AuthStore {
 
   emailCode = '';
 
+  userInfo = null;
+
   // actions
   validateSignUp = () => {
     let isValidated = false;
@@ -110,10 +112,8 @@ class AuthStore {
     const { email, PW } = this;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signin`, { email, password: PW }, defaultCredential)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status !== 201) return false;
-
-        AsyncStorage.setItem('user', res.data.user);
 
         runInAction(() => {
           this.root.helper.clearInput('auth', 'email', 'PW');
@@ -125,7 +125,6 @@ class AuthStore {
         console.dir('err : ', err);
         return false;
       });
-
     return result;
   };
 
@@ -140,6 +139,11 @@ class AuthStore {
       })
       .catch((err) => console.dir(err));
   };
+
+  getMyInfo = async () => {
+    const userStr = await AsyncStorage.getItem('user');
+    this.userInfo = JSON.parse(userStr);
+  }
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -170,5 +174,6 @@ decorate(AuthStore, {
   signOut: action,
   updateState: action,
   getPermissionAsync: action,
+  getMyInfo: action,
 });
 export default AuthStore;
