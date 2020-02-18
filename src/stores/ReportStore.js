@@ -13,10 +13,6 @@ class ReportStore {
   // observable
   catReportVisible = false;
 
-  canReportPost = true;
-
-  canReportComment = true;
-
   // action
   setCatReportVisible = flag => {
     this.catReportVisible = flag;
@@ -33,23 +29,16 @@ class ReportStore {
     return result;
   };
 
-  setCanReportPost = flag => {
-    this.canReportPost = flag;
-  };
-
-  reportPost = async () => {
+  reportPost = async postId => {
+    console.log('postId', postId);
     const { cat } = this.root;
-    const postId = cat.selectedCatPost.id;
     const criminalId = cat.selectedCatPost.user.id;
+    console.log('criminalId', criminalId);
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
       .then(res => true)
       .catch(err => this.alertFailure(err));
     return result;
-  };
-
-  setCanReportComment = flag => {
-    this.canReportComment = flag;
   };
 
   reportComment = async () => {
@@ -74,19 +63,43 @@ class ReportStore {
     }
     return false;
   };
+
+  processPostActions = (idx, id) => {
+    if (idx === 2) {
+      // 게시글 신고
+      if (idx === 0) {
+        // 게시글 수정 모드로 변경
+        console.log('수정');
+      }
+      if (idx === 1) {
+        // 게시글 삭제
+        console.log('삭제');
+      }
+      if (idx === 2) {
+        Alert.alert('부적절한 게시글 신고', '해당 포스트를 신고하시겠습니까?', [
+          {
+            text: '취소',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: '신고',
+            onPress: () => this.reportPost(id),
+          },
+        ]);
+      }
+    }
+  };
 }
 
 decorate(ReportStore, {
   catReportVisible: observable,
-  canReportPost: observable,
-  canReportComment: observable,
   setCatReportVisible: action,
   reportCatBio: action,
-  setCanReportPost: action,
   reportPost: action,
-  setCanReportComment: action,
   reportComment: action,
   alertFailure: action,
+  processPostActions: action,
 });
 
 export default ReportStore;
