@@ -61,16 +61,18 @@ class CatPost extends React.Component {
         </View>
         <ActionSheet
           ref={o => (this.ActionSheet = o)}
-          title="Which one do you like ?"
+          // title="Which one do you like ?"
           options={
             userInfo && userInfo.id === user.id
               ? ['수정', '삭제', '취소']
-              : ['수정', '삭제', '게시물 신고', '취소']
+              : ['게시물 신고', '취소']
           }
-          cancelButtonIndex={userInfo && userInfo.id === user.id ? 2 : 3}
-          destructiveButtonIndex={1}
+          cancelButtonIndex={userInfo && userInfo.id === user.id ? 2 : 1}
+          destructiveButtonIndex={
+            userInfo && userInfo.id === user.id ? 1 : null
+          }
           onPress={index => {
-            processPostActions(index, id);
+            processPostActions(index, this.props.item);
           }}
         />
         <TouchableWithoutFeedback

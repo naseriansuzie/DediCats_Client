@@ -64,30 +64,32 @@ class ReportStore {
     return false;
   };
 
-  processPostActions = (idx, id) => {
+  processPostActions = (idx, item) => {
+    const { cat } = this.root;
+    if (idx === 0) {
+      cat.postModifyState = true;
+      cat.selectedCatPost = item;
+      cat.selectedCatInputContent = item.content;
+      // cat.selectedCatPhotoPath =
+      //   item.photos && item.photos.length > 0 ? item.photos[0].path : null;
+      // cat.selectedCatUri = photos && photos.length > 0 ? photos[0].path : null;
+    }
+    if (idx === 1) {
+      // 게시글 삭제
+      console.log('삭제');
+    }
     if (idx === 2) {
-      // 게시글 신고
-      if (idx === 0) {
-        // 게시글 수정 모드로 변경
-        console.log('수정');
-      }
-      if (idx === 1) {
-        // 게시글 삭제
-        console.log('삭제');
-      }
-      if (idx === 2) {
-        Alert.alert('부적절한 게시글 신고', '해당 포스트를 신고하시겠습니까?', [
-          {
-            text: '취소',
-            onPress: () => {},
-            style: 'cancel',
-          },
-          {
-            text: '신고',
-            onPress: () => this.reportPost(id),
-          },
-        ]);
-      }
+      Alert.alert('부적절한 게시글 신고', '해당 포스트를 신고하시겠습니까?', [
+        {
+          text: '취소',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: '신고',
+          onPress: () => this.reportPost(id),
+        },
+      ]);
     }
   };
 }

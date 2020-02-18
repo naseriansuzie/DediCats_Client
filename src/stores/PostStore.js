@@ -52,22 +52,29 @@ class PostStore {
     this.getPostList();
   };
 
-  addPost = () => {
+  addPost = mode => {
+    const url =
+      mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
+    console.log('mode는', mode, url);
     const { cat, helper } = this.root;
     const {
       selectedCatPhotoPath,
       selectedCatInputContent,
       selectedCatBio,
+      selectedCatPost,
     } = cat;
-    const postInfo = {
-      content: selectedCatInputContent,
-      catId: selectedCatBio[0].id,
-    };
+    const postInfo =
+      mode === 'new'
+        ? {
+            content: selectedCatInputContent,
+            catId: selectedCatBio[0].id,
+          }
+        : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
     }
     axios
-      .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
+      .post(url, postInfo, defaultCredential)
       .then(res => {
         helper.clearInput(
           'cat',
@@ -90,6 +97,12 @@ class PostStore {
       });
   };
 
+  modifyPost = () => {};
+
+  setPostModify = () => {
+    this.root.cat.postModifyState = false;
+  };
+
   resetPostState = () => {
     this.postList = [];
     this.postPage = 0;
@@ -107,6 +120,8 @@ decorate(PostStore, {
   handleLoadMorePosts: action,
   handleRefresh: action,
   addPost: action,
+  modifyPost: action,
+  setPostModify: action,
   resetPostState: action,
 });
 export default PostStore;
