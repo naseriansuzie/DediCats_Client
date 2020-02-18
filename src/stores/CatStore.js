@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
+import socketio from 'socket.io-client';
 
 /**
  * 1. spot 관련
@@ -121,6 +122,14 @@ class CatStore {
   // 해당 고양이(포스트) 신고
   selectedCatReportInfo = null;
 
+  // * 소켓 아이디
+  socketId = null;
+
+  //! 소켓 연결 여부
+  isConnectSocket = false;
+
+  //! 추가된 댓글
+  newComment = null;
   // CatStore
   setCatPost = (item) => {
     this.selectedCatPost = item;
@@ -132,7 +141,54 @@ class CatStore {
    * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
    * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
    */
-  //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
+  
+  connectSocket = () => {
+   
+    const socket = socketio.connect(`${SERVER_URL}`, {
+     query: `postId=${this.selectedCatPost}`
+   });
+   (() => {
+     socket.emit('new comment', "hello");
+     
+     socket.on('connect', () => {
+       if (socket.connected) {
+         this.socketId = socket.id;
+         this.isConnectSocket = true;
+       }
+       else {
+         console.log("Connection Failed");
+       }
+     });
+
+     socket.on('drop', () => {
+       console.log('drop');
+       socket.disconnect();
+       this.isConnectSocket = false;
+     });
+
+     socket.on('new comment', (comment) => {
+       this.newComment = comment;
+       console.log('got new comment');
+     });
+   });
+
+  }
+
+   offUser = async (socketId) => {
+     const result = await axios
+       .get(`${SERVER_URL}/post/disconnect/?socket_id=${socketId}`, defaultCredential)
+       .then((res) => {
+         Alert.alert('Off User Success.');
+       //! Need to Navigate back
+       })
+       .catch(error) => {
+         Alert.alert("Off User Failed");
+       }
+     return result;  
+   }
+
+
+   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
   getSelectedCatInfo = async (catId) => {
     const result = await axios
@@ -469,6 +525,11 @@ class CatStore {
 }
 
 decorate(CatStore, {
+  socketId: observable,
+  isConnectSocket: observable,
+  newComment: observable,
+  connectSocket: action,
+  offUser: action,
   onDragstate: observable,
   addCatAddress: observable,
   addCatLocation: observable,
