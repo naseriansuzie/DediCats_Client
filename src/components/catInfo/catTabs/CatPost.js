@@ -25,15 +25,17 @@ const styles = StyleSheet.create({
 });
 
 class CatPost extends React.Component {
-  setCatPostHere = item => {
-    console.log('setCatPostHere :', item);
+  setCatPostHere = (item) => {
     this.props.setCatPost(item);
     this.props.navigation.navigate('SelectedPost');
   };
 
   render() {
     const { content, createAt, user, photos } = this.props.item;
+    const usrImgUri = user.photoPath !== null ? user.photoPath : '';
+    const postImgUri = photos[0].path !== null ? photos[0].path : '';
     const { canReportPost, setCanReportPost, reportPost } = this.props;
+
     return (
       <TouchableWithoutFeedback
         onPress={() => this.setCatPostHere(this.props.item)}
@@ -41,7 +43,7 @@ class CatPost extends React.Component {
         <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{ uri: user.photoPath }} />
+              <Thumbnail source={{uri: usrImgUri}} />
               <Body>
                 <Text>{user.nickname}</Text>
               </Body>
@@ -53,10 +55,7 @@ class CatPost extends React.Component {
             </Right>
           </CardItem>
           <CardItem cardBody>
-            <Image
-              source={{ uri: photos[0].path }}
-              style={{ height: 200, width: null, flex: 1 }}
-            />
+            <Image source={{uri: postImgUri}} style={{height: 200, width: null, flex: 1}}/>
           </CardItem>
           <CardItem>
             <Text note>{content}</Text>
