@@ -106,15 +106,12 @@ class HelperStore {
   };
 
   convertDateTime = str => {
-    let dateStr = `${str.substring(0, 4)}/${str.substring(
-      5,
-      7,
-    )}/${str.substring(8, 10)} ${str.substring(11, 16)}`;
-
+    let dateStr = `${str.substring(0, 4)}/${str.substring(5, 7)}
+      /${str.substring(8, 10)} ${str.substring(11, 16)}`;
     if (dateStr[11] === '1') {
       const convertedHour = Number(dateStr.substring(11, 13)) - 12;
-      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour) +
-        dateStr.substring(13, 19)}`;
+      dateStr = `${dateStr.substring(0, 10)} 오후 ${String(convertedHour)
+      + dateStr.substring(13, 19)}`;
     } else {
       dateStr = `${dateStr.substring(0, 10)} 오전 ${dateStr.substring(12, 19)}`;
     }
