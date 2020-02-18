@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 class CatPost extends React.Component {
-  setCatPostHere = (item) => {
+  setCatPostHere = item => {
     this.props.setCatPost(item);
     this.props.navigation.navigate('SelectedPost');
   };
@@ -33,7 +33,6 @@ class CatPost extends React.Component {
   render() {
     const { content, createAt, user, photos } = this.props.item;
     const usrImgUri = user.photoPath !== null ? user.photoPath : '';
-    const postImgUri = photos[0].path !== null ? photos[0].path : '';
     const { canReportPost, setCanReportPost, reportPost } = this.props;
 
     return (
@@ -43,7 +42,7 @@ class CatPost extends React.Component {
         <Card style={{ width: 400, borderRadius: 20, overflow: 'hidden' }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{uri: usrImgUri}} />
+              <Thumbnail source={{ uri: usrImgUri }} />
               <Body>
                 <Text>{user.nickname}</Text>
               </Body>
@@ -55,7 +54,14 @@ class CatPost extends React.Component {
             </Right>
           </CardItem>
           <CardItem cardBody>
-            <Image source={{uri: postImgUri}} style={{height: 200, width: null, flex: 1}}/>
+            {photos.length > 0 ? (
+              <Image
+                source={{ uri: photos[0].path }}
+                style={{ height: 200, width: null, flex: 1 }}
+              />
+            ) : (
+              <View />
+            )}
           </CardItem>
           <CardItem>
             <Text note>{content}</Text>

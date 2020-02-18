@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import {
   Container,
@@ -29,8 +29,10 @@ const CatSelectedPost = ({
   selectedCatCommentList,
   convertDateTime,
 }) => {
-  const usrImgUri = selectedCatPost.user.photoPath !== null ? selectedCatPost.user.photoPath : '';
-  const postImgUri = selectedCatPost.photos[0].path !== null ? selectedCatPost.photos[0].path : '';
+  const usrImgUri =
+    selectedCatPost.user.photoPath !== null
+      ? selectedCatPost.user.photoPath
+      : '';
   return (
     <Container style={styles.container}>
       <Header style={{ display: 'none' }} />
@@ -50,10 +52,14 @@ const CatSelectedPost = ({
           </CardItem>
           <CardItem style={styles.flex1}>
             <Body>
-              <Image
-                source={{ uri: postImgUri }}
-                style={styles.image}
-              />
+              {selectedCatPost.photos.length > 0 ? (
+                <Image
+                  source={{ uri: selectedCatPost.photos[0].path }}
+                  style={styles.image}
+                />
+              ) : (
+                <View />
+              )}
               <Text>{selectedCatPost.content}</Text>
             </Body>
           </CardItem>
