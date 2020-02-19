@@ -116,7 +116,7 @@ class AuthStore {
         if (res.status !== 201) return false;
 
         runInAction(() => {
-          this.root.helper.clearInput('auth', 'email', 'PW');
+          this.root.helper.clearInput('auth', 'email', 'PW', 'confirmPW', 'reConfirmPW');
         });
         return true;
       })

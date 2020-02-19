@@ -63,26 +63,29 @@ const ChangePW = ({
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'PW', text)}
+            secureTextEntry
             value={PW}
           />
         </Item>
         <Item floatingLabel>
           <Label>
             <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password
+            새로운 비밀번호
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'confirmPW', text)}
+            secureTextEntry
             value={confirmPW}
           />
         </Item>
         <Item floatingLabel>
           <Label>
             <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password 재확인
+            새로운 비밀번호 재확인
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'reConfirmPW', text)}
+            secureTextEntry
             value={reConfirmPW}
           />
         </Item>

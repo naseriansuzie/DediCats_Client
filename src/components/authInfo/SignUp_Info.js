@@ -100,6 +100,7 @@ const SignUp_Info = ({
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'confirmPW', text)}
+            secureTextEntry
             value={confirmPW}
           />
         </Item>
@@ -110,6 +111,7 @@ const SignUp_Info = ({
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'reConfirmPW', text)}
+            secureTextEntry
             value={reConfirmPW}
           />
         </Item>
