@@ -160,22 +160,23 @@ class CatStore {
     helper(socket);
   };
 
-   offUser = async () => {
-     const result = await axios
-       .get(`${SERVER_URL}/post/disconnect/?socket_id=${this.socketId}`, defaultCredential)
-       .then((res) => {
-         Alert.alert('Off User Success.');
-       //! Need to Navigate back
-       })
-       .catch((error) => {
-         console.log(error);
-         Alert.alert('Off User Failed');
-       });
-     return result;
-   };
+
+  offUser = async () => {
+    const result = await axios
+      .get(`${SERVER_URL}/post/disconnect/?socket_id=${this.socketId}`, defaultCredential)
+      .then((res) => {
+        Alert.alert('Off User Success.');
+        //! Need to Navigate back
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert('Off User Failed');
+      });
+    return result;
+  };
 
 
-   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
+  //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
   getSelectedCatInfo = async (catId) => {
     const result = await axios
@@ -186,16 +187,16 @@ class CatStore {
           res.data[0].todayTime = this.root.helper.changeToDateTime(
             res.data[0].todayTime,
           );
-          // console.log(
-          //   'getSelectedCatInfo 후 변경된 todayTime',
-          //   res.data[0].todayTime,
-          // );
         }
         if (res.data[0].rainbow) {
           res.data[0].rainbow = JSON.parse(res.data[0].rainbow);
         }
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.selectedCatBio = res.data;
+        console.log(
+          '이 고양이 팔로우 중인가요?',
+          this.selectedCatBio[1].isFollowing,
+        );
         // const replacement = this.markers;
         // this.carousels = replacement;
 
@@ -210,11 +211,13 @@ class CatStore {
 
   // CatStore
   followCat = (catId) => {
+    const { map } = this.root;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then((res) => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
+        map.getMapInfo();
       })
       .catch((err) => console.dir(err));
   };
@@ -270,11 +273,9 @@ class CatStore {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;
     }
-
     if (
       addCatPhotoPath
-      &&
-      addCatLocation
+      && addCatLocation
       && addCatNickname.length
       && addCatDescription.length
       && addCatSpecies.length
@@ -547,7 +548,6 @@ class CatStore {
   };
 
   getFollowerList = (catId) => {
-    console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then((res) => {

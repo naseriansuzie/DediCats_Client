@@ -116,7 +116,7 @@ class AuthStore {
         if (res.status !== 201) return false;
 
         runInAction(() => {
-          this.root.helper.clearInput('auth', 'email', 'PW');
+          this.root.helper.clearInput('auth', 'email', 'PW', 'confirmPW', 'reConfirmPW');
         });
         return true;
       })
@@ -136,7 +136,6 @@ class AuthStore {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
-        // navigation.navigate('AuthLoading');
         return true;
       })
       .catch((err) => {

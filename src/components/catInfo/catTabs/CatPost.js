@@ -42,7 +42,7 @@ class CatPost extends React.Component {
   };
 
   render() {
-    const { content, createAt, user, photos, id } = this.props.item;
+    const { content, createAt, user, photos, comments } = this.props.item;
     const { processPostActions, userInfo } = this.props;
     const usrImgUri =
       user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
@@ -129,7 +129,9 @@ class CatPost extends React.Component {
                   </View>
                   <View style={{ width: '45%' }}>
                     <Text note style={{ paddingLeft: 5, paddingRight: 0 }}>
-                      n 개의 댓글
+                      {comments.length > 0
+                        ? `${comments.length}개의 댓글`
+                        : '댓글 없음'}
                     </Text>
                   </View>
                   <View style={{ width: '45%' }}>
