@@ -1,4 +1,6 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
+import {
+  observable, action, computed, decorate, runInAction,
+} from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
@@ -52,9 +54,8 @@ class PostStore {
     this.getPostList();
   };
 
-  addPost = mode => {
-    const url =
-      mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
+  addPost = (mode) => {
+    const url = mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
     console.log('mode는', mode, url);
     const { cat, helper } = this.root;
     const {
@@ -63,19 +64,18 @@ class PostStore {
       selectedCatBio,
       selectedCatPost,
     } = cat;
-    const postInfo =
-      mode === 'new'
-        ? {
-            content: selectedCatInputContent,
-            catId: selectedCatBio[0].id,
-          }
-        : { content: selectedCatInputContent, postId: selectedCatPost.id };
+    const postInfo = mode === 'new'
+      ? {
+        content: selectedCatInputContent,
+        catId: selectedCatBio[0].id,
+      }
+      : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
     }
     axios
       .post(url, postInfo, defaultCredential)
-      .then(res => {
+      .then((res) => {
         helper.clearInput(
           'cat',
           'selectedCatInputContent',
@@ -84,7 +84,7 @@ class PostStore {
         );
         return res.data;
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',

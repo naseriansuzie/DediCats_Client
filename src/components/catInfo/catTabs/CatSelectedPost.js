@@ -1,6 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import {
+  StyleSheet, View, Text, Image,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -14,8 +16,7 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const defaultPhotoUrl =
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+const defaultPhotoUrl = 'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 const styles = StyleSheet.create({
   container: {
@@ -53,21 +54,23 @@ class CatSelectedPost extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();
 
   componentDidMount() {
+    const { getCommentList, selectedCatPost } = this.props;
     console.log('CatSelectedPost mount');
-    console.log('selectedCatPost = ', this.props.selectedCatPost);
-  }
+    console.log('selectedCatPost = ', selectedCatPost);
+    getCommentList();
+  };
 
   render() {
     const {
       selectedCatPost,
       selectedCatCommentList,
       convertDateTime,
+      getCommentList,
     } = this.props;
 
-    const usrImgUri =
-      selectedCatPost.user.photoPath !== null
-        ? selectedCatPost.user.photoPath
-        : defaultPhotoUrl;
+    const usrImgUri = selectedCatPost.user.photoPath !== null
+      ? selectedCatPost.user.photoPath
+      : defaultPhotoUrl;
 
     return (
       <Container style={styles.container}>
@@ -129,4 +132,5 @@ export default inject(({ cat, helper }) => ({
   selectedCatPost: cat.selectedCatPost,
   selectedCatCommentList: cat.selectedCatCommentList,
   convertDateTime: helper.convertDateTime,
+  getCommentList: cat.getCommentList,
 }))(observer(CatSelectedPost));
