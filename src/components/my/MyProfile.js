@@ -1,9 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet, Text, View, Image, TouchableOpacity,
-} from 'react-native';
-
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -65,19 +62,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-// const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+const DEFAULT_CAT =
+  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 class MyProfile extends React.Component {
   componentDidMount = async () => {
     await this.props.getMyInfo();
     console.log(this.props.userInfo);
-  }
-
+  };
 
   render() {
     if (!this.props.userInfo) {
-      return (<View style={styles.container} />);
+      return <View style={styles.container} />;
     }
-
 
     return (
       <View style={styles.container}>
@@ -88,16 +84,16 @@ class MyProfile extends React.Component {
     /> */}
         <View style={styles.profileView}>
           <View style={styles.photoView}>
-            {/* <Image
+            <Image
               style={styles.defaultPhoto}
               source={{
                 uri: DEFAULT_CAT,
               }}
-            /> */}
+            />
           </View>
           <View style={styles.infoView}>
             <Text style={styles.nickName}>{this.props.userInfo.nickname}</Text>
-            <Text style={styles.address}>{ this.props.userInfo.createAt}</Text>
+            <Text style={styles.address}>{this.props.userInfo.createAt}</Text>
 
             <TouchableOpacity style={styles.btn}>
               <Text style={styles.btnTxt}>회원정보 수정</Text>
@@ -106,14 +102,12 @@ class MyProfile extends React.Component {
             <TouchableOpacity style={styles.btn}>
               <Text style={styles.btnTxt}>로그아웃</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </View>
     );
   }
 }
-
 
 export default inject(({ auth }) => ({
   userInfo: auth.userInfo,

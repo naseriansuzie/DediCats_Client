@@ -21,6 +21,7 @@ class PostStore {
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
+    console.log('get post list');
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
@@ -51,22 +52,29 @@ class PostStore {
     this.getPostList();
   };
 
-  addPost = () => {
+  addPost = mode => {
+    const url =
+      mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
+    console.log('mode는', mode, url);
     const { cat, helper } = this.root;
     const {
       selectedCatPhotoPath,
       selectedCatInputContent,
       selectedCatBio,
+      selectedCatPost,
     } = cat;
-    const postInfo = {
-      content: selectedCatInputContent,
-      catId: selectedCatBio[0].id,
-    };
+    const postInfo =
+      mode === 'new'
+        ? {
+            content: selectedCatInputContent,
+            catId: selectedCatBio[0].id,
+          }
+        : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
     }
     axios
-      .post(`${SERVER_URL}/post/new`, postInfo, defaultCredential)
+      .post(url, postInfo, defaultCredential)
       .then(res => {
         helper.clearInput(
           'cat',
@@ -74,6 +82,7 @@ class PostStore {
           'selectedCatPhotoPath',
           'selectedCatUri',
         );
+        return res.data;
       })
       .catch(err => {
         if (err.response && err.response.status === 405) {
@@ -87,6 +96,19 @@ class PostStore {
         }
       });
   };
+
+  modifyPost = () => {};
+
+  setPostModify = () => {
+    this.root.cat.postModifyState = false;
+  };
+
+  resetPostState = () => {
+    this.postList = [];
+    this.postPage = 0;
+    this.isRefreshingPost = false;
+    this.isLoadingPost = false;
+  };
 }
 
 decorate(PostStore, {
@@ -98,5 +120,8 @@ decorate(PostStore, {
   handleLoadMorePosts: action,
   handleRefresh: action,
   addPost: action,
+  modifyPost: action,
+  setPostModify: action,
+  resetPostState: action,
 });
 export default PostStore;
