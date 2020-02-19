@@ -58,7 +58,7 @@ const SignUp_Info = ({
   navigation,
 }) => (
   <Container>
-    <Header />
+    <Header style={{ display: 'none' }} />
     <View style={styles.logo}>
       <Text
         style={styles.logoTxt}

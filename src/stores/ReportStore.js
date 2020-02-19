@@ -14,7 +14,7 @@ class ReportStore {
   reportCatBio = async () => {
     const { cat } = this.root;
     const catId = cat.selectedCatBio[0].id;
-    const criminalId = cat.selectedCatBio[0].userId;
+    const criminalId = cat.selectedCatBio[0].user.id;
     const result = await axios
       .post(`${SERVER_URL}/report`, { catId, criminalId }, defaultCredential)
       .then(res =>

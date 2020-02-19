@@ -1,6 +1,4 @@
-import {
-  observable, action, computed, decorate, runInAction,
-} from 'mobx';
+import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
@@ -37,18 +35,28 @@ class MapStore {
 
   permissionState = false;
 
+  isShowingCarousel = false;
+
+  // 선택한 고양이 아이디
+  selectedCatId = 0;
+
+  // 아이디를 가진 객체의 배열 안 인덱스
+  carouselIndex = 0;
+
+  refIndex = 0;
+
   carousels = [
-  //   //! sample data
-  //   {
-  //     catId: 1,
-  //     latitude: 37.503528,
-  //     longitude: 127.049784,
-  //     catNickname: 'Best Place',
-  //     catAddress: '서울시 선릉',
-  //     description: 'This is the best place in Portland',
-  //     catProfile:
-  //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-  //   },
+    //   //! sample data
+    //   {
+    //     catId: 1,
+    //     latitude: 37.503528,
+    //     longitude: 127.049784,
+    //     catNickname: 'Best Place',
+    //     catAddress: '서울시 선릉',
+    //     description: 'This is the best place in Portland',
+    //     catProfile:
+    //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    //   },
   ];
 
   markers = [
@@ -67,39 +75,25 @@ class MapStore {
   syncCarousels = () => {
     this.carousels = this.markers;
   };
-    
 
   // actions
   getMapInfo = async () => {
     const currentBound = this.currentBoundingBox;
-    // console.log('현재 바운드', currentBound);
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
-      .then((res) => {
-        // if (this.markers.length < res.data.length) {
-        //   const newAddition = res.data.slice(this.markers.length);
-        //   this.markers = this.markers.concat(newAddition);
-        //   console.log('변화된 길이:', this.markers.length);
-        // }
-
-        // if (this.markers.length > res.data.length) {
-        //   this.markers = res.data;
-        // }
+      .then(res => {
         this.markers = res.data;
-
-        // console.log('마커정보는:', this.markers, res.data.length);
         this.carousels = res.data;
-        // this.carousels = res.data;
-        // console.log('카루셀 정보: ', this.carousels);
+        const matchedIndex = this.carousels.findIndex((data) => data.catId === this.selectedCatId);
+        if (matchedIndex === -1) {
+          this.isShowingCarousel = false;
+        } else {
+          this.carouselIndex = matchedIndex;
+        }
+      
         return true;
       })
-      .catch((err) => console.dir(err));
-    // if (result) {
-    //   return true;
-    // }
-    // axios로 map 정보 get
-    // res => this.spot.list에 추가
-    // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
+      .catch(err => console.dir(err));
   };
 
   requestMapPermission = async () => {
@@ -119,7 +113,7 @@ class MapStore {
 
   getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         const { latitude, longitude } = position.coords;
         this.currentPosition = {
           latitude,
@@ -135,14 +129,14 @@ class MapStore {
         });
         // this.getMapInfo();
       },
-      (error) => {
+      error => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
-  onRegionChangeComplete = async (region) => {
+  onRegionChangeComplete = async region => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -150,26 +144,53 @@ class MapStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-    this.getMapInfo();
+    await this.getMapInfo();
+
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = (e) => {
+  onDragEnd = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
   };
 
   syncCarousel = () => {
+    // this.carouselMarkers = this.markers;
     this.carousels = this.markers;
+  }
+
+  showCarousel = () => {
+    this.isShowingCarousel = true;
+  };
+
+  hideCarousel = () => {
+    this.isShowingCarousel = false;
+  };
+
+  setCarouselIndex = (index) => {
+    this.carouselIndex = index;
+  }
+
+  setSelectedCatId = (id, callback) => {
+    this.selectedCatId = id;
+    callback();
+  }
+
+  setRefIndex = (index) => {
+    this.refIndex = index;
   }
 }
 
 decorate(MapStore, {
+  selectedCatId: observable,
+  carouselIndex: observable,
+  refIndex: observable,
   currentPosition: observable,
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
+  isShowingCarousel: observable,
   carousels: observable,
   markers: observable,
   syncCarousels: action,
@@ -179,5 +200,10 @@ decorate(MapStore, {
   onRegionChangeComplete: action,
   onDragEnd: action,
   syncCarousel: action,
+  showCarousel: action,
+  hideCarousel: action,
+  setCarouselIndex: action,
+  setSelectedCatId: action,
+  setRefIndex: action,
 });
 export default MapStore;
