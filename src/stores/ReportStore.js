@@ -61,22 +61,8 @@ class ReportStore {
     return false;
   };
 
-  deletePost = item => {
-    cat.selectedCatPost = item;
-    axios
-      .post(
-        `${SERVER_URL}/post/delete`,
-        { postId: cat.selectedCatPost.id },
-        defaultCredential,
-      )
-      .then(res => Alert.alert('게시글이 삭제되었습니다.'))
-      .catch(err => {
-        this.alertFailure(err);
-      });
-  };
-
   processPostActions = (isMyPost, idx, item) => {
-    const { cat } = this.root;
+    const { cat, post } = this.root;
     if (isMyPost) {
       if (idx === 0) {
         // 게시글 수정
@@ -89,7 +75,7 @@ class ReportStore {
       }
       if (idx === 1) {
         // 게시글 삭제
-        this.deletePost(item);
+        post.deletePost(item);
       }
     } else if (isMyPost !== true && idx === 0) {
       // 게시물 신고
@@ -113,7 +99,6 @@ decorate(ReportStore, {
   reportPost: action,
   reportComment: action,
   alertFailure: action,
-  deletePost: action,
   processPostActions: action,
 });
 

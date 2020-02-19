@@ -1,6 +1,4 @@
-import {
-  observable, action, computed, decorate, runInAction,
-} from 'mobx';
+import { observable, action, computed, decorate, runInAction } from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
@@ -23,7 +21,6 @@ class PostStore {
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
-    console.log('get post list');
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
@@ -54,9 +51,9 @@ class PostStore {
     this.getPostList();
   };
 
-  addPost = (mode) => {
-    const url = mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
-    console.log('mode는', mode, url);
+  addPost = mode => {
+    const url =
+      mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
     const { cat, helper } = this.root;
     const {
       selectedCatPhotoPath,
@@ -64,18 +61,19 @@ class PostStore {
       selectedCatBio,
       selectedCatPost,
     } = cat;
-    const postInfo = mode === 'new'
-      ? {
-        content: selectedCatInputContent,
-        catId: selectedCatBio[0].id,
-      }
-      : { content: selectedCatInputContent, postId: selectedCatPost.id };
+    const postInfo =
+      mode === 'new'
+        ? {
+            content: selectedCatInputContent,
+            catId: selectedCatBio[0].id,
+          }
+        : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
     }
     axios
       .post(url, postInfo, defaultCredential)
-      .then((res) => {
+      .then(res => {
         helper.clearInput(
           'cat',
           'selectedCatInputContent',
@@ -86,7 +84,7 @@ class PostStore {
         this.setPostModify();
         return res.data;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 405) {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
@@ -99,10 +97,23 @@ class PostStore {
       });
   };
 
-  modifyPost = () => {};
+  deletePost = item => {
+    cat.selectedCatPost = item;
+    axios
+      .post(
+        `${SERVER_URL}/post/delete`,
+        { postId: cat.selectedCatPost.id },
+        defaultCredential,
+      )
+      .then(res => Alert.alert('게시글이 삭제되었습니다.'))
+      .catch(err => {
+        this.alertFailure(err);
+      });
+  };
 
   setPostModify = () => {
-    this.root.cat.postModifyState = false;
+    const { cat } = this.root;
+    cat.postModifyState = false;
   };
 
   resetPostState = () => {
@@ -122,7 +133,7 @@ decorate(PostStore, {
   handleLoadMorePosts: action,
   handleRefresh: action,
   addPost: action,
-  modifyPost: action,
+  deletePost: action,
   setPostModify: action,
   resetPostState: action,
 });

@@ -70,6 +70,9 @@ class CatStore {
   // 작성하는 댓글
   selectedCatInputComment = '';
 
+  // comment를 수정하는 중인지 상태 - true면 수정 중
+  commentModifyState = false;
+
   // 해당 고양이의 앨범
   selectedCatAlbum = null;
 
@@ -487,8 +490,10 @@ class CatStore {
   };
 
   resetCommentState = () => {
-    this.commentList = [];
+    this.selectedCatCommentList = [];
+    this.selectedCatComment = null;
     this.commentPage = 0;
+    this.newComment = null;
   };
 
   _handleLoadMoreComments = () => {
@@ -507,32 +512,70 @@ class CatStore {
 
     if (mode === 'new') {
       const newCommentInfo = { postId, content: this.selectedCatInputComment };
-      axios
+      return axios
         .post(url, newCommentInfo, defaultCredential)
-        .then(res =>
-          this.root.helper.clearInput('cat', 'selectedCatInputComment'),
-        )
+        .then(res => {
+          this.root.helper.clearInput('cat', 'selectedCatInputComment');
+          return res;
+        })
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
           } else console.dir(err);
         });
-    } else {
-      const updateCommentInfo = {
-        commentId: this.selectedCatComment.id,
-        content: this.selectedCatInputComment,
-      };
-      axios
-        .post(url, updateCommentInfo, defaultCredential)
-        .then(res =>
-          this.root.helper.clearInput('cat', 'selectedCatInputComment'),
-        )
-        .catch(err => {
-          if (err.response && err.response.status === 409) {
-            Alert.alert('댓글 수정에 실패했습니다. 다시 한 번 등록해주세요!');
-          } else console.dir(err);
-        });
     }
+    const updateCommentInfo = {
+      commentId: this.selectedCatComment.id,
+      content: this.selectedCatInputComment,
+    };
+    return axios
+      .post(url, updateCommentInfo, defaultCredential)
+      .then(res => {
+        this.root.helper.clearInput('cat', 'selectedCatInputComment');
+        return res.data;
+      })
+      .catch(err => {
+        if (err.response && err.response.status === 409) {
+          Alert.alert('댓글 수정에 실패했습니다. 다시 한 번 등록해주세요!');
+        } else console.dir(err);
+      });
+  };
+
+  setCatComment = async comment => {
+    this.selectedCatComment = comment;
+    console.log('선택한 코멘트는', this.selectedCatComment.content);
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  };
+
+  setCommentModify = () => {
+    this.commentModifyState = !this.commentModifyState;
+    console.log('코멘트 수정 상태는', this.commentModifyState);
+  };
+
+  modifyComment = comment => {
+    this.setCatComment(comment);
+    this.setCommentModify();
+    this.selectedCatInputComment = comment.content;
+    console.log('돌아온 인풋', this.selectedCatInputComment);
+  };
+
+  deleteComment = async comment => {
+    await this.setCatComment(comment);
+    axios
+      .post(
+        `${SERVER_URL}/comment/delete`,
+        { commentId: this.selectedCatComment.id },
+        defaultCredential,
+      )
+      .then(res => {
+        Alert.alert('게시글이 삭제되었습니다.');
+        console.log();
+      })
+      .catch(err => {
+        this.alertFailure(err);
+      });
   };
 
   getAlbums = () => {
@@ -593,6 +636,8 @@ decorate(CatStore, {
   selectedCatCommentList: observable,
   selectedCatComment: observable,
   selectedCatInputComment: observable,
+  setCatComment: observable,
+  commentModifyState: observable,
   selectedCatAlbum: observable,
   selectedCatUri: observable,
   selectedCatPhoto: observable,
@@ -620,6 +665,9 @@ decorate(CatStore, {
   resetCommentState: action,
   _handleLoadMoreComments: action,
   addComment: action,
+  setCommentModify: action,
+  modifyComment: action,
+  deleteComment: action,
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,

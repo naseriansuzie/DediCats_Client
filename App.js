@@ -64,8 +64,9 @@ const MainStack = createStackNavigator(
           <HeaderBackButton
             onPress={async () => {
               await root.cat.offUser();
-              // 여기에 socket disconnect 추가
+              root.cat.resetCommentState();
               navigation.goBack();
+              root.post.getPostList();
             }}
           />
         ),
