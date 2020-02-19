@@ -34,58 +34,85 @@ const styles = StyleSheet.create({
 });
 
 class MainMap extends React.Component {
-  state = {
-    isShowingCarousel: false,
-  };
-
   componentDidMount() {
     this.props.requestMapPermission();
     // this.props.getMapInfo();
   }
 
-  renderCarouselItem = ({ item }) => {
-    const { isShowingCarousel } = this.state;
+  renderCarouselItem = ({ index }) => {
+    let { carousels, carouselIndex, isShowingCarousel, hideCarousel } = this.props;
+    // selectedCatId = carousels[index].catId;
 
-    if (isShowingCarousel) {
+    // console.log('carousels.length :', carousels.length);
+    // console.log('carouselIndex :', carouselIndex);
+    // console.log('isShowingCarousel :', isShowingCarousel);
+    if (isShowingCarousel && carousels[carouselIndex]) {
       return (
         <BriefCatInfo
-          item={item}
+          item={carousels[carouselIndex]}
           isShowingCarousel={isShowingCarousel}
-          hideCarousel={this.hideCarousel}
+          hideCarousel={hideCarousel}
         />
       );
     }
+    return null;
   };
 
-  hideCarousel = () => {
-    this.setState({ isShowingCarousel: false });
+  onCarouselItemChange = (index) => {
+    let { carousels, refIndex, setRefIndex, carouselIndex, setCarouselIndex, setSelectedCatId } = this.props;
+    // console.log('Carousel:: ', Carousel.toString());
+    // console.log('positions :', Carousel.positions.toString());
+    console.log('change index:::', index);
+    let item;
+    let newIndex;
+    if (index > refIndex) {
+      if (carousels.length - 1 > carouselIndex) {
+        console.log('increase:::', index);
+        console.log('carousels.length - 1:::', carousels.length - 1);
+        console.log('carouselIndex:::', carouselIndex);
+        setCarouselIndex(carouselIndex + 1);
+        item = carousels[carouselIndex + 1];
+        newIndex = carouselIndex + 1;
+      }
+    } else if (index < refIndex) {
+      if (carouselIndex > 0) {
+        console.log('decrease:::', index);
+        console.log('carouselIndex:::', carouselIndex);
+        setCarouselIndex(carouselIndex - 1);
+        item = carousels[carouselIndex - 1];
+        newIndex = carouselIndex + 1;
+      }
+    }
+    if (!item) {
+      return;
+    }
+    this.onMarkerPressed(item, newIndex);
+
+    // const region = {
+    //   latitude: item.latitude,
+    //   longitude: item.longitude,
+    //   latitudeDelta: 0.0035,
+    //   longitudeDelta: 0.0035,
+    // };
+    // setSelectedCatId(item.catId, () => this._map.animateToRegion(region));
   };
 
-  onCarouselItemChange = index => {
-    const { carousels } = this.props;
-    const location = carousels[index];
+  onMarkerPressed = (item, index) => {
+    let { setRefIndex, setCarouselIndex, carouselIndex, isShowingCarousel, showCarousel, setSelectedCatId } = this.props;
+    setRefIndex(index);
+    setCarouselIndex(index);
     const region = {
-      latitude: location.latitude,
-      longitude: location.longitude,
+      latitude: item.latitude,
+      longitude: item.longitude,
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
-    this._map.animateToRegion(region);
-  };
-
-  onMarkerPressed = (location, index) => {
-    this.props.syncCarousel();
-    const { isShowingCarousel } = this.state;
-    const region = {
-      latitude: location.latitude,
-      longitude: location.longitude,
-      latitudeDelta: 0.0035,
-      longitudeDelta: 0.0035,
-    };
-    this._map.animateToRegion(region);
+    setSelectedCatId(item.catId, () => this._map.animateToRegion(region));
+    // carouselIndex = carousels.findIndex((data) => data.catId === selectedCatId);
     this._carousel.snapToItem(index);
+    console.log('carouselIndex in onMarkerPressed', carouselIndex);
     if (!isShowingCarousel) {
-      this.setState({ isShowingCarousel: true });
+      showCarousel();
     }
   };
 
@@ -115,7 +142,7 @@ class MainMap extends React.Component {
               <MainMarker
                 key={marker.longitude + marker.latitude}
                 marker={marker}
-                carousel={carousels[index]}
+                // carousel={carousels[index]}
                 index={index}
                 onMarkerPressed={this.onMarkerPressed}
                 currentRegion={currentRegion}
@@ -150,7 +177,7 @@ class MainMap extends React.Component {
             }}
             data={carousels}
             renderItem={this.renderCarouselItem}
-            onSnapToItem={index => this.onCarouselItemChange(index)}
+            onBeforeSnapToItem={(index) => this.onCarouselItemChange(index)}
             removeClippedSubviews={false}
             sliderWidth={width}
             itemWidth={width * 0.9}
@@ -168,6 +195,9 @@ class MainMap extends React.Component {
 }
 
 export default inject(({ map }) => ({
+  selectedCatId: map.selectedCatId,
+  carouselIndex: map.carouselIndex,
+  refIndex: map.refIndex,
   markers: map.markers,
   carousels: map.carousels,
   getMapInfo: map.getMapInfo,
@@ -179,4 +209,10 @@ export default inject(({ map }) => ({
   getCurrentPosition: map.getCurrentPosition,
   onRegionChangeComplete: map.onRegionChangeComplete,
   syncCarousel: map.syncCarousel,
+  isShowingCarousel: map.isShowingCarousel,
+  showCarousel: map.showCarousel,
+  hideCarousel: map.hideCarousel,
+  setCarouselIndex: map.setCarouselIndex,
+  setSelectedCatId: map.setSelectedCatId,
+  setRefIndex: map.setRefIndex,
 }))(observer(MainMap));
