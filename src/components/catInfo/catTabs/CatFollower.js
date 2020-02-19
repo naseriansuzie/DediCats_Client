@@ -10,10 +10,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const defaultPhotoUrl = [
-  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512',
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512',
-][Math.floor(Math.random() * 2)];
+const defaultPhotoUrl =
+  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
 // const defaultPhotoUrl =
 //   'https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg';
 
