@@ -60,6 +60,9 @@ class CatStore {
   // post를 추가할 때의 content
   selectedCatInputContent = '';
 
+  // post를 수정하는 중인지 상태 - true면 수정 중
+  postModifyState = false;
+
   // post에 해당하는 commentList
   selectedCatCommentList = null;
 
@@ -531,6 +534,7 @@ decorate(CatStore, {
   selectedCatNewTag: observable,
   selectedCatPost: observable,
   selectedCatInputContent: observable,
+  postModifyState: observable,
   selectedCatCommentList: observable,
   selectedCatComment: observable,
   selectedCatInputComment: observable,

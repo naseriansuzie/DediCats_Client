@@ -22,7 +22,6 @@ class AuthLoadingScreen extends React.Component {
         console.log(e);
         return false;
       });
-
     return this.props.navigation.navigate(result ? 'App' : 'Auth');
   }
 

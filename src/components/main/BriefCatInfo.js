@@ -72,6 +72,7 @@ const BriefCatInfo = ({
   item,
   navigation,
   hideCarousel,
+  resetPostState,
 }) => (
   <View style={styles.card}>
     <View>
@@ -87,6 +88,7 @@ const BriefCatInfo = ({
           const result = await getSelectedCatInfo(item.catId);
           // console.log('카드', result);
           if (result) {
+            resetPostState();
             navigation.navigate('CatInfo');
           }
         }}
@@ -119,8 +121,9 @@ const BriefCatInfo = ({
     </View>
   </View>
 );
-export default inject(({ cat, helper }) => ({
+export default inject(({ cat, helper, post }) => ({
   getSelectedCatInfo: cat.getSelectedCatInfo,
   followCat: cat.followCat,
   unFollowCat: helper.unFollowCat,
+  resetPostState: post.resetPostState,
 }))(observer(withNavigation(BriefCatInfo)));

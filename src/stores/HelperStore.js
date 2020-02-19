@@ -86,9 +86,7 @@ class HelperStore {
   };
 
   // * Helper Store from CatStore
-  makeDateTime = () => {
-    return moment().format('YYYY-MM-DD');
-  };
+  makeDateTime = () => moment().format('YYYY-MM-DD');
 
   changeToDateTime = timeInfo => {
     if (timeInfo === 'today') {
@@ -101,9 +99,7 @@ class HelperStore {
   };
 
   // 'YYYY/MM/DD HH:MM a/pm
-  convertDateTime = (str) => {
-    return moment(str).format('YY/MM/DD h:mm a');
-  };
+  convertDateTime = str => moment(str).format('YY/MM/DD h:mm a');
 
   // * Helper Store from CatStore
 }
