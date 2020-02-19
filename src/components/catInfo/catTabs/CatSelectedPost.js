@@ -1,8 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet, View, Text, Image,
-} from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import {
   Container,
   Header,
@@ -16,7 +14,8 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const defaultPhotoUrl = 'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+const defaultPhotoUrl =
+  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 const styles = StyleSheet.create({
   container: {
@@ -58,19 +57,19 @@ class CatSelectedPost extends React.Component {
     console.log('CatSelectedPost mount');
     console.log('selectedCatPost = ', selectedCatPost);
     getCommentList();
-  };
+  }
 
   render() {
     const {
       selectedCatPost,
       selectedCatCommentList,
       convertDateTime,
-      getCommentList,
     } = this.props;
 
-    const usrImgUri = selectedCatPost.user.photoPath !== null
-      ? selectedCatPost.user.photoPath
-      : defaultPhotoUrl;
+    const usrImgUri =
+      selectedCatPost.user.photoPath !== null
+        ? selectedCatPost.user.photoPath
+        : defaultPhotoUrl;
 
     return (
       <Container style={styles.container}>
@@ -107,10 +106,10 @@ class CatSelectedPost extends React.Component {
             </CardItem>
           </Card>
           <List>
-            {selectedCatCommentList ? (
+            {selectedCatCommentList.length > 0 ? (
               selectedCatCommentList.map((comment, idx) => (
                 <CatComment
-                  key={`comment_${comment.id}`}
+                  key={`comment_${comment.id}_${idx}`}
                   idx={idx}
                   myPhoto={comment.user.photoPath}
                   userNickname={comment.user.nickname}
