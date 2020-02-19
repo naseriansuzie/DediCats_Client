@@ -75,9 +75,8 @@ class MyProfile extends React.Component {
   render() {
     console.log('this.props.userInfo : ', this.props.userInfo);
     if (!this.props.userInfo) {
-      return (<View style={styles.container} />);
+      return <View style={styles.container} />;
     }
-
 
     return (
       <View style={styles.container}>
@@ -92,7 +91,7 @@ class MyProfile extends React.Component {
           </View>
           <View style={styles.infoView}>
             <Text style={styles.nickName}>{this.props.userInfo.nickname}</Text>
-            <Text style={styles.address}>{ this.props.userInfo.createAt}</Text>
+            <Text style={styles.address}>{this.props.userInfo.createAt}</Text>
 
             <TouchableOpacity style={styles.btn}>
               <Text style={styles.btnTxt}>회원정보 수정</Text>
@@ -107,14 +106,12 @@ class MyProfile extends React.Component {
             >
               <Text style={styles.btnTxt}>로그아웃</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </View>
     );
   }
 }
-
 
 export default inject(({ auth }) => ({
   userInfo: auth.userInfo,
