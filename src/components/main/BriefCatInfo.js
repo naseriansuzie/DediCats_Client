@@ -4,6 +4,7 @@ import { Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -71,22 +72,24 @@ const BriefCatInfo = ({
   unFollowCat,
   item,
   navigation,
-  hideCarousel,
+  hideBriefCat,
   resetPostState,
 }) => (
   <View style={styles.card}>
     <View>
       <View style={styles.closeBtn}>
-        <TouchableOpacity onPress={() => hideCarousel()}>
-          <Text>X</Text>
+        <TouchableOpacity onPress={() => hideBriefCat()}>
+          <MaterialCommunityIcons
+            style={{ fontSize: 23, left: 10 }}
+            name="close"
+            color="#767577"
+          />
         </TouchableOpacity>
       </View>
       <TouchableWithoutFeedback
         style={styles.row}
         onPress={async () => {
-          // console.log('카루셀 클릭시: ', item.catId);
           const result = await getSelectedCatInfo(item.catId);
-          // console.log('카드', result);
           if (result) {
             resetPostState();
             navigation.navigate('CatInfo');
