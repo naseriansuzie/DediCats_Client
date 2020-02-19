@@ -10,7 +10,7 @@ export default class MainMarker extends React.Component {
   }
 
   render() {
-    const { marker, index, currentRegion } = this.props;
+    const { marker, currentRegion } = this.props;
     // 1. latitudeDelta보다 큰 값에서는 GET 과 Render 둘 다 막는다.
     // 2. latitudeDelta보다 작으면 마커들을 렌더하고, 슬라이드를 해서 범위(Bound)가 변경되었을 시에 GET을 보낸다.
     if (currentRegion.latitudeDelta < 0.007 || currentRegion.longitudeDelta < 0.007) {
@@ -20,7 +20,7 @@ export default class MainMarker extends React.Component {
             latitude: marker.latitude,
             longitude: marker.longitude,
           }}
-          onPress={() => this.props.onMarkerPressed(marker, index)}
+          onPress={() => this.props.onMarkerPressed(marker)}
           tracksViewChanges={this.state.tracksViewChanges}
           onLoad={this.stopRendering}
         />
