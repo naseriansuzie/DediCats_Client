@@ -11,24 +11,29 @@ const styles = StyleSheet.create({
   marginRight10: {
     marginRight: 10,
   },
+  modificationView: { flexDirection: 'row' },
 });
 
-const defaultPhotoUrl = [
-  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512',
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512',
-][Math.floor(Math.random() * 2)];
+const defaultPhotoUrl =
+  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 // const defaultPhotoUrl =
 //   'https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg';
 
 const CatComment = ({
+  comment,
+  userId,
   myPhoto,
   userNickname,
-  comment,
+  content,
   date,
   convertDateTime,
-  canReportComment,
+  userInfo,
   reportComment,
-  setCanReportComment,
+  setSelectedCatComment,
+  modifyComment,
+  deleteComment,
+  resetCommentState,
+  getCommentList,
 }) => (
   <ListItem thumbnail style={styles.container}>
     <Left>
@@ -41,15 +46,36 @@ const CatComment = ({
     <Body>
       <View>
         <Text>{userNickname}</Text>
-        <Text>{comment}</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity>
-            <Text note>수정</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text note>삭제</Text>
-          </TouchableOpacity>
-          {canReportComment ? (
+        <Text>{content}</Text>
+        <View style={styles.modificationView}>
+          {userInfo.id === userId ? (
+            <TouchableOpacity
+              onPress={() => {
+                modifyComment(comment);
+              }}
+            >
+              <Text note>수정</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+          {userInfo.id === userId ? (
+            <TouchableOpacity
+              onPress={async () => {
+                await deleteComment(comment);
+                resetCommentState();
+                getCommentList();
+              }}
+            >
+              <Text note>삭제</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+
+          {userInfo.id === userId ? (
+            <View />
+          ) : (
             <TouchableOpacity>
               <Text
                 note
@@ -63,9 +89,10 @@ const CatComment = ({
                     {
                       text: '신고',
                       onPress: async () => {
-                        const result = await reportComment();
-                        if (result) {
-                          setCanReportComment(false);
+                        setSelectedCatComment(comment);
+                        const reportResult = await reportComment();
+                        if (reportResult) {
+                          Alert.alert('댓글 신고가 완료 되었습니다.');
                         }
                       },
                     },
@@ -75,8 +102,6 @@ const CatComment = ({
                 신고
               </Text>
             </TouchableOpacity>
-          ) : (
-            <View />
           )}
         </View>
       </View>
@@ -87,9 +112,13 @@ const CatComment = ({
   </ListItem>
 );
 
-export default inject(({ helper, report }) => ({
+export default inject(({ helper, report, cat, auth }) => ({
   convertDateTime: helper.convertDateTime,
-  canReportComment: report.canReportComment,
   reportComment: report.reportComment,
-  setCanReportComment: report.setCanReportComment,
+  setSelectedCatComment: cat.setSelectedCatComment,
+  modifyComment: cat.modifyComment,
+  deleteComment: cat.deleteComment,
+  resetCommentState: cat.resetCommentState,
+  getCommentList: cat.getCommentList,
+  userInfo: auth.userInfo,
 }))(observer(CatComment));

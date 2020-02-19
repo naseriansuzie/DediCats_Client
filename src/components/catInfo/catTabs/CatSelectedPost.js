@@ -111,9 +111,11 @@ class CatSelectedPost extends React.Component {
                 <CatComment
                   key={`comment_${comment.id}_${idx}`}
                   idx={idx}
+                  userId={comment.user.id}
+                  comment={comment}
                   myPhoto={comment.user.photoPath}
                   userNickname={comment.user.nickname}
-                  comment={comment.content}
+                  content={comment.content}
                   date={comment.createAt}
                 />
               ))

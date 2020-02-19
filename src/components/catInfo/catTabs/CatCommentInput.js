@@ -45,9 +45,13 @@ const styles = StyleSheet.create({
 
 const CatCommentInput = ({
   selectedCatInputComment,
+  commentModifyState,
   updateInput,
   validateAddInput,
+  getCommentList,
+  resetCommentState,
   addComment,
+  setCommentModify,
 }) => (
   <View style={styles.container}>
     <KeyboardAvoidingView>
@@ -65,15 +69,28 @@ const CatCommentInput = ({
         </Form>
         <TouchableOpacity
           style={styles.submitBtn}
-          onPress={() => {
-            const validation = validateAddInput('selectedCatInputComment');
-            console.log(validation);
-            if (validation) {
-              addComment('new');
+          onPress={async () => {
+            try {
+              const validation = validateAddInput('selectedCatInputComment');
+              if (validation) {
+                if (commentModifyState) {
+                  await addComment('update');
+                  setCommentModify();
+                  resetCommentState();
+                  getCommentList();
+                } else {
+                  await addComment('new');
+                }
+              }
+            } catch (err) {
+              console.log('something is wrong');
+              console.dir(err);
             }
           }}
         >
-          <Text style={styles.submitBtnTxt}>등록</Text>
+          <Text style={styles.submitBtnTxt}>
+            {commentModifyState ? '수정' : '등록'}
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -82,7 +99,11 @@ const CatCommentInput = ({
 
 export default inject(({ cat, helper }) => ({
   selectedCatInputComment: cat.selectedCatInputComment,
+  commentModifyState: cat.commentModifyState,
+  getCommentList: cat.getCommentList,
   addComment: cat.addComment,
+  setCommentModify: cat.setCommentModify,
+  resetCommentState: cat.resetCommentState,
   validateAddInput: helper.validateAddInput,
   updateInput: helper.updateInput,
 }))(observer(CatCommentInput));
