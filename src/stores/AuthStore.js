@@ -129,11 +129,11 @@ class AuthStore {
   };
 
 
-  signOut = async (navigation) => {
+  signOut = async () => {
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async (res) => {
-        await AsyncStorage.clear();
+        await AsyncStorage.removeItem('user');
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
         return true;
@@ -147,6 +147,7 @@ class AuthStore {
   };
 
   getMyInfo = async () => {
+    console.log('is it working?');
     const userStr = await AsyncStorage.getItem('user');
     this.userInfo = JSON.parse(userStr);
   }
