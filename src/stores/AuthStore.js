@@ -3,10 +3,9 @@ import {
 } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
-import { SERVER_URL, AUTH_SERVER, JWT_SECRET_ACCESS } from 'react-native-dotenv';
+import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-// import jwt from 'jsonwebtoken';
 
 const defaultCredential = { withCredentials: true };
 
@@ -23,13 +22,15 @@ class AuthStore {
 
   reConfirmPW = '';
 
+  photoPath = '';
+
   PW = '';
 
   emailVerification = '';
 
   emailCode = '';
 
-  myInfo = null;
+  userInfo = null;
 
   // actions
   validateSignUp = () => {
@@ -87,7 +88,7 @@ class AuthStore {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         }
-        console.dzir(err);
+        console.dir(err);
         return false;
       });
 
@@ -111,10 +112,9 @@ class AuthStore {
     const { email, PW } = this;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signin`, { email, password: PW }, defaultCredential)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status !== 201) return false;
 
-        // this.updateToken(res.data.accessToken);
         runInAction(() => {
           this.root.helper.clearInput('auth', 'email', 'PW');
         });
@@ -122,26 +122,12 @@ class AuthStore {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) Alert.alert('회원 정보가 일치하지 않습니다. 이메일 또는 비밀번호를 확인해주세요.');
-        console.dir(err);
+        console.dir('err : ', err);
         return false;
       });
-
     return result;
   };
 
-  // updatemyInfo = (accessToken) => {
-  //   const decode = jwt.verify(accessToken, JWT_SECRET_ACCESS);
-
-  //   const {
-  //     id, nickname, email, createAt,
-  //   } = decode;
-
-  //   this.myInfo = {
-  //     id, nickname, email, createAt,
-  //   };
-
-  //   return this.myInfo;
-  // }
 
   signOut = (id) => {
     axios
@@ -153,6 +139,11 @@ class AuthStore {
       })
       .catch((err) => console.dir(err));
   };
+
+  getMyInfo = async () => {
+    const userStr = await AsyncStorage.getItem('user');
+    this.userInfo = JSON.parse(userStr);
+  }
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -183,5 +174,6 @@ decorate(AuthStore, {
   signOut: action,
   updateState: action,
   getPermissionAsync: action,
+  getMyInfo: action,
 });
 export default AuthStore;

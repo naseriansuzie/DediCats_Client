@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import {
   Container,
@@ -28,52 +28,62 @@ const CatSelectedPost = ({
   selectedCatPost,
   selectedCatCommentList,
   convertDateTime,
-}) => (
-  <Container style={styles.container}>
-    <Header style={{ display: 'none' }} />
-    <Content>
-      <Card style={styles.flex1}>
-        <CardItem style={styles.flex1}>
-          <Left>
-            <Thumbnail
-              style={{ borderWidth: 1, borderColor: 'green' }}
-              source={{ uri: selectedCatPost.user.photoPath }}
-            />
+}) => {
+  const usrImgUri =
+    selectedCatPost.user.photoPath !== null
+      ? selectedCatPost.user.photoPath
+      : '';
+  return (
+    <Container style={styles.container}>
+      <Header style={{ display: 'none' }} />
+      <Content>
+        <Card style={styles.flex1}>
+          <CardItem style={styles.flex1}>
+            <Left>
+              <Thumbnail
+                style={{ borderWidth: 1, borderColor: 'green' }}
+                source={{ uri: usrImgUri }}
+              />
+              <Body>
+                <Text>{selectedCatPost.user.nickname}</Text>
+                <Text note>{convertDateTime(selectedCatPost.createAt)}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem style={styles.flex1}>
             <Body>
-              <Text>{selectedCatPost.user.nickname}</Text>
-              <Text note>{convertDateTime(selectedCatPost.createAt)}</Text>
+              {selectedCatPost.photos.length > 0 ? (
+                <Image
+                  source={{ uri: selectedCatPost.photos[0].path }}
+                  style={styles.image}
+                />
+              ) : (
+                <View />
+              )}
+              <Text>{selectedCatPost.content}</Text>
             </Body>
-          </Left>
-        </CardItem>
-        <CardItem style={styles.flex1}>
-          <Body>
-            <Image
-              source={{ uri: selectedCatPost.photos[0].path }}
-              style={styles.image}
-            />
-            <Text>{selectedCatPost.content}</Text>
-          </Body>
-        </CardItem>
-      </Card>
-      <List>
-        {selectedCatCommentList ? (
-          selectedCatCommentList.map((comment, idx) => (
-            <CatComment
-              key={`comment_${comment.id}`}
-              idx={idx}
-              myPhoto={comment.user.photoPath}
-              userNickname={comment.user.nickname}
-              comment={comment.content}
-              date={comment.createAt}
-            />
-          ))
-        ) : (
-          <Text style={styles.noComment}>댓글이 없습니다.</Text>
-        )}
-      </List>
-    </Content>
-  </Container>
-);
+          </CardItem>
+        </Card>
+        <List>
+          {selectedCatCommentList ? (
+            selectedCatCommentList.map((comment, idx) => (
+              <CatComment
+                key={`comment_${comment.id}`}
+                idx={idx}
+                myPhoto={comment.user.photoPath}
+                userNickname={comment.user.nickname}
+                comment={comment.content}
+                date={comment.createAt}
+              />
+            ))
+          ) : (
+            <Text style={styles.noComment}>댓글이 없습니다.</Text>
+          )}
+        </List>
+      </Content>
+    </Container>
+  );
+};
 
 export default inject(({ cat, helper }) => ({
   selectedCatPost: cat.selectedCatPost,

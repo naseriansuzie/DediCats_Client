@@ -133,7 +133,7 @@ class MapStore {
           longitude,
           longitudeDelta: 0.005,
         });
-        this.getMapInfo();
+        // this.getMapInfo();
       },
       (error) => {
         Alert.alert(error.code, error.message);
@@ -159,6 +159,10 @@ class MapStore {
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
   };
+
+  syncCarousel = () => {
+    this.carousels = this.markers;
+  }
 }
 
 decorate(MapStore, {
@@ -174,5 +178,6 @@ decorate(MapStore, {
   getCurrentPosition: action,
   onRegionChangeComplete: action,
   onDragEnd: action,
+  syncCarousel: action,
 });
 export default MapStore;

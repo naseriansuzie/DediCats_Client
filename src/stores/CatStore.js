@@ -7,32 +7,6 @@ import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 import socketio from 'socket.io-client';
 
-/**
- * 1. spot 관련
- *  - 팔로우하는 고양이 수
- *  - list = [ {bounds 안 고양이 위치정보} ]
- * 2. addCatBio = {
- *   img: fileName,
- *   name: string,
- *   desc: string,
- *   species: string,
- *   tagInput: string,
- *   cut: {Y: number, N: number, unknown: number}
- * }
- * 3. cat 관련
- *  - selectedCat = [{선택한 고양이에 대한 bio}] <- 1마리면 배열에 요소 1개, 2마리 이상이면 배열에 요소 2개 이상
- *  - newTag = ""
- *  - postList = [{각 포스트에 관한 정보}]
- *  - selectedPost = 5번의 객체 하나 -> {}
- *  - inputContent = string (post의 내용)
- *  - inputPhoto = data (post의 사진)
- *  - commentList = [{6번 기준 달린 댓글들}]
- *  - inputComment = string (댓글 내용)
- *  - album = [{해당 postId에 따른 사진 정보들}]
- *  - followerList = [{해당 catId에 따른 follower들}]
- *  - reportInfo = {신고할 (postId || commentId || catId) && criminalId (userId?)}
- */
-
 const defaultCredential = { withCredentials: true };
 
 class CatStore {
@@ -89,6 +63,9 @@ class CatStore {
   // post에 해당하는 commentList
   selectedCatCommentList = null;
 
+  // 수정, 삭제, 신고를 위해 선택한 comment
+  selectedCatComment = null;
+
   // 작성하는 댓글
   selectedCatInputComment = '';
 
@@ -130,6 +107,7 @@ class CatStore {
 
   //! 추가된 댓글
   newComment = null;
+
   // CatStore
   setCatPost = (item) => {
     this.selectedCatPost = item;
@@ -141,37 +119,35 @@ class CatStore {
    * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
    * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
    */
-  
+
   connectSocket = () => {
-   
     const socket = socketio.connect(`${SERVER_URL}`, {
-     query: `postId=${this.selectedCatPost}`
-   });
-   (() => {
-     socket.emit('new comment', "hello");
-     
-     socket.on('connect', () => {
-       if (socket.connected) {
-         this.socketId = socket.id;
-         this.isConnectSocket = true;
-       }
-       else {
-         console.log("Connection Failed");
-       }
-     });
+      query: `postId=${this.selectedCatPost}`,
+    });
+    const helper = (sockets) => {
+      sockets.emit('new comment', 'hello');
 
-     socket.on('drop', () => {
-       console.log('drop');
-       socket.disconnect();
-       this.isConnectSocket = false;
-     });
+      sockets.on('connect', () => {
+        if (socket.connected) {
+          this.socketId = sockets.id;
+          this.isConnectSocket = true;
+        } else {
+          console.log('Connection Failed');
+        }
+      });
 
-     socket.on('new comment', (comment) => {
-       this.newComment = comment;
-       console.log('got new comment');
-     });
-   });
+      sockets.on('drop', () => {
+        console.log('drop');
+        sockets.disconnect();
+        this.isConnectSocket = false;
+      });
 
+      sockets.on('new comment', (comment) => {
+        this.newComment = comment;
+        console.log('got new comment');
+      });
+    };
+    helper(socket);
   }
 
    offUser = async (socketId) => {
@@ -181,11 +157,12 @@ class CatStore {
          Alert.alert('Off User Success.');
        //! Need to Navigate back
        })
-       .catch(error) => {
-         Alert.alert("Off User Failed");
-       }
-     return result;  
-   }
+       .catch((error) => {
+         console.log(error);
+         Alert.alert('Off User Failed');
+       });
+     return result;
+   };
 
 
    //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
@@ -222,8 +199,7 @@ class CatStore {
   };
 
   // CatStore
-  followCat = () => {
-    const catId = this.selectedCatBio[0].id;
+  followCat = (catId) => {
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then((res) => {
@@ -273,6 +249,12 @@ class CatStore {
       addCatCutClicked,
       onDragstate,
     } = this;
+    console.log('수정 후', this.onDragstate);
+    console.log(
+      '수정 후',
+      this.addCatLocation.latitude,
+      this.addCatLocation.longitude,
+    );
     if (!onDragstate) {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;
@@ -287,40 +269,44 @@ class CatStore {
     ) {
       this.onDragstate = false;
       isValidated = true;
-    } else { Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.'); }
+    } else Alert.alert('고양이 위치를 포함한 모든 정보를 입력해주세요.');
     return isValidated;
   };
 
   // MapStore
   getAddress = async () => {
     const { latitude, longitude } = this.addCatLocation;
-    console.log(latitude, longitude);
-    /* API 제한 때문에 실제로 서버 연동 후에 주석 풀 예정 */
-    // axios
-    //   .get(
-    //     `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
-    //     {
-    //       headers: {
-    //         Authorization: `KakaoAK ${KAKAO_MAPS_API_KEY}`,
-    //       },
-    //     },
-    //   )
-    //   .then(res => {
-    //     const {
-    //       region_1depth_name,
-    //       region_2depth_name,
-    //       region_3depth_name,
-    //     } = res.data.documents[0].address;
-    //     console.log(region_1depth_name, region_2depth_name, region_3depth_name);
-    //     this.addCatAddress = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
-    //     return this.addCatAddress;
-    //   })
-    //   .catch(err => {
-    //     console.dir(err);
-    //     Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
-    //   });
-    this.addCatAddress = '서울 강남구 대치동';
-    return true;
+    console.log('카카오로 보낼 좌표', latitude, longitude);
+    const address = await axios
+      .get(
+        `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
+        {
+          headers: {
+            Authorization: `KakaoAK ${KAKAO_MAPS_API_KEY}`,
+          },
+        },
+      )
+      .then((res) => {
+        const {
+          region_1depth_name,
+          region_2depth_name,
+          region_3depth_name,
+        } = res.data.documents[0].address;
+        console.log(
+          '받은 주소는',
+          region_1depth_name,
+          region_2depth_name,
+          region_3depth_name,
+        );
+        this.addCatAddress = `${region_1depth_name} ${region_2depth_name} ${region_3depth_name}`;
+        return true;
+      })
+      .catch((err) => {
+        console.dir(err);
+        Alert.alert('좌표가 정확하지 않습니다. 다시 지도에서 선택해주세요!');
+        return false;
+      });
+    return address;
   };
 
   // CatStore
@@ -546,6 +532,7 @@ decorate(CatStore, {
   selectedCatPost: observable,
   selectedCatInputContent: observable,
   selectedCatCommentList: observable,
+  selectedCatComment: observable,
   selectedCatInputComment: observable,
   selectedCatAlbum: observable,
   selectedCatUri: observable,

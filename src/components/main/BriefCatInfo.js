@@ -1,34 +1,33 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import { Badge, Text } from 'native-base';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const { width, height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+  },
   card: {
-    backgroundColor: '#edf1f5',
-    height: 230,
-    width: 320,
+    backgroundColor: 'white',
+    height: 210,
+    width: 345,
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 0,
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#677ef1',
   },
   closeBtn: {
     alignItems: 'flex-end',
-    paddingRight: 20,
+    paddingTop: 10,
+    paddingRight: 5,
+    fontSize: 20,
   },
   cardImg: {
-    height: 80,
-    width: 80,
+    height: 110,
+    width: 110,
     alignItems: 'center',
     marginTop: 10,
     borderRadius: 10,
@@ -46,17 +45,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#444',
     paddingVertical: 5,
-  },
-  tagView: { flexDirection: 'row', overflow: 'hidden' },
-  tag: {
-    backgroundColor: '#f38847',
-    borderRadius: 10,
-    marginRight: 10,
-    marginBottom: 10,
+    flexWrap: 'wrap',
   },
   btn: {
-    width: '40%',
+    width: '35%',
     alignSelf: 'center',
+    marginLeft: 55,
     paddingVertical: 10,
     borderRadius: 10,
     backgroundColor: '#677ef1',
@@ -67,12 +61,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   row: { flexDirection: 'row' },
-  row30: { width: '30%' },
-  row70: { width: '70%' },
+  row45: { width: '45%' },
+  row55: { width: '55%' },
 });
 
 const BriefCatInfo = ({
   getSelectedCatInfo,
+  followCat,
+  unFollowCat,
   item,
   navigation,
   hideCarousel,
@@ -95,30 +91,36 @@ const BriefCatInfo = ({
           }
         }}
       >
-        <View style={styles.row30}>
+        <View style={styles.row45}>
           <Image style={styles.cardImg} source={{ uri: item.catProfile }} />
         </View>
-        <View style={styles.row70}>
+        <View style={styles.row55}>
           <Text style={styles.nickName}>{item.catNickname}</Text>
           <Text style={styles.address}>{item.catAddress}</Text>
           <Text style={styles.intro}>{item.description}</Text>
-          <View style={styles.tagView}>
-            <Badge style={styles.tag}>
-              <Text>태그</Text>
-            </Badge>
-            <Badge style={styles.tag}>
-              <Text>태그태그태그태그</Text>
-            </Badge>
-          </View>
+          <Text note>자세히 보기</Text>
         </View>
       </TouchableWithoutFeedback>
-      <TouchableOpacity style={styles.btn} onPress={() => {}}>
-        <Text style={styles.btnTxt}>Follow</Text>
-      </TouchableOpacity>
+      {item.isFollowing ? (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => followCat(item.catId)}
+        >
+          <Text style={styles.btnTxt}>Follow</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => unFollowCat(item.catId)}
+        >
+          <Text style={styles.btnTxt}>UnFollow</Text>
+        </TouchableOpacity>
+      )}
     </View>
   </View>
 );
-
-export default inject(({ cat }) => ({
+export default inject(({ cat, helper }) => ({
   getSelectedCatInfo: cat.getSelectedCatInfo,
+  followCat: cat.followCat,
+  unFollowCat: helper.unFollowCat,
 }))(observer(withNavigation(BriefCatInfo)));
