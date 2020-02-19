@@ -64,7 +64,7 @@ class CatStore {
   postModifyState = false;
 
   // post에 해당하는 commentList
-  selectedCatCommentList = null;
+  selectedCatCommentList = [];
 
   // 수정, 삭제, 신고를 위해 선택한 comment
   selectedCatComment = null;
@@ -111,10 +111,16 @@ class CatStore {
   //! 추가된 댓글
   newComment = null;
 
+  //! 댓글 페이지
+  commentPage = 0;
+
+
   // CatStore
   setCatPost = (item) => {
     this.selectedCatPost = item;
+    this.connectSocket();
   };
+
 
   // actions
   /**
@@ -123,9 +129,10 @@ class CatStore {
    * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
    */
 
+
   connectSocket = () => {
     const socket = socketio.connect(`${SERVER_URL}`, {
-      query: `postId=${this.selectedCatPost}`,
+      query: `postId=${this.selectedCatPost.id}`,
     });
     const helper = (sockets) => {
       sockets.emit('new comment', 'hello');
@@ -151,11 +158,11 @@ class CatStore {
       });
     };
     helper(socket);
-  }
+  };
 
-   offUser = async (socketId) => {
+   offUser = async () => {
      const result = await axios
-       .get(`${SERVER_URL}/post/disconnect/?socket_id=${socketId}`, defaultCredential)
+       .get(`${SERVER_URL}/post/disconnect/?socket_id=${this.socketId}`, defaultCredential)
        .then((res) => {
          Alert.alert('Off User Success.');
        //! Need to Navigate back
@@ -251,6 +258,7 @@ class CatStore {
       addCatSpecies,
       addCatCutClicked,
       onDragstate,
+      addCatPhotoPath,
     } = this;
     console.log('수정 후', this.onDragstate);
     console.log(
@@ -264,6 +272,8 @@ class CatStore {
     }
 
     if (
+      addCatPhotoPath
+      &&
       addCatLocation
       && addCatNickname.length
       && addCatDescription.length
@@ -463,22 +473,57 @@ class CatStore {
       .catch((err) => console.dir(err));
   };
 
-  getCommentList = (postId) => {
+  getCommentList = async () => {
+    try {
+      const postId = this.selectedCatPost.id;
+      const url = `${SERVER_URL}/comment/${postId}/${this.commentPage}`;
+      const comment = await axios.get(url);
+      this.selectedCatCommentList.concat(comment.data);
+      return;
+    } catch (error) {
+      console.error(error);
+    }
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   };
 
-  addComment = () => {
-    const catId = this.selectedCatPost.id;
-    const commentInfo = { catId, content: this.selectedCatInputComment };
-    axios
-      .post(`${SERVER_URL}/comment/add`, commentInfo, defaultCredential)
-      .then((res) => this.root.helper.clearInput('cat', 'selectedCatInputComment'))
-      .catch((err) => {
-        if (err.response && err.response.status === 409) {
-          Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
-        } else console.dir(err);
-      });
+  resetCommentState = () => {
+    this.commentList = [];
+    this.commentPage = 0;
   };
+
+  _handleLoadMoreComments = () => {
+    this.commentPage += 1;
+    this.getCommentList();
+  };
+
+  // * 추가와 수정 둘다 가능
+  addComment = (mode) => {
+    const url = mode === 'new' ? `${SERVER_URL}/comment/add` : `${SERVER_URL}/comment/update`;
+    const postId = this.selectedCatPost.id;
+    const commentId = this.selectedCatComment.id;
+    const updatecommentInfo = { commentId, content: this.selectedCatInputComment };
+    const newcommentInfo = { postId, content: this.selectedCatInputComment };
+    if (mode === 'new') {
+      axios
+        .post(url, newcommentInfo, defaultCredential)
+        .then((res) => this.root.helper.clearInput('cat', 'selectedCatInputComment'))
+        .catch((err) => {
+          if (err.response && err.response.status === 409) {
+            Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
+          } else console.dir(err);
+        });
+    } else {
+      axios
+        .post(url, updatecommentInfo, defaultCredential)
+        .then((res) => this.root.helper.clearInput('cat', 'selectedCatInputComment'))
+        .catch((err) => {
+          if (err.response && err.response.status === 409) {
+            Alert.alert('댓글 수정에 실패했습니다. 다시 한 번 등록해주세요!');
+          } else console.dir(err);
+        });
+    }
+  };
+
 
   getAlbums = () => {
     const catId = this.selectedCatBio[0].id;
@@ -514,6 +559,7 @@ class CatStore {
 }
 
 decorate(CatStore, {
+  commentPage: observable,
   socketId: observable,
   isConnectSocket: observable,
   newComment: observable,
@@ -562,6 +608,8 @@ decorate(CatStore, {
   validateTag: action,
   postTag: action,
   getCommentList: action,
+  resetCommentState: action,
+  _handleLoadMoreComments: action,
   addComment: action,
   getAlbums: action,
   selectPhoto: action,
