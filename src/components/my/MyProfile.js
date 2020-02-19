@@ -1,6 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, Text, View, Image, TouchableOpacity,
+} from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,26 +65,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 class MyProfile extends React.Component {
   componentDidMount = async () => {
     await this.props.getMyInfo();
-    console.log(this.props.userInfo);
-  };
+  }
+
 
   render() {
+    console.log('this.props.userInfo : ', this.props.userInfo);
     if (!this.props.userInfo) {
       return <View style={styles.container} />;
     }
 
     return (
       <View style={styles.container}>
-        {/* <Text>This is My Page!</Text>
-    <Button
-      title="회원정보 수정"
-      onPress={() => props.navigation.navigate('EditMyProfile')}
-    /> */}
         <View style={styles.profileView}>
           <View style={styles.photoView}>
             <Image
@@ -99,7 +97,13 @@ class MyProfile extends React.Component {
               <Text style={styles.btnTxt}>회원정보 수정</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={async () => {
+                const result = await this.props.signOut();
+                if (result) this.props.navigation.navigate('AuthLoading');
+              }}
+            >
               <Text style={styles.btnTxt}>로그아웃</Text>
             </TouchableOpacity>
           </View>
@@ -112,4 +116,5 @@ class MyProfile extends React.Component {
 export default inject(({ auth }) => ({
   userInfo: auth.userInfo,
   getMyInfo: auth.getMyInfo,
-}))(observer(MyProfile));
+  signOut: auth.signOut,
+}))(observer(withNavigation(MyProfile)));

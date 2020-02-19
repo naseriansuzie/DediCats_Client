@@ -129,15 +129,22 @@ class AuthStore {
   };
 
 
-  signOut = (id) => {
-    axios
-      .post(`${AUTH_SERVER}/auth/signout`, id, defaultCredential)
+  signOut = async (navigation) => {
+    const result = await axios
+      .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async (res) => {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
-        this.myInfo = null;
+        this.userInfo = null;
+        // navigation.navigate('AuthLoading');
+        return true;
       })
-      .catch((err) => console.dir(err));
+      .catch((err) => {
+        console.dir(err);
+        Alert.alert('로그아웃에 실패하였습니다. 관리자에게 문의해주세요');
+        return false;
+      });
+    return result;
   };
 
   getMyInfo = async () => {
