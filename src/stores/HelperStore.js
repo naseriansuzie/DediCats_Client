@@ -52,7 +52,7 @@ class HelperStore {
   };
 
   unFollowCat = catId => {
-    const { cat, user } = this.root;
+    const { cat, user, map } = this.root;
     console.log('캣 아이디는', catId);
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
@@ -61,6 +61,7 @@ class HelperStore {
         runInAction(() => {
           cat.getSelectedCatInfo(catId);
           cat.getFollowerList(catId);
+          map.getMapInfo();
         });
       })
       .catch(err => console.dir(err));
@@ -90,9 +91,7 @@ class HelperStore {
 
   changeToDateTime = timeInfo => {
     if (timeInfo === 'today') {
-      console.log('today');
       timeInfo = new Date();
-      console.log('time = ', JSON.stringify(new Date()).slice(1, 11));
       return JSON.stringify(new Date()).slice(1, 11);
     }
     return timeInfo.slice(0, 10);
