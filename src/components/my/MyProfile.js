@@ -67,16 +67,17 @@ const styles = StyleSheet.create({
 });
 const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 class MyProfile extends React.Component {
-  componentDidMount = async () => {
-    await this.props.getMyInfo();
+  componentDidMount() {
+    this.props.getMyInfo();
   }
 
 
   render() {
-    console.log('this.props.userInfo : ', this.props.userInfo);
     if (!this.props.userInfo) {
       return <View style={styles.container} />;
     }
+    const { nickname, createAt, photoPath } = this.props.userInfo;
+    const pilePath = photoPath || DEFAULT_CAT;
 
     return (
       <View style={styles.container}>
@@ -85,15 +86,20 @@ class MyProfile extends React.Component {
             <Image
               style={styles.defaultPhoto}
               source={{
-                uri: DEFAULT_CAT,
+                uri: pilePath,
               }}
             />
           </View>
           <View style={styles.infoView}>
-            <Text style={styles.nickName}>{this.props.userInfo.nickname}</Text>
-            <Text style={styles.address}>{this.props.userInfo.createAt}</Text>
+            <Text style={styles.nickName}>{nickname}</Text>
+            <Text style={styles.address}>{createAt}</Text>
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                this.props.navigation.navigate('EditMyProfile');
+              }}
+            >
               <Text style={styles.btnTxt}>회원정보 수정</Text>
             </TouchableOpacity>
 
