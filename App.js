@@ -21,6 +21,7 @@ import ChangePW from './src/pages/ChangePW';
 import SelectedPost from './src/pages/SelectedPost';
 import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
+import findPW from './src/pages/findPW';
 
 const root = new RootStore();
 
@@ -137,6 +138,7 @@ const AuthStack = createStackNavigator(
     },
     'Sign Up': Signup,
     'Email Certified': EmailCertified,
+    findPW,
   },
   {
     initialRouteName: 'Sign In',

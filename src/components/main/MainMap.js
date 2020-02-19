@@ -35,12 +35,15 @@ const styles = StyleSheet.create({
 
 class MainMap extends React.Component {
   componentDidMount() {
+    this.props.getMyInfo();
     this.props.requestMapPermission();
     // this.props.getMapInfo();
   }
 
   renderCarouselItem = ({ index }) => {
-    let { carousels, carouselIndex, isShowingCarousel, hideCarousel } = this.props;
+    const {
+      carousels, carouselIndex, isShowingCarousel, hideCarousel,
+    } = this.props;
     // selectedCatId = carousels[index].catId;
 
     // console.log('carousels.length :', carousels.length);
@@ -59,7 +62,9 @@ class MainMap extends React.Component {
   };
 
   onCarouselItemChange = (index) => {
-    let { carousels, refIndex, setRefIndex, carouselIndex, setCarouselIndex, setSelectedCatId } = this.props;
+    const {
+      carousels, refIndex, setRefIndex, carouselIndex, setCarouselIndex, setSelectedCatId,
+    } = this.props;
     // console.log('Carousel:: ', Carousel.toString());
     // console.log('positions :', Carousel.positions.toString());
     console.log('change index:::', index);
@@ -98,7 +103,9 @@ class MainMap extends React.Component {
   };
 
   onMarkerPressed = (item, index) => {
-    let { setRefIndex, setCarouselIndex, carouselIndex, isShowingCarousel, showCarousel, setSelectedCatId } = this.props;
+    const {
+      setRefIndex, setCarouselIndex, carouselIndex, isShowingCarousel, showCarousel, setSelectedCatId,
+    } = this.props;
     setRefIndex(index);
     setCarouselIndex(index);
     const region = {
@@ -131,7 +138,7 @@ class MainMap extends React.Component {
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
-            ref={map => (this._map = map)}
+            ref={(map) => (this._map = map)}
             style={styles.map}
             showsUserLocation
             region={{ ...currentRegion }}
@@ -172,7 +179,7 @@ class MainMap extends React.Component {
             />
           </TouchableOpacity>
           <Carousel
-            ref={c => {
+            ref={(c) => {
               this._carousel = c;
             }}
             data={carousels}
@@ -194,7 +201,8 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ map }) => ({
+export default inject(({ map, auth }) => ({
+  getMyInfo: auth.getMyInfo,
   selectedCatId: map.selectedCatId,
   carouselIndex: map.carouselIndex,
   refIndex: map.refIndex,
