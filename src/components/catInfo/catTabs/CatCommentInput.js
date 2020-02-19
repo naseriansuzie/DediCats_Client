@@ -58,7 +58,9 @@ const CatCommentInput = ({
             rowSpan={selectedCatInputComment.length > 27 ? 3 : 2}
             placeholder="댓글을 입력해주세요."
             value={selectedCatInputComment}
-            onChangeText={(text) => updateInput('cat', 'selectedCatInputComment', text)}
+            onChangeText={text =>
+              updateInput('cat', 'selectedCatInputComment', text)
+            }
           />
         </Form>
         <TouchableOpacity
@@ -67,7 +69,7 @@ const CatCommentInput = ({
             const validation = validateAddInput('selectedCatInputComment');
             console.log(validation);
             if (validation) {
-              addComment();
+              addComment('new');
             }
           }}
         >
