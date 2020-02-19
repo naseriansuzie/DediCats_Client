@@ -29,6 +29,12 @@ class UserStore {
 
   changePW = async () => {
     const { PW, confirmPW, reConfirmPW } = this.root.auth;
+
+    if (!PW || !confirmPW || !reConfirmPW) {
+      Alert.alert('모든 정보를 입력해주세요!');
+      return false;
+      
+    }
     if (confirmPW !== reConfirmPW) {
       Alert.alert('비밀번호 확인이 일치하지 않습니다. 다시 입력해주세요!');
       return false;
