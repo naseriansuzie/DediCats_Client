@@ -66,6 +66,7 @@ const MainStack = createStackNavigator(
               await root.cat.offUser();
               root.cat.resetCommentState();
               navigation.goBack();
+              root.post.getPostList();
             }}
           />
         ),
