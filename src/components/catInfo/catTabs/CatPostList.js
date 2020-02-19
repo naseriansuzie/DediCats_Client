@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 
 class CatPostList extends React.Component {
   componentDidMount() {
+    console.log('CatPostList mount');
     this.props.getPostList();
   }
 
@@ -49,14 +50,12 @@ class CatPostList extends React.Component {
     />
   );
 
-
-  renderFooter = () => (
+  renderFooter = () =>
     this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
-    ) : null
-  )
+    ) : null;
 
   render() {
     const { postList } = this.props;
@@ -70,7 +69,7 @@ class CatPostList extends React.Component {
             <FlatList
               data={postList}
               renderItem={this._renderItem}
-              keyExtractor={(item) => `${item.id}`}
+              keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
               showsVerticalScrollIndicator={false}
               onEndReached={this.props._handleLoadMorePosts}
               onEndReachedThreshold={0}

@@ -52,7 +52,7 @@ class HelperStore {
   };
 
   unFollowCat = catId => {
-    const { cat, user } = this.root;
+    const { cat, user, map } = this.root;
     console.log('캣 아이디는', catId);
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
@@ -61,6 +61,7 @@ class HelperStore {
         runInAction(() => {
           cat.getSelectedCatInfo(catId);
           cat.getFollowerList(catId);
+          map.getMapInfo();
         });
       })
       .catch(err => console.dir(err));
@@ -71,7 +72,7 @@ class HelperStore {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 0.2,
+      quality: 1,
       base64: true,
     });
     if (!result.cancelled) {
@@ -86,24 +87,18 @@ class HelperStore {
   };
 
   // * Helper Store from CatStore
-  makeDateTime = () => {
-    return moment().format('YYYY-MM-DD');
-  };
+  makeDateTime = () => moment().format('YYYY-MM-DD');
 
   changeToDateTime = timeInfo => {
     if (timeInfo === 'today') {
-      console.log('today');
       timeInfo = new Date();
-      console.log('time = ', JSON.stringify(new Date()).slice(1, 11));
       return JSON.stringify(new Date()).slice(1, 11);
     }
     return timeInfo.slice(0, 10);
   };
 
   // 'YYYY/MM/DD HH:MM a/pm
-  convertDateTime = (str) => {
-    return moment(str).format('YY/MM/DD h:mm a');
-  };
+  convertDateTime = str => moment(str).format('YY/MM/DD h:mm a');
 
   // * Helper Store from CatStore
 }

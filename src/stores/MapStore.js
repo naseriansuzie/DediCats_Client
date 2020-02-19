@@ -46,17 +46,17 @@ class MapStore {
   refIndex = 0;
 
   carousels = [
-  //   //! sample data
-  //   {
-  //     catId: 1,
-  //     latitude: 37.503528,
-  //     longitude: 127.049784,
-  //     catNickname: 'Best Place',
-  //     catAddress: '서울시 선릉',
-  //     description: 'This is the best place in Portland',
-  //     catProfile:
-  //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-  //   },
+    //   //! sample data
+    //   {
+    //     catId: 1,
+    //     latitude: 37.503528,
+    //     longitude: 127.049784,
+    //     catNickname: 'Best Place',
+    //     catAddress: '서울시 선릉',
+    //     description: 'This is the best place in Portland',
+    //     catProfile:
+    //       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    //   },
   ];
 
   markers = [
@@ -72,14 +72,16 @@ class MapStore {
     // },
   ];
 
+  syncCarousels = () => {
+    this.carousels = this.markers;
+  };
+
   // actions
   getMapInfo = async () => {
     const currentBound = this.currentBoundingBox;
-    // console.log('현재 바운드', currentBound);
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
       .then(res => {
-        // console.log('Response data is : ', res.data);
         this.markers = res.data;
         this.carousels = res.data;
         const matchedIndex = this.carousels.findIndex((data) => data.catId === this.selectedCatId);
@@ -88,16 +90,10 @@ class MapStore {
         } else {
           this.carouselIndex = matchedIndex;
         }
-
+      
         return true;
       })
       .catch(err => console.dir(err));
-    // if (result) {
-    //   return true;
-    // }
-    // axios로 map 정보 get
-    // res => this.spot.list에 추가
-    // err => err.response.status = 404이면 this.spot.list를 빈 배열로 추가
   };
 
   requestMapPermission = async () => {
@@ -157,7 +153,6 @@ class MapStore {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
-    console.log("이동 후:", this.root.cat.onDragstate)
   };
 
   syncCarousel = () => {
@@ -198,6 +193,7 @@ decorate(MapStore, {
   isShowingCarousel: observable,
   carousels: observable,
   markers: observable,
+  syncCarousels: action,
   getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,

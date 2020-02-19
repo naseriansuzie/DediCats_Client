@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
+import socketio from 'socket.io-client';
 
 const defaultCredential = { withCredentials: true };
 
@@ -57,6 +58,9 @@ class CatStore {
   // post를 추가할 때의 content
   selectedCatInputContent = '';
 
+  // post를 수정하는 중인지 상태 - true면 수정 중
+  postModifyState = false;
+
   // post에 해당하는 commentList
   selectedCatCommentList = null;
 
@@ -96,6 +100,15 @@ class CatStore {
   // 해당 고양이(포스트) 신고
   selectedCatReportInfo = null;
 
+  // * 소켓 아이디
+  socketId = null;
+
+  //! 소켓 연결 여부
+  isConnectSocket = false;
+
+  //! 추가된 댓글
+  newComment = null;
+
   // CatStore
   setCatPost = item => {
     this.selectedCatPost = item;
@@ -107,21 +120,63 @@ class CatStore {
    * 2. 마커 배열에는 POST 요청한 boundingBox 안에 존재하는 마커들만 할당
    * 3. 마커를 클릭했을 때, 그 당시 boundingBox 안에 존재하는 마커들을 carouselItem에 새로 할당
    */
+
+  connectSocket = () => {
+    const socket = socketio.connect(`${SERVER_URL}`, {
+      query: `postId=${this.selectedCatPost}`,
+    });
+    const helper = sockets => {
+      sockets.emit('new comment', 'hello');
+
+      sockets.on('connect', () => {
+        if (socket.connected) {
+          this.socketId = sockets.id;
+          this.isConnectSocket = true;
+        } else {
+          console.log('Connection Failed');
+        }
+      });
+
+      sockets.on('drop', () => {
+        console.log('drop');
+        sockets.disconnect();
+        this.isConnectSocket = false;
+      });
+
+      sockets.on('new comment', comment => {
+        this.newComment = comment;
+        console.log('got new comment');
+      });
+    };
+    helper(socket);
+  };
+
+  offUser = async socketId => {
+    const result = await axios
+      .get(
+        `${SERVER_URL}/post/disconnect/?socket_id=${socketId}`,
+        defaultCredential,
+      )
+      .then(res => {
+        Alert.alert('Off User Success.');
+        //! Need to Navigate back
+      })
+      .catch(error => {
+        console.log(error);
+        Alert.alert('Off User Failed');
+      });
+    return result;
+  };
+
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
   getSelectedCatInfo = async catId => {
-    console.log('클릭이되나?:', catId);
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then(res => {
-        console.log('고양이 정보', res.data);
         if (res.data[0].todayTime) {
           // Helper Store
           res.data[0].todayTime = this.root.helper.changeToDateTime(
-            res.data[0].todayTime,
-          );
-          console.log(
-            'getSelectedCatInfo 후 변경된 todayTime',
             res.data[0].todayTime,
           );
         }
@@ -130,6 +185,10 @@ class CatStore {
         }
         res.data[0].cut = JSON.parse(res.data[0].cut);
         this.selectedCatBio = res.data;
+        console.log(
+          '이 고양이 팔로우 중인가요?',
+          this.selectedCatBio[1].isFollowing,
+        );
         // const replacement = this.markers;
         // this.carousels = replacement;
 
@@ -144,11 +203,13 @@ class CatStore {
 
   // CatStore
   followCat = catId => {
+    const { map } = this.root;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then(res => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
+        map.getMapInfo();
       })
       .catch(err => console.dir(err));
   };
@@ -192,6 +253,7 @@ class CatStore {
       addCatSpecies,
       addCatCutClicked,
       onDragstate,
+      addCatPhotoPath,
     } = this;
     console.log('수정 후', this.onDragstate);
     console.log(
@@ -203,8 +265,8 @@ class CatStore {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;
     }
-
     if (
+      addCatPhotoPath &&
       addCatLocation &&
       addCatNickname.length &&
       addCatDescription.length &&
@@ -264,7 +326,6 @@ class CatStore {
       addCatSpecies,
       addCatCut,
     } = this;
-    console.log(addCatLocation);
     const result = await axios
       .post(
         `${SERVER_URL}/cat/addcat`,
@@ -446,7 +507,6 @@ class CatStore {
   };
 
   getFollowerList = catId => {
-    console.log('팔로워 리스트를 불러올 고양이 id: ', catId);
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => {
@@ -458,6 +518,11 @@ class CatStore {
 }
 
 decorate(CatStore, {
+  socketId: observable,
+  isConnectSocket: observable,
+  newComment: observable,
+  connectSocket: action,
+  offUser: action,
   onDragstate: observable,
   addCatAddress: observable,
   addCatLocation: observable,
@@ -473,6 +538,7 @@ decorate(CatStore, {
   selectedCatNewTag: observable,
   selectedCatPost: observable,
   selectedCatInputContent: observable,
+  postModifyState: observable,
   selectedCatCommentList: observable,
   selectedCatComment: observable,
   selectedCatInputComment: observable,

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import {
@@ -5,10 +6,9 @@ import {
   View,
   TouchableOpacity,
   TouchableHighlight,
-  Text,
   Image,
 } from 'react-native';
-import { Form, Textarea } from 'native-base';
+import { Form, Textarea, Text } from 'native-base';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   inputBottomView: {
     flexDirection: 'row',
-    paddingTop: 5,
+    paddingVertical: 5,
   },
   imageView: {
     width: '80%',
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
 });
 
 const CatPostInput = ({
+  postModifyState,
   selectedCatInputContent,
   selectedCatUri,
   updateInput,
@@ -97,6 +98,8 @@ const CatPostInput = ({
   removePhoto,
   validateAddInput,
   addPost,
+  setPostModify,
+  _handleRefresh,
 }) => (
   <View style={styles.container}>
     <View style={styles.inputView}>
@@ -113,7 +116,11 @@ const CatPostInput = ({
       <View>
         <View style={styles.inputBottomView}>
           <View style={styles.imageView}>
-            {selectedCatUri ? (
+            {postModifyState ? (
+              <View>
+                <Text note>*게시글만 수정 가능합니다.</Text>
+              </View>
+            ) : selectedCatUri ? (
               <View>
                 <TouchableHighlight
                   style={styles.removeBtn}
@@ -140,15 +147,27 @@ const CatPostInput = ({
           <View>
             <TouchableOpacity
               style={styles.submitBtn}
-              onPress={() => {
-                const validation = validateAddInput('selectedCatInputContent');
-                console.log(validation);
-                if (validation) {
-                  addPost();
+              onPress={async () => {
+                try {
+                  const validation = validateAddInput(
+                    'selectedCatInputContent',
+                  );
+                  if (validation) {
+                    postModifyState
+                      ? await addPost('update')
+                      : await addPost('new');
+                    _handleRefresh();
+                    setPostModify();
+                  }
+                } catch (err) {
+                  console.log('something is wrong');
+                  console.dir(err);
                 }
               }}
             >
-              <Text style={styles.submitBtnTxt}>등록</Text>
+              <Text style={styles.submitBtnTxt}>
+                {postModifyState ? '수정' : '등록'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -159,6 +178,7 @@ const CatPostInput = ({
 );
 
 export default inject(({ cat, helper, auth, post }) => ({
+  postModifyState: cat.postModifyState,
   selectedCatInputContent: cat.selectedCatInputContent,
   selectedCatUri: cat.selectedCatUri,
   updateInput: helper.updateInput,
@@ -167,4 +187,6 @@ export default inject(({ cat, helper, auth, post }) => ({
   removePhoto: helper.removePhoto,
   validateAddInput: helper.validateAddInput,
   addPost: post.addPost,
+  setPostModify: post.setPostModify,
+  _handleRefresh: post._handleRefresh,
 }))(observer(CatPostInput));

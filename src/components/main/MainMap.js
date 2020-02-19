@@ -140,7 +140,7 @@ class MainMap extends React.Component {
           >
             {markers.map((marker, index) => (
               <MainMarker
-                key={marker.longitude + marker.latitude}
+                key={marker.catNickname + marker.longitude + marker.latitude}
                 marker={marker}
                 // carousel={carousels[index]}
                 index={index}

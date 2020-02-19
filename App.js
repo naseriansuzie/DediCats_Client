@@ -2,7 +2,7 @@
 import React from 'react';
 import { Provider } from 'mobx-react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Signin from './src/pages/Signin';
 import Signup from './src/pages/Signup';
@@ -56,7 +56,19 @@ const MainStack = createStackNavigator(
         headerTitleStyle: { display: 'none' },
       },
     },
-    SelectedPost,
+    SelectedPost: {
+      screen: SelectedPost,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: () => (
+          <HeaderBackButton
+            onPress={() => {
+              // 여기에 socket disconnect 추가
+              navigation.goBack();
+            }}
+          />
+        ),
+      }),
+    },
     PhotoModal,
   },
   {
@@ -133,7 +145,6 @@ const RootNavigator = createSwitchNavigator(
     Auth: AuthStack,
     App: AppStack,
   },
-  // { initialRouteName: 'App' },
   { initialRouteName: 'AuthLoading' },
 );
 
