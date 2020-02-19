@@ -8,9 +8,7 @@ import {
   Input,
   Label,
 } from 'native-base';
-import {
-  StyleSheet, Text, TouchableOpacity, View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
@@ -58,7 +56,7 @@ const SignUp_Info = ({
   navigation,
 }) => (
   <Container>
-    <Header />
+    <Header style={{ display: 'none' }} />
     <View style={styles.logo}>
       <Text
         style={styles.logoTxt}
@@ -79,7 +77,7 @@ const SignUp_Info = ({
             hello@cat.com
           </Label>
           <Input
-            onChangeText={(text) => updateInput('auth', 'email', text)}
+            onChangeText={text => updateInput('auth', 'email', text)}
             value={email}
           />
         </Item>
@@ -89,7 +87,7 @@ const SignUp_Info = ({
             nickname
           </Label>
           <Input
-            onChangeText={(text) => updateInput('auth', 'nickname', text)}
+            onChangeText={text => updateInput('auth', 'nickname', text)}
             value={nickname}
           />
         </Item>
@@ -99,7 +97,7 @@ const SignUp_Info = ({
             Password
           </Label>
           <Input
-            onChangeText={(text) => updateInput('auth', 'confirmPW', text)}
+            onChangeText={text => updateInput('auth', 'confirmPW', text)}
             value={confirmPW}
           />
         </Item>
@@ -109,7 +107,7 @@ const SignUp_Info = ({
             Password 재확인
           </Label>
           <Input
-            onChangeText={(text) => updateInput('auth', 'reConfirmPW', text)}
+            onChangeText={text => updateInput('auth', 'reConfirmPW', text)}
             value={reConfirmPW}
           />
         </Item>

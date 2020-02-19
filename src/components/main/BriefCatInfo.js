@@ -106,16 +106,16 @@ const BriefCatInfo = ({
       {item.isFollowing ? (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => followCat(item.catId)}
+          onPress={() => unFollowCat(item.catId)}
         >
-          <Text style={styles.btnTxt}>Follow</Text>
+          <Text style={styles.btnTxt}>UnFollow</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => unFollowCat(item.catId)}
+          onPress={() => followCat(item.catId)}
         >
-          <Text style={styles.btnTxt}>UnFollow</Text>
+          <Text style={styles.btnTxt}>Follow</Text>
         </TouchableOpacity>
       )}
     </View>
