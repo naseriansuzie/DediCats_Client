@@ -136,7 +136,6 @@ class AuthStore {
         await AsyncStorage.clear();
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
-        // navigation.navigate('AuthLoading');
         return true;
       })
       .catch((err) => {

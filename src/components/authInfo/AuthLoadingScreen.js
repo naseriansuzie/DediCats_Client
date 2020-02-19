@@ -5,11 +5,13 @@ import {
 } from 'react-native';
 
 import { AUTH_SERVER } from 'react-native-dotenv';
+import { inject, observer } from 'mobx-react';
 
 class AuthLoadingScreen extends React.Component {
   // lifecycle
-  componentDidMount() {
-    this.verifyToken();
+  async componentDidMount() {
+    await this.verifyToken();
+    await this.props.getMyInfo();
   }
 
   async verifyToken() {
@@ -36,4 +38,6 @@ class AuthLoadingScreen extends React.Component {
   }
 }
 
-export default AuthLoadingScreen;
+export default inject(({ auth }) => ({
+  getMyInfo: auth.getMyInfo,
+}))(observer(AuthLoadingScreen));
