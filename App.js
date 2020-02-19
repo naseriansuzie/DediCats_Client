@@ -1,9 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { Alert } from 'react-native';
-import { SERVER_URL } from 'react-native-dotenv';
 import { Provider } from 'mobx-react';
-import axios from "axios";
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -64,8 +61,8 @@ const MainStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerLeft: () => (
           <HeaderBackButton
-            onPress={() => {
-              root.cat.offUser();
+            onPress={async () => {
+              await root.cat.offUser();
               // 여기에 socket disconnect 추가
               navigation.goBack();
             }}
