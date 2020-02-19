@@ -487,8 +487,10 @@ class CatStore {
   };
 
   resetCommentState = () => {
-    this.commentList = [];
+    this.selectedCatCommentList = [];
+    this.selectedCatComment = null;
     this.commentPage = 0;
+    this.newComment = null;
   };
 
   _handleLoadMoreComments = () => {
