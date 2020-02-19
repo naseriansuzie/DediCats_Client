@@ -82,6 +82,8 @@ class PostStore {
           'selectedCatPhotoPath',
           'selectedCatUri',
         );
+        this._handleRefresh();
+        this.setPostModify();
         return res.data;
       })
       .catch((err) => {

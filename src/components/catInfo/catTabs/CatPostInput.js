@@ -156,8 +156,6 @@ const CatPostInput = ({
                     postModifyState
                       ? await addPost('update')
                       : await addPost('new');
-                    _handleRefresh();
-                    setPostModify();
                   }
                 } catch (err) {
                   console.log('something is wrong');
