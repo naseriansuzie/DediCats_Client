@@ -8,9 +8,9 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import Carousel from 'react-native-snap-carousel';
 import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
 import MainMarker from './MainMarker';
@@ -31,103 +31,79 @@ const styles = StyleSheet.create({
     bottom: 0,
     marginBottom: 10,
   },
+  briefCatInfo: {
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: 10,
+  },
+  itemLayout: {
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  myLocation: {
+    width: 50,
+    height: 50,
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    borderRadius: 30,
+    backgroundColor: '#d2d2d2',
+  },
+  myLocationIcon: {
+    fontSize: 30,
+    width: 30,
+    height: 40,
+    margin: 10,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
 });
 
 class MainMap extends React.Component {
   componentDidMount() {
     this.props.getMyInfo();
     this.props.requestMapPermission();
-    // this.props.getMapInfo();
   }
 
-  renderCarouselItem = ({ index }) => {
-    const {
-      carousels, carouselIndex, isShowingCarousel, hideCarousel,
-    } = this.props;
-    // selectedCatId = carousels[index].catId;
-
-    // console.log('carousels.length :', carousels.length);
-    // console.log('carouselIndex :', carouselIndex);
-    // console.log('isShowingCarousel :', isShowingCarousel);
-    if (isShowingCarousel && carousels[carouselIndex]) {
+  renderBriefCatInfo = () => {
+    let { selectedMarker, isShowingBriefCat, hideBriefCat } = this.props;
+    if (isShowingBriefCat && selectedMarker !== null) {
       return (
         <BriefCatInfo
-          item={carousels[carouselIndex]}
-          isShowingCarousel={isShowingCarousel}
-          hideCarousel={hideCarousel}
+          style={styles.briefCatInfo}
+          item={selectedMarker}
+          isShowingBriefCat={isShowingBriefCat}
+          hideBriefCat={hideBriefCat}
         />
       );
     }
     return null;
   };
 
-  onCarouselItemChange = (index) => {
-    const {
-      carousels, refIndex, setRefIndex, carouselIndex, setCarouselIndex, setSelectedCatId,
-    } = this.props;
-    // console.log('Carousel:: ', Carousel.toString());
-    // console.log('positions :', Carousel.positions.toString());
-    console.log('change index:::', index);
-    let item;
-    let newIndex;
-    if (index > refIndex) {
-      if (carousels.length - 1 > carouselIndex) {
-        console.log('increase:::', index);
-        console.log('carousels.length - 1:::', carousels.length - 1);
-        console.log('carouselIndex:::', carouselIndex);
-        setCarouselIndex(carouselIndex + 1);
-        item = carousels[carouselIndex + 1];
-        newIndex = carouselIndex + 1;
-      }
-    } else if (index < refIndex) {
-      if (carouselIndex > 0) {
-        console.log('decrease:::', index);
-        console.log('carouselIndex:::', carouselIndex);
-        setCarouselIndex(carouselIndex - 1);
-        item = carousels[carouselIndex - 1];
-        newIndex = carouselIndex + 1;
-      }
-    }
-    if (!item) {
-      return;
-    }
-    this.onMarkerPressed(item, newIndex);
-
-    // const region = {
-    //   latitude: item.latitude,
-    //   longitude: item.longitude,
-    //   latitudeDelta: 0.0035,
-    //   longitudeDelta: 0.0035,
-    // };
-    // setSelectedCatId(item.catId, () => this._map.animateToRegion(region));
-  };
-
-  onMarkerPressed = (item, index) => {
-    const {
-      setRefIndex, setCarouselIndex, carouselIndex, isShowingCarousel, showCarousel, setSelectedCatId,
-    } = this.props;
-    setRefIndex(index);
-    setCarouselIndex(index);
+  onMarkerPressed = (item) => {
+    let { setSelectedMarker } = this.props;
     const region = {
       latitude: item.latitude,
       longitude: item.longitude,
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
-    setSelectedCatId(item.catId, () => this._map.animateToRegion(region));
-    // carouselIndex = carousels.findIndex((data) => data.catId === selectedCatId);
-    this._carousel.snapToItem(index);
-    console.log('carouselIndex in onMarkerPressed', carouselIndex);
-    if (!isShowingCarousel) {
-      showCarousel();
-    }
+    setSelectedMarker(item, () => this._map.animateToRegion(region));
   };
 
   render() {
     console.disableYellowBox = 'true';
     const {
       markers,
-      carousels,
       onRegionChangeComplete,
       getCurrentPosition,
       currentRegion,
@@ -145,12 +121,10 @@ class MainMap extends React.Component {
             onRegionChangeComplete={onRegionChangeComplete}
             maxZoomLevel={18}
           >
-            {markers.map((marker, index) => (
+            {markers.map((marker) => (
               <MainMarker
                 key={marker.catNickname + marker.longitude + marker.latitude}
                 marker={marker}
-                // carousel={carousels[index]}
-                index={index}
                 onMarkerPressed={this.onMarkerPressed}
                 currentRegion={currentRegion}
               />
@@ -158,44 +132,24 @@ class MainMap extends React.Component {
           </MapView>
           <TouchableOpacity
             onPress={() => getCurrentPosition()}
-            style={{
-              width: 50,
-              height: 50,
-              position: 'absolute',
-              top: 20,
-              left: 20,
-              borderRadius: 30,
-              backgroundColor: '#d2d2d2',
-            }}
+            style={styles.myLocation}
           >
             <MaterialIcons
               name="my-location"
-              style={{
-                fontSize: 30,
-                width: 30,
-                height: 40,
-                margin: 10,
-              }}
+              style={styles.myLocationIcon}
             />
           </TouchableOpacity>
-          <Carousel
-            ref={(c) => {
-              this._carousel = c;
-            }}
-            data={carousels}
-            renderItem={this.renderCarouselItem}
-            onBeforeSnapToItem={(index) => this.onCarouselItemChange(index)}
-            removeClippedSubviews={false}
-            sliderWidth={width}
-            itemWidth={width * 0.9}
-            containerCustomStyle={styles.carousel}
-          />
+          <View
+            style={styles.itemLayout}
+          >
+            {this.renderBriefCatInfo()}
+          </View>
         </View>
       );
     }
     return (
-      <View style={{ position: 'absolute' }}>
-        <Text style={{ flex: 1 }}>No Permission for location</Text>
+      <View style={[styles.loading, styles.horizontal]}>
+        <ActivityIndicator style={{ size: 'large', color: '#0000ff' }} />
       </View>
     );
   }
@@ -203,11 +157,8 @@ class MainMap extends React.Component {
 
 export default inject(({ map, auth }) => ({
   getMyInfo: auth.getMyInfo,
-  selectedCatId: map.selectedCatId,
-  carouselIndex: map.carouselIndex,
-  refIndex: map.refIndex,
   markers: map.markers,
-  carousels: map.carousels,
+  selectedMarker: map.selectedMarker,
   getMapInfo: map.getMapInfo,
   currentPosition: map.currentPosition,
   currentRegion: map.currentRegion,
@@ -216,11 +167,7 @@ export default inject(({ map, auth }) => ({
   requestMapPermission: map.requestMapPermission,
   getCurrentPosition: map.getCurrentPosition,
   onRegionChangeComplete: map.onRegionChangeComplete,
-  syncCarousel: map.syncCarousel,
-  isShowingCarousel: map.isShowingCarousel,
-  showCarousel: map.showCarousel,
-  hideCarousel: map.hideCarousel,
-  setCarouselIndex: map.setCarouselIndex,
-  setSelectedCatId: map.setSelectedCatId,
-  setRefIndex: map.setRefIndex,
+  isShowingBriefCat: map.isShowingBriefCat,
+  hideBriefCat: map.hideBriefCat,
+  setSelectedMarker: map.setSelectedMarker,
 }))(observer(MainMap));
