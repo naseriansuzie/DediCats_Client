@@ -253,6 +253,7 @@ class CatStore {
       addCatSpecies,
       addCatCutClicked,
       onDragstate,
+      addCatPhotoPath,
     } = this;
     console.log('수정 후', this.onDragstate);
     console.log(
@@ -264,8 +265,8 @@ class CatStore {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;
     }
-
     if (
+      addCatPhotoPath &&
       addCatLocation &&
       addCatNickname.length &&
       addCatDescription.length &&
