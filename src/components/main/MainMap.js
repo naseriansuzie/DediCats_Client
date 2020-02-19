@@ -70,6 +70,7 @@ class MainMap extends React.Component {
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
+    // this.props.syncCarousels();
     this._map.animateToRegion(region);
   };
 
@@ -82,6 +83,7 @@ class MainMap extends React.Component {
       latitudeDelta: 0.0035,
       longitudeDelta: 0.0035,
     };
+    this.props.syncCarousels();
     this._map.animateToRegion(region);
     this._carousel.snapToItem(index);
     if (!isShowingCarousel) {
@@ -113,7 +115,7 @@ class MainMap extends React.Component {
           >
             {markers.map((marker, index) => (
               <MainMarker
-                key={marker.longitude + marker.latitude}
+                key={marker.catNickname + marker.longitude + marker.latitude}
                 marker={marker}
                 carousel={carousels[index]}
                 index={index}
@@ -168,6 +170,7 @@ class MainMap extends React.Component {
 }
 
 export default inject(({ map }) => ({
+  syncCarousels: map.syncCarousels,
   markers: map.markers,
   carousels: map.carousels,
   getMapInfo: map.getMapInfo,

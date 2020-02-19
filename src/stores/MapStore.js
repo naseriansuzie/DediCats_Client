@@ -1,4 +1,6 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
+import {
+  observable, action, computed, decorate, runInAction,
+} from 'mobx';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
@@ -50,17 +52,22 @@ class MapStore {
   ];
 
   markers = [
-    {
-      catId: 1,
-      latitude: 37.503528,
-      longitude: 127.049784,
-      catNickname: 'Best Place',
-      catAddress: '서울시 선릉',
-      description: 'This is the best place in Portland',
-      catProfile:
-        'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
-    },
+    // {
+    //   catId: 1,
+    //   latitude: 37.503528,
+    //   longitude: 127.049784,
+    //   catNickname: 'Best Place',
+    //   catAddress: '서울시 선릉',
+    //   description: 'This is the best place in Portland',
+    //   catProfile:
+    //     'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/CAT%20%2314',
+    // },
   ];
+
+  syncCarousels = () => {
+    this.carousels = this.markers;
+  };
+    
 
   // actions
   getMapInfo = async () => {
@@ -68,16 +75,25 @@ class MapStore {
     // console.log('현재 바운드', currentBound);
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
-      .then(res => {
-        // console.log('Response data is : ', res.data);
+      .then((res) => {
+        // if (this.markers.length < res.data.length) {
+        //   const newAddition = res.data.slice(this.markers.length);
+        //   this.markers = this.markers.concat(newAddition);
+        //   console.log('변화된 길이:', this.markers.length);
+        // }
+
+        // if (this.markers.length > res.data.length) {
+        //   this.markers = res.data;
+        // }
         this.markers = res.data;
+
         // console.log('마커정보는:', this.markers, res.data.length);
-        // this.carousels = res.data;
+        this.carousels = res.data;
         // this.carousels = res.data;
         // console.log('카루셀 정보: ', this.carousels);
         return true;
       })
-      .catch(err => console.dir(err));
+      .catch((err) => console.dir(err));
     // if (result) {
     //   return true;
     // }
@@ -103,7 +119,7 @@ class MapStore {
 
   getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
-      position => {
+      (position) => {
         const { latitude, longitude } = position.coords;
         this.currentPosition = {
           latitude,
@@ -119,14 +135,14 @@ class MapStore {
         });
         // this.getMapInfo();
       },
-      error => {
+      (error) => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
-  onRegionChangeComplete = async region => {
+  onRegionChangeComplete = async (region) => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -138,11 +154,10 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = e => {
+  onDragEnd = (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
-    console.log("이동 후:", this.root.cat.onDragstate)
   };
 
   syncCarousel = () => {
@@ -157,6 +172,7 @@ decorate(MapStore, {
   permissionState: observable,
   carousels: observable,
   markers: observable,
+  syncCarousels: action,
   getMapInfo: action,
   requestMapPermission: action,
   getCurrentPosition: action,
