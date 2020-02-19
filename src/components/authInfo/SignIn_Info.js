@@ -89,6 +89,7 @@ const SignIn_Info = ({
           </Label>
           <Input
             onChangeText={(text) => updateInput('auth', 'PW', text)}
+            secureTextEntry
             value={PW}
           />
         </Item>
@@ -110,12 +111,25 @@ const SignIn_Info = ({
       <TouchableOpacity
         style={styles.signUpBtn}
         onPress={() => {
-          clearInput('auth', 'email', 'PW');
+          clearInput('auth', 'email', 'PW', 'nickname', 'confirmPW', 'reConfirmPW');
           navigation.navigate('Sign Up');
         }}
       >
         <Text style={styles.light}>Sign Up</Text>
       </TouchableOpacity>
+      <View style={{ marginTop: 30 }}>
+        <Text style={{ textAlign: 'center' }}>비밀번호를 잊으셨나요?</Text>
+        <Text style={{ textAlign: 'center' }}>
+          <Text
+            style={{ color: 'blue', fontWeight: 'bold' }}
+            onPress={() => {
+              clearInput('auth', 'email', 'PW', 'nickname', 'confirmPW', 'reConfirmPW');
+              navigation.navigate('findPW');
+            }}
+          >여기
+          </Text>를 클릭해주세요
+        </Text>
+      </View>
     </Content>
   </Container>
 );

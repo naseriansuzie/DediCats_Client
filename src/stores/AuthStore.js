@@ -116,7 +116,7 @@ class AuthStore {
         if (res.status !== 201) return false;
 
         runInAction(() => {
-          this.root.helper.clearInput('auth', 'email', 'PW');
+          this.root.helper.clearInput('auth', 'email', 'PW', 'confirmPW', 'reConfirmPW');
         });
         return true;
       })
@@ -129,14 +129,13 @@ class AuthStore {
   };
 
 
-  signOut = async (navigation) => {
+  signOut = async () => {
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async (res) => {
-        await AsyncStorage.clear();
+        await AsyncStorage.removeItem('user');
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
-        // navigation.navigate('AuthLoading');
         return true;
       })
       .catch((err) => {
@@ -148,6 +147,7 @@ class AuthStore {
   };
 
   getMyInfo = async () => {
+    console.log('is it working?');
     const userStr = await AsyncStorage.getItem('user');
     this.userInfo = JSON.parse(userStr);
   }

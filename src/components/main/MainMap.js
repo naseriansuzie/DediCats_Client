@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
 
 class MainMap extends React.Component {
   componentDidMount() {
+    this.props.getMyInfo();
     this.props.requestMapPermission();
   }
 
@@ -113,7 +114,7 @@ class MainMap extends React.Component {
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
-            ref={map => (this._map = map)}
+            ref={(map) => (this._map = map)}
             style={styles.map}
             showsUserLocation
             region={{ ...currentRegion }}
@@ -154,7 +155,8 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ map }) => ({
+export default inject(({ map, auth }) => ({
+  getMyInfo: auth.getMyInfo,
   markers: map.markers,
   selectedMarker: map.selectedMarker,
   getMapInfo: map.getMapInfo,
