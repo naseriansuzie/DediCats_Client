@@ -35,6 +35,16 @@ class MapStore {
 
   permissionState = false;
 
+  isShowingCarousel = false;
+
+  // 선택한 고양이 아이디
+  selectedCatId = 0;
+
+  // 아이디를 가진 객체의 배열 안 인덱스
+  carouselIndex = 0;
+
+  refIndex = 0;
+
   carousels = [
     //   //! sample data
     //   {
@@ -74,6 +84,13 @@ class MapStore {
       .then(res => {
         this.markers = res.data;
         this.carousels = res.data;
+        const matchedIndex = this.carousels.findIndex((data) => data.catId === this.selectedCatId);
+        if (matchedIndex === -1) {
+          this.isShowingCarousel = false;
+        } else {
+          this.carouselIndex = matchedIndex;
+        }
+      
         return true;
       })
       .catch(err => console.dir(err));
@@ -127,7 +144,8 @@ class MapStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-    this.getMapInfo();
+    await this.getMapInfo();
+
   };
 
   // {latitude: Number, longitude: Number}
@@ -138,15 +156,41 @@ class MapStore {
   };
 
   syncCarousel = () => {
+    // this.carouselMarkers = this.markers;
     this.carousels = this.markers;
+  }
+
+  showCarousel = () => {
+    this.isShowingCarousel = true;
   };
+
+  hideCarousel = () => {
+    this.isShowingCarousel = false;
+  };
+
+  setCarouselIndex = (index) => {
+    this.carouselIndex = index;
+  }
+
+  setSelectedCatId = (id, callback) => {
+    this.selectedCatId = id;
+    callback();
+  }
+
+  setRefIndex = (index) => {
+    this.refIndex = index;
+  }
 }
 
 decorate(MapStore, {
+  selectedCatId: observable,
+  carouselIndex: observable,
+  refIndex: observable,
   currentPosition: observable,
   currentRegion: observable,
   currentBoundingBox: observable,
   permissionState: observable,
+  isShowingCarousel: observable,
   carousels: observable,
   markers: observable,
   syncCarousels: action,
@@ -156,5 +200,10 @@ decorate(MapStore, {
   onRegionChangeComplete: action,
   onDragEnd: action,
   syncCarousel: action,
+  showCarousel: action,
+  hideCarousel: action,
+  setCarouselIndex: action,
+  setSelectedCatId: action,
+  setRefIndex: action,
 });
 export default MapStore;
