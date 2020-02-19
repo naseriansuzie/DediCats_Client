@@ -73,6 +73,7 @@ class MyProfile extends React.Component {
 
 
   render() {
+    console.log(this.props.userInfo);
     if (!this.props.userInfo) {
       return <View style={styles.container} />;
     }

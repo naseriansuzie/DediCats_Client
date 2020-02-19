@@ -120,7 +120,14 @@ const SignIn_Info = ({
       <View style={{ marginTop: 30 }}>
         <Text style={{ textAlign: 'center' }}>비밀번호를 잊으셨나요?</Text>
         <Text style={{ textAlign: 'center' }}>
-          <Text style={{ color: 'blue', fontWeight: 'bold' }}>여기</Text>를 클릭해주세요
+          <Text
+            style={{ color: 'blue', fontWeight: 'bold' }}
+            onPress={() => {
+              clearInput('auth', 'email', 'PW', 'nickname', 'confirmPW', 'reConfirmPW');
+              navigation.navigate('findPW');
+            }}
+          >여기
+          </Text>를 클릭해주세요
         </Text>
       </View>
     </Content>

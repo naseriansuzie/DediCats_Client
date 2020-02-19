@@ -29,6 +29,11 @@ class UserStore {
 
   changePW = async () => {
     const { PW, confirmPW, reConfirmPW } = this.root.auth;
+
+    if (!PW || !confirmPW || !reConfirmPW) {
+      Alert.alert('모든 정보를 입력해주세요!');
+      return false;
+    }
     if (confirmPW !== reConfirmPW) {
       Alert.alert('비밀번호 확인이 일치하지 않습니다. 다시 입력해주세요!');
       return false;
@@ -43,6 +48,7 @@ class UserStore {
       .then((res) => {
         if (res.status === 201) {
           Alert.alert('비밀번호가 성공적으로 변경되었습니다!');
+          AsyncStorage.removeItem('changepw');
           this.root.helper.clearInput('auth', 'PW', 'confirmPW', 'reConfirmPW');
           return true;
         }
@@ -61,6 +67,30 @@ class UserStore {
 
     return result;
   };
+
+  findPW = async () => {
+    const { email } = this.root.auth;
+    const result = await axios.post(`${SERVER_URL}/signup/findpw`, { email }, defaultCredential)
+      .then(async (res) => {
+        if (res.status === 201) {
+          Alert.alert('임시 비밀번호가 발급되었습니다. 이메일을 확인해주세요');
+          this.root.helper.clearInput('auth', 'email', 'PW', 'confirmPW', 'reConfirmPW');
+          await AsyncStorage.setItem('changepw', 'true');
+          return true;
+        }
+        return false;
+      }).catch((err) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          Alert.alert('가입된 이메일이 아닙니다. 이메일을 확인해주세요');
+        } else {
+          Alert.alert('에러가 발생하였습니다. 관리자에게 문의해주세요');
+        }
+        return false;
+      });
+
+    return result;
+  };
 }
 
 decorate(UserStore, {
@@ -69,6 +99,7 @@ decorate(UserStore, {
   myCatList: observable,
   unFollowedCat: observable,
   changePW: action,
+  findPW: action,
 });
 
 export default UserStore;
