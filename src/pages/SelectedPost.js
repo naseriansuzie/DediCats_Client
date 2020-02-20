@@ -28,12 +28,12 @@ class SelectedPost extends React.Component {
   }
 
   handleAndroidBackButton = () => {
-    const { offUser, resetCommentState, navigation, getPostList } = this.props;
+    const { offUser, resetCommentState, navigation, validateRefreshMode } = this.props;
     BackHandler.addEventListener('hardwareBackPress', async () => {
       await offUser();
       resetCommentState();
       navigation.goBack();
-      getPostList();
+      validateRefreshMode();
       return true;
     });
   };
@@ -61,5 +61,5 @@ class SelectedPost extends React.Component {
 export default inject(({ cat, post }) => ({
   offUser: cat.offUser,
   resetCommentState: cat.resetCommentState,
-  getPostList: post.getPostList,
+  validateRefreshMode: post.validateRefreshMode,
 }))(observer(SelectedPost));
