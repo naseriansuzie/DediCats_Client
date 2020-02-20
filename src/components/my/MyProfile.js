@@ -1,8 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet, Text, View, Image, TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -21,15 +19,15 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   defaultPhoto: {
-    width: 160,
-    height: 160,
+    width: '80%',
+    height: '100%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
   },
   catPhoto: {
-    width: 160,
-    height: 160,
+    width: '80%',
+    height: '100%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -65,12 +63,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+const defaultPhotoUrl =
+  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+
 class MyProfile extends React.Component {
   componentDidMount() {
     this.props.getMyInfo();
   }
-
 
   render() {
     console.log(this.props.userInfo);
@@ -78,7 +77,7 @@ class MyProfile extends React.Component {
       return <View style={styles.container} />;
     }
     const { nickname, createAt, photoPath } = this.props.userInfo;
-    const pilePath = photoPath || DEFAULT_CAT;
+    const pilePath = photoPath || defaultPhotoUrl;
 
     return (
       <View style={styles.container}>
