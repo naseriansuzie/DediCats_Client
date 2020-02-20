@@ -6,10 +6,12 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  Text,
+  AsyncStorage,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import { MaterialIcons } from '@expo/vector-icons';
 import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
@@ -69,13 +71,23 @@ const styles = StyleSheet.create({
 });
 
 class MainMap extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     this.props.getMyInfo();
     this.props.requestMapPermission();
+
+    const changepw = await AsyncStorage.getItem('changepw');
+
+    if (changepw) {
+      Alert.alert(
+        '비밀번호 변경 안내',
+        '임시 비밀번호로 로그인되었습니다. 비밀번호를 변경해주세요!',
+      );
+      this.props.navigation.navigate('ChangePW');
+    }
   }
 
   renderBriefCatInfo = () => {
-    let { selectedMarker, isShowingBriefCat, hideBriefCat } = this.props;
+    const { selectedMarker, isShowingBriefCat, hideBriefCat } = this.props;
     if (isShowingBriefCat && selectedMarker !== null) {
       return (
         <BriefCatInfo
@@ -89,8 +101,8 @@ class MainMap extends React.Component {
     return null;
   };
 
-  onMarkerPressed = (item) => {
-    let { setSelectedMarker } = this.props;
+  onMarkerPressed = item => {
+    const { setSelectedMarker } = this.props;
     const region = {
       latitude: item.latitude,
       longitude: item.longitude,
@@ -114,14 +126,14 @@ class MainMap extends React.Component {
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
-            ref={(map) => (this._map = map)}
+            ref={map => (this._map = map)}
             style={styles.map}
             showsUserLocation
             region={{ ...currentRegion }}
             onRegionChangeComplete={onRegionChangeComplete}
             maxZoomLevel={18}
           >
-            {markers.map((marker) => (
+            {markers.map(marker => (
               <MainMarker
                 key={marker.catNickname + marker.longitude + marker.latitude}
                 marker={marker}
@@ -134,16 +146,9 @@ class MainMap extends React.Component {
             onPress={() => getCurrentPosition()}
             style={styles.myLocation}
           >
-            <MaterialIcons
-              name="my-location"
-              style={styles.myLocationIcon}
-            />
+            <MaterialIcons name="my-location" style={styles.myLocationIcon} />
           </TouchableOpacity>
-          <View
-            style={styles.itemLayout}
-          >
-            {this.renderBriefCatInfo()}
-          </View>
+          <View style={styles.itemLayout}>{this.renderBriefCatInfo()}</View>
         </View>
       );
     }
@@ -170,4 +175,4 @@ export default inject(({ map, auth }) => ({
   isShowingBriefCat: map.isShowingBriefCat,
   hideBriefCat: map.hideBriefCat,
   setSelectedMarker: map.setSelectedMarker,
-}))(observer(MainMap));
+}))(observer(withNavigation(MainMap)));
