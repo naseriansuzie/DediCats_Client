@@ -552,7 +552,6 @@ class CatStore {
 
   setCatComment = async comment => {
     this.selectedCatComment = comment;
-    console.log('선택한 코멘트는', this.selectedCatComment.content);
     return new Promise((resolve, reject) => {
       resolve(true);
     });
@@ -560,14 +559,12 @@ class CatStore {
 
   setCommentModify = () => {
     this.commentModifyState = !this.commentModifyState;
-    console.log('코멘트 수정 상태는', this.commentModifyState);
   };
 
   modifyComment = comment => {
     this.setCatComment(comment);
     this.setCommentModify();
     this.selectedCatInputComment = comment.content;
-    console.log('돌아온 인풋', this.selectedCatInputComment);
   };
 
   deleteComment = async comment => {
@@ -580,7 +577,6 @@ class CatStore {
       )
       .then(res => {
         Alert.alert('게시글이 삭제되었습니다.');
-        console.log();
       })
       .catch(err => {
         this.alertFailure(err);
@@ -592,11 +588,9 @@ class CatStore {
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
       .then(res => {
-        console.log('서버에서 받은 앨범', res.data);
         const photos = res.data.filter(
           photo => photo.path !== this.selectedCatBio[3].path,
         );
-        console.log('필터한 앨범', photos);
         this.selectedCatAlbum = photos;
       })
       .catch(err => {
@@ -613,7 +607,6 @@ class CatStore {
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => {
         this.selectedCatFollowerList = res.data;
-        console.log(this.selectedCatFollowerList);
       })
       .catch(err => console.dir(err));
   };

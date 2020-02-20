@@ -1,8 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  StyleSheet, Text, View, Image, TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
@@ -12,7 +11,7 @@ const styles = StyleSheet.create({
   profileView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#6772f1',
+    backgroundColor: '#edf1f5',
   },
   photoView: {
     width: '50%',
@@ -20,21 +19,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  defaultPhoto: {
-    width: 160,
-    height: 160,
+  photo: {
+    width: '75%',
+    height: '100%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-  },
-  catPhoto: {
-    width: 160,
-    height: 160,
-    resizeMode: 'stretch',
-    overflow: 'hidden',
-    borderRadius: 30,
-    borderColor: '#6772f1',
-    borderWidth: 1,
   },
   infoView: {
     width: '50%',
@@ -43,34 +33,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   nickName: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: '600',
-    color: 'white',
     marginVertical: 5,
   },
   address: {
     fontSize: 15,
-    color: 'white',
+    color: '#444',
     marginBottom: 10,
   },
   btn: {
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 20,
-    borderRadius: 15,
-    backgroundColor: 'white',
+    borderRadius: 10,
+    backgroundColor: '#6772f1',
   },
   btnTxt: {
-    color: '#677ef1',
+    color: 'white',
     fontWeight: 'bold',
   },
 });
-const DEFAULT_CAT = 'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+
+// const defaultPhotoUrl =
+//   'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+const defaultPhotoUrl =
+  'https://scontent-gmp1-1.xx.fbcdn.net/v/t1.0-9/35362350_2128812463813083_109129312195575808_o.jpg?_nc_cat=100&_nc_ohc=UfkbqZH71McAX849PZo&_nc_ht=scontent-gmp1-1.xx&oh=e8d961f7d73f856eb7c5e9c42dfa4259&oe=5EF62D35';
+
 class MyProfile extends React.Component {
   componentDidMount() {
     this.props.getMyInfo();
   }
-
 
   render() {
     console.log(this.props.userInfo);
@@ -78,14 +71,15 @@ class MyProfile extends React.Component {
       return <View style={styles.container} />;
     }
     const { nickname, createAt, photoPath } = this.props.userInfo;
-    const pilePath = photoPath || DEFAULT_CAT;
+    const { convertDateTime, navigation, signOut } = this.props;
+    const pilePath = photoPath || defaultPhotoUrl;
 
     return (
       <View style={styles.container}>
         <View style={styles.profileView}>
           <View style={styles.photoView}>
             <Image
-              style={styles.defaultPhoto}
+              style={styles.photo}
               source={{
                 uri: pilePath,
               }}
@@ -93,25 +87,26 @@ class MyProfile extends React.Component {
           </View>
           <View style={styles.infoView}>
             <Text style={styles.nickName}>{nickname}</Text>
-            <Text style={styles.address}>{createAt}</Text>
+            <Text style={styles.address}>
+              {`가입일 : ${convertDateTime(createAt).slice(0, 8)}`}
+            </Text>
 
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                this.props.navigation.navigate('EditMyProfile');
+                navigation.navigate('EditMyProfile');
               }}
             >
               <Text style={styles.btnTxt}>회원정보 수정</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.btn}
               onPress={async () => {
-                const result = await this.props.signOut();
-                if (result) this.props.navigation.navigate('AuthLoading');
+                const result = await signOut();
+                if (result) navigation.navigate('AuthLoading');
               }}
             >
-              <Text style={styles.btnTxt}>로그아웃</Text>
+              <Text style={{ paddingTop: 5, color: '#677ef1' }}>로그아웃</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -120,8 +115,9 @@ class MyProfile extends React.Component {
   }
 }
 
-export default inject(({ auth }) => ({
+export default inject(({ auth, helper }) => ({
   userInfo: auth.userInfo,
   getMyInfo: auth.getMyInfo,
   signOut: auth.signOut,
+  convertDateTime: helper.convertDateTime,
 }))(observer(withNavigation(MyProfile)));

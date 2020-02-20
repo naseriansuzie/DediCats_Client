@@ -5,8 +5,6 @@ import { ListItem, Left, Body, Thumbnail, Text } from 'native-base';
 const styles = StyleSheet.create({
   radius: {
     borderRadius: 15,
-    // borderWidth: 1,
-    // borderColor: '#edf1f5'
   },
 });
 

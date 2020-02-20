@@ -1,12 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import {
-  ActivityIndicator, StatusBar, View, AsyncStorage, Alert,
-} from 'react-native';
+import { ActivityIndicator, StatusBar, View, AsyncStorage } from 'react-native';
 
 import { AUTH_SERVER } from 'react-native-dotenv';
 import { inject, observer } from 'mobx-react';
-import ChangePW from '../../pages/ChangePW';
 
 class AuthLoadingScreen extends React.Component {
   // lifecycle
@@ -15,20 +12,16 @@ class AuthLoadingScreen extends React.Component {
   }
 
   async verifyToken() {
-    const result = await axios.post(`${AUTH_SERVER}/auth/token`)
-      .then(async (res) => {
+    const result = await axios
+      .post(`${AUTH_SERVER}/auth/token`)
+      .then(async res => {
         if (!res.data.accessToken) return false;
 
         await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
-        const changepw = await AsyncStorage.getItem('changepw');
-
-        if (changepw) {
-          Alert.alert('비밀번호 변경 대상입니다. 비밀번호를 변경해주세요!');
-          return 'ChangePW';
-        }
-
+        console.log('asyncStorage에 저장한 값들', res.data.user);
         return 'App';
-      }).catch((e) => {
+      })
+      .catch(e => {
         console.log(e);
         return 'Auth';
       });

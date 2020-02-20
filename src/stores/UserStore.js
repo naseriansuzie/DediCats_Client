@@ -20,6 +20,13 @@ class UserStore {
 
   unFollowedCat = null;
 
+  getMyCatList = () => {
+    axios
+      .get(`${SERVER_URL}/cat/catlist`, defaultCredential)
+      .then(res => (this.myCatList = res.data))
+      .catch(err => console.dir(err));
+  };
+
   changePW = async () => {
     const { PW, confirmPW, reConfirmPW } = this.root.auth;
 
@@ -107,6 +114,7 @@ decorate(UserStore, {
   myPhotoPath: observable,
   myCatList: observable,
   unFollowedCat: observable,
+  getMyCatList: action,
   changePW: action,
   findPW: action,
 });

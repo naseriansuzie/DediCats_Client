@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
   marginRight10: {
     marginRight: 10,
   },
+  width70: {
+    width: '70%',
+  },
   modificationView: { flexDirection: 'row' },
 });
 
@@ -48,6 +51,9 @@ const CatComment = ({
         <Text>{userNickname}</Text>
         <Text>{content}</Text>
         <View style={styles.modificationView}>
+          <View style={styles.width70}>
+            <Text note>{convertDateTime(date)}</Text>
+          </View>
           {userInfo.id === userId ? (
             <TouchableOpacity
               onPress={() => {
@@ -61,10 +67,22 @@ const CatComment = ({
           )}
           {userInfo.id === userId ? (
             <TouchableOpacity
-              onPress={async () => {
-                await deleteComment(comment);
-                resetCommentState();
-                getCommentList();
+              onPress={() => {
+                Alert.alert('댓글 삭제', '해당 댓글을 삭제하시겠습니까?', [
+                  {
+                    text: '취소',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },
+                  {
+                    text: '삭제',
+                    onPress: async () => {
+                      await deleteComment(comment);
+                      resetCommentState();
+                      getCommentList();
+                    },
+                  },
+                ]);
               }}
             >
               <Text note>삭제</Text>
@@ -106,9 +124,7 @@ const CatComment = ({
         </View>
       </View>
     </Body>
-    <Right style={styles.marginRight10}>
-      <Text>{convertDateTime(date)}</Text>
-    </Right>
+    <Right style={styles.marginRight10} />
   </ListItem>
 );
 

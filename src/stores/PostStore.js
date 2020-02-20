@@ -18,9 +18,12 @@ class PostStore {
 
   isLoadingPost = false;
 
+  replyNum = null;
+
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
+    console.log('getPostList 실행');
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
@@ -30,10 +33,10 @@ class PostStore {
         if (this.isRefreshingPost) {
           this.postList = post.data;
           this.isRefreshingPost = false;
-        } else {
-          this.postList = this.postList.concat(post.data);
-          this.isLoadingPost = false;
+          return post;
         }
+        this.postList = this.postList.concat(post.data);
+        this.isLoadingPost = false;
       }
     } catch (error) {
       console.error(error);
@@ -98,6 +101,7 @@ class PostStore {
   };
 
   deletePost = item => {
+    const { cat } = this.root;
     cat.selectedCatPost = item;
     axios
       .post(
@@ -105,7 +109,10 @@ class PostStore {
         { postId: cat.selectedCatPost.id },
         defaultCredential,
       )
-      .then(res => Alert.alert('게시글이 삭제되었습니다.'))
+      .then(res => {
+        Alert.alert('게시글이 삭제되었습니다.');
+        this._handleRefresh();
+      })
       .catch(err => {
         this.alertFailure(err);
       });
@@ -122,6 +129,18 @@ class PostStore {
     this.isRefreshingPost = false;
     this.isLoadingPost = false;
   };
+
+  setReplyNum = comments => {
+    this.replyNum = comments.length;
+  };
+
+  validateRefreshMode = () => {
+    const { cat } = this.root;
+    const commentCount = cat.selectedCatCommentList.length;
+    if (commentCount !== this.replyNum) {
+      this._handleRefresh();
+    }
+  };
 }
 
 decorate(PostStore, {
@@ -129,6 +148,7 @@ decorate(PostStore, {
   postPage: observable,
   isLoadingPost: observable,
   isRefreshingPost: observable,
+  replyNum: observable,
   getPostList: action,
   handleLoadMorePosts: action,
   handleRefresh: action,
@@ -136,5 +156,7 @@ decorate(PostStore, {
   deletePost: action,
   setPostModify: action,
   resetPostState: action,
+  setReplyNum: action,
+  validateRefreshMode: action,
 });
 export default PostStore;

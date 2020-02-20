@@ -51,9 +51,8 @@ class CatSelectedPost extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();
 
   componentDidMount() {
-    const { getCommentList, selectedCatPost } = this.props;
+    const { getCommentList } = this.props;
     console.log('CatSelectedPost mount');
-    console.log('selectedCatPost = ', selectedCatPost);
     getCommentList();
   }
 
