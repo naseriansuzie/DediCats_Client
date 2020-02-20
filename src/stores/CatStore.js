@@ -571,7 +571,6 @@ class CatStore {
       )
       .then(res => {
         Alert.alert('게시글이 삭제되었습니다.');
-        console.log();
       })
       .catch(err => {
         this.alertFailure(err);
