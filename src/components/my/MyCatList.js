@@ -67,6 +67,7 @@ class MyCatList extends React.Component {
               {myCatList[0].cats.map((cat, idx) => (
                 <MyCat
                   key={`${cat.id}_${cat.nickname}`}
+                  catId={cat.id}
                   catNickname={cat.nickname}
                   catPhoto={cat.photos[0].path}
                   address={cat.address}
