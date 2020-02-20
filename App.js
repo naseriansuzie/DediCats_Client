@@ -24,9 +24,18 @@ const root = new RootStore();
 
 const MyPageStack = createStackNavigator(
   {
-    MyPage,
+    MyPage: {
+      screen: MyPage,
+      navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#edf1f5',
+          headerTintColor: '#444',
+          headerTitleStyle: { display: 'none' },
+        },
+      },
+    },
     EditMyProfile,
-    ChangePW: { screen: ChangePW, navigationOptions: { headerShown: false } },
+    ChangePW,
   },
   {
     initialRouteName: 'MyPage',
