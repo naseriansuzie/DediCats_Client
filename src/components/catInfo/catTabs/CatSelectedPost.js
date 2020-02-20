@@ -116,14 +116,14 @@ class CatSelectedPost extends React.Component {
           </Card>
           {selectedCatCommentList.length > 0 ? (
             <SafeAreaView>
-
-              {unloadedComment > 0 ? (
-                <TouchableOpacity
-                  onPress={() => _handleLoadMoreComments()}
-                >
-                  <Text style={{ textAlign: 'center', fontSize: 20 }}>load comments</Text>
-                </TouchableOpacity>
-              ) : null}
+              {selectedCatCommentList.length < 10 || unloadedComment === 0 ? null
+                : (
+                  <TouchableOpacity
+                    onPress={() => _handleLoadMoreComments()}
+                  >
+                    <Text style={{ textAlign: 'center', fontSize: 20 }}>load comments</Text>
+                  </TouchableOpacity>
+                )}
               <FlatList
                 data={selectedCatCommentList}
                 renderItem={this._renderItem}
