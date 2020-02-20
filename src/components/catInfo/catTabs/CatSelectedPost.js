@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text, Image, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, SafeAreaView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import {
   Container,
   Header,
@@ -10,7 +10,6 @@ import {
   Thumbnail,
   Left,
   Body,
-  List,
 } from 'native-base';
 import CatComment from './CatComment';
 
@@ -60,7 +59,6 @@ class CatSelectedPost extends React.Component {
 
   _renderItem = ({ item }) => (
     <CatComment
-      key={`comment_${item.id}`}
       userId={item.user.id}
       comment={item}
       myPhoto={item.user.photoPath}
@@ -75,6 +73,8 @@ class CatSelectedPost extends React.Component {
       selectedCatPost,
       selectedCatCommentList,
       convertDateTime,
+      unloadedComment,
+      _handleLoadMoreComments
     } = this.props;
 
     const usrImgUri = selectedCatPost.user.photoPath !== null
@@ -114,37 +114,27 @@ class CatSelectedPost extends React.Component {
               </Body>
             </CardItem>
           </Card>
-          <SafeAreaView>
-            <FlatList
-              data={selectedCatCommentList}
-              renderItem={this._renderItem}
-              keyExtractor={(item) => `post_${item.id}`}
-              showsVerticalScrollIndicator={false}
-            // onEndReached={this.props._handleLoadMorePosts}
-            // onEndReachedThreshold={0}
-            // ListFooterComponent={this.renderFooter}
-            // refreshing={this.props.isRefreshingPost}
-            // onRefresh={this.props._handleRefresh}
-            />
-          </SafeAreaView>
-          {/* <List>
-            {selectedCatCommentList.length > 0 ? (
-              selectedCatCommentList.map((comment, idx) => (
-                <CatComment
-                  key={`comment_${comment.id}_${idx}`}
-                  idx={idx}
-                  userId={comment.user.id}
-                  comment={comment}
-                  myPhoto={comment.user.photoPath}
-                  userNickname={comment.user.nickname}
-                  content={comment.content}
-                  date={comment.createAt}
-                />
-              ))
-            ) : (
-              <Text style={styles.noComment}>댓글이 없습니다.</Text>
-            )}
-          </List> */}
+          {selectedCatCommentList.length > 0 ? (
+            <SafeAreaView>
+
+              {unloadedComment > 0 ? (
+                <TouchableOpacity
+                  onPress={() => _handleLoadMoreComments()}
+                >
+                  <Text style={{ textAlign: 'center', fontSize: 20 }}>load comments</Text>
+                </TouchableOpacity>
+              ) : null}
+              <FlatList
+                data={selectedCatCommentList}
+                renderItem={this._renderItem}
+                keyExtractor={(item) => `post_${item.id}`}
+                showsVerticalScrollIndicator={false}
+                inverted
+              />
+            </SafeAreaView>
+          ) : (
+            <Text style={styles.noComment}>댓글이 없습니다.</Text>
+          )}
         </Content>
       </Container>
     );
@@ -156,4 +146,6 @@ export default inject(({ cat, helper }) => ({
   selectedCatCommentList: cat.selectedCatCommentList,
   convertDateTime: helper.convertDateTime,
   getCommentList: cat.getCommentList,
+  _handleLoadMoreComments: cat._handleLoadMoreComments,
+  unloadedComment: cat.unloadedComment,
 }))(observer(CatSelectedPost));
