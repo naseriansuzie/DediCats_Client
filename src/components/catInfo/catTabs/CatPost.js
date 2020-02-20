@@ -43,11 +43,10 @@ class CatPost extends React.Component {
 
   render() {
     const { content, createAt, user, photos, comments } = this.props.item;
-    const { processPostActions, userInfo } = this.props;
+    const { processPostActions, userInfo, setReplyNum } = this.props;
     const usrImgUri =
       user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
-    console.log('userInfo = ', userInfo);
-    console.log('user = ', user);
+
     return (
       <Card style={styles.container}>
         <View style={styles.reportView}>
@@ -80,7 +79,10 @@ class CatPost extends React.Component {
           }}
         />
         <TouchableWithoutFeedback
-          onPress={() => this.setCatPostHere(this.props.item)}
+          onPress={() => {
+            this.setCatPostHere(this.props.item);
+            setReplyNum(comments);
+          }}
         >
           <CardItem>
             <Left>
@@ -149,7 +151,10 @@ class CatPost extends React.Component {
   }
 }
 
-export default inject(({ report, auth }) => ({
-  processPostActions: report.processPostActions,
+export default inject(({ auth, post, cat, report }) => ({
   userInfo: auth.userInfo,
+  replyNum: post.replyNum,
+  setReplyNum: post.setReplyNum,
+  selectedCatPost: cat.selectedCatPost,
+  processPostActions: report.processPostActions,
 }))(observer(withNavigation(CatPost)));

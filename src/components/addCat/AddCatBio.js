@@ -225,12 +225,9 @@ const AddCatBio = ({
               const validation = await validateAddCat();
               if (validation) {
                 const addressResult = await getAddress();
-                // console.log('주소검증 성공', addressResult);
                 if (addressResult) {
                   const addCatResult = await addCat();
-                  // console.log('등록 성공', addCatResult);
                   if (addCatResult) {
-                    // Alert.alert('등록에 성공하였습니다!');
                     navigation.goBack();
                     await getMapInfo();
                   } else {

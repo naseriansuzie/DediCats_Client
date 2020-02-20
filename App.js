@@ -64,9 +64,9 @@ const MainStack = createStackNavigator(
           <HeaderBackButton
             onPress={async () => {
               await root.cat.offUser();
+              root.post.validateRefreshMode();
               root.cat.resetCommentState();
               navigation.goBack();
-              root.post.getPostList();
             }}
           />
         ),
