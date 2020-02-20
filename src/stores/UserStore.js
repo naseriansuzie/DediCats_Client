@@ -14,7 +14,7 @@ class UserStore {
   // observable
   myUri = defaultPhotoUrl;
 
-  myPhotoPath = '';
+  myPhotoPath = null;
 
   myCatList = null;
 
@@ -107,6 +107,34 @@ class UserStore {
 
     return result;
   };
+
+  resetDefaultPhoto = async () => {
+    const defaultPhotoUrl =
+      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+
+    this.myUri = defaultPhotoUrl;
+    this.myPhotoPath = null;
+    return new Promise((resolve, reject) => resolve(true));
+  };
+
+  postMyPhoto = async () => {
+    console.log('postMyPhoto 시작');
+    const photoPath = await axios
+      .post(
+        `${SERVER_URL}/photo/profile`,
+        { photoPath: this.myPhotoPath },
+        defaultCredential,
+      )
+      .then(res => {
+        this.myUri = res.data.photoPath;
+        console.log('서버에서 받은 uri', this.myUri);
+        return res.data.photoPath;
+      })
+      .catch(err => {
+        console.dir(err);
+      });
+    return photoPath;
+  };
 }
 
 decorate(UserStore, {
@@ -117,6 +145,8 @@ decorate(UserStore, {
   getMyCatList: action,
   changePW: action,
   findPW: action,
+  resetDefaultPhoto: action,
+  postMyPhoto: action,
 });
 
 export default UserStore;
