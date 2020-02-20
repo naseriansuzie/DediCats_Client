@@ -8,11 +8,8 @@ import {
   Input,
   Label,
 } from 'native-base';
-import {
-  StyleSheet, Text, TouchableOpacity, View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
@@ -62,33 +59,48 @@ class ChangePW extends React.Component {
           <Form>
             <Item floatingLabel>
               <Label>
-                <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  style={styles.font16}
+                />{' '}
                 기존 비밀번호
               </Label>
               <Input
-                onChangeText={(text) => this.props.updateInput('auth', 'PW', text)}
+                onChangeText={text =>
+                  this.props.updateInput('auth', 'PW', text)
+                }
                 secureTextEntry
                 value={this.props.PW}
               />
             </Item>
             <Item floatingLabel>
               <Label>
-                <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  style={styles.font16}
+                />{' '}
                 새로운 비밀번호
               </Label>
               <Input
-                onChangeText={(text) => this.props.updateInput('auth', 'confirmPW', text)}
+                onChangeText={text =>
+                  this.props.updateInput('auth', 'confirmPW', text)
+                }
                 secureTextEntry
                 value={this.props.confirmPW}
               />
             </Item>
             <Item floatingLabel>
               <Label>
-                <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  style={styles.font16}
+                />{' '}
                 새로운 비밀번호 재확인
               </Label>
               <Input
-                onChangeText={(text) => this.props.updateInput('auth', 'reConfirmPW', text)}
+                onChangeText={text =>
+                  this.props.updateInput('auth', 'reConfirmPW', text)
+                }
                 secureTextEntry
                 value={this.props.reConfirmPW}
               />
@@ -97,15 +109,14 @@ class ChangePW extends React.Component {
           <TouchableOpacity
             style={styles.btn}
             onPress={async () => {
-              const reuslt = await this.props.changePW();
+              const result = await this.props.changePW();
               this.props.getMyInfo();
-              if (reuslt) this.props.navigation.navigate('AuthLoading');
+              if (result) this.props.navigation.navigate('AuthLoading');
             }}
           >
             <Text style={styles.white}>비밀변호 변경</Text>
           </TouchableOpacity>
         </Content>
-
       </Container>
     );
   }
