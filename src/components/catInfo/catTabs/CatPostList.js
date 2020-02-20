@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
+import * as Font from 'expo-font';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
 
@@ -36,9 +37,20 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
+  state = { loading: true }
+
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList();
+  }
+
+  loadFont = async () => {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
+    });
+    this.setState({ loading: false });
   }
 
   _renderItem = ({ item }) => (
@@ -51,14 +63,18 @@ class CatPostList extends React.Component {
   );
 
   renderFooter = () =>
-    this.props.isLoadingPost ? (
+    (this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
-    ) : null;
+    ) : null);
 
   render() {
     const { postList } = this.props;
+    if (this.state.loading) {
+      this.loadFont();
+      return <View />;
+    }
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
