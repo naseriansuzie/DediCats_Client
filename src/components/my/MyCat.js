@@ -1,7 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   radius: {
@@ -26,19 +28,45 @@ const styles = StyleSheet.create({
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
-const MyCat = ({ catId, catPhoto, address, catNickname, unFollowCat }) => (
+const MyCat = ({
+  catId,
+  catPhoto,
+  address,
+  catNickname,
+  unFollowCat,
+  navigation,
+  getSelectedCatInfo,
+}) => (
   <ListItem thumbnail>
-    <Left>
-      <Thumbnail
-        square
-        source={{ uri: catPhoto || DEFAULT_CAT }}
-        style={styles.radius}
-      />
-    </Left>
-    <Body>
-      <Text>{catNickname}</Text>
-      <Text note>{address}</Text>
-    </Body>
+    <TouchableWithoutFeedback
+      onPress={async () => {
+        const result = await getSelectedCatInfo(catId);
+        if (result) {
+          navigation.navigate('CatInfo');
+        }
+      }}
+    >
+      <Left>
+        <Thumbnail
+          square
+          source={{ uri: catPhoto || DEFAULT_CAT }}
+          style={styles.radius}
+        />
+      </Left>
+    </TouchableWithoutFeedback>
+    <TouchableWithoutFeedback
+      onPress={async () => {
+        const result = await getSelectedCatInfo(catId);
+        if (result) {
+          navigation.navigate('CatInfo');
+        }
+      }}
+    >
+      <Body>
+        <Text>{catNickname}</Text>
+        <Text note>{address}</Text>
+      </Body>
+    </TouchableWithoutFeedback>
     <Right>
       <TouchableOpacity style={styles.btn} onPress={() => unFollowCat(catId)}>
         <Text style={styles.btnTxt}>Unfollow</Text>
@@ -47,6 +75,7 @@ const MyCat = ({ catId, catPhoto, address, catNickname, unFollowCat }) => (
   </ListItem>
 );
 
-export default inject(({ helper }) => ({
+export default inject(({ cat, helper }) => ({
+  getSelectedCatInfo: cat.getSelectedCatInfo,
   unFollowCat: helper.unFollowCat,
-}))(observer(MyCat));
+}))(observer(withNavigation(MyCat)));
