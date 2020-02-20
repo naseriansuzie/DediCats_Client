@@ -209,13 +209,14 @@ class CatStore {
 
   // CatStore
   followCat = catId => {
-    const { map } = this.root;
+    const { map, user } = this.root;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then(res => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
         map.getMapInfo();
+        user.getMyCatList();
       })
       .catch(err => console.dir(err));
   };

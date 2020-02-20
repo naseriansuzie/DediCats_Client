@@ -61,6 +61,7 @@ class HelperStore {
           cat.getSelectedCatInfo(catId);
           cat.getFollowerList(catId);
           map.getMapInfo();
+          user.getMyCatList();
         });
       })
       .catch(err => console.dir(err));
