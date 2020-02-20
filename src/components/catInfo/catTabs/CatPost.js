@@ -18,9 +18,13 @@ import ActionSheet from 'react-native-actionsheet';
 import { AntDesign } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
-  container: { width: 400, borderRadius: 20, overflow: 'hidden' },
+  container: {
+    width: 370,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
   reportView: { alignItems: 'flex-end' },
-  ellipsis: { fontSize: 24 },
+  ellipsis: { fontSize: 24, paddingRight: 10 },
   userImg: {
     borderRadius: 10,
     height: 50,
@@ -137,7 +141,7 @@ class CatPost extends React.Component {
                     </Text>
                   </View>
                   <View style={{ width: '45%' }}>
-                    <Text note style={{ paddingLeft: 5 }}>
+                    <Text note style={{ paddingLeft: 0 }}>
                       댓글달기
                     </Text>
                   </View>

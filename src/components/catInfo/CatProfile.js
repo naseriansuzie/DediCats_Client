@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     backgroundColor: '#6772f1',
   },
-  ellipsis: { fontSize: 24, color: 'white' },
+  ellipsis: { fontSize: 24, color: 'white', paddingRight: 10 },
   profileView: {
     flex: 1,
     flexDirection: 'row',

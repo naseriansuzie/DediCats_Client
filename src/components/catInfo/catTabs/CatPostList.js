@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     flex: 3,
     width: '100%',
     backgroundColor: 'white',
+    alignItems: 'center',
   },
 });
 
