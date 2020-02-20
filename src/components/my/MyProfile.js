@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 15,
-    color: '#444',
+    color: '#444444',
     marginBottom: 10,
   },
   btn: {
@@ -55,24 +55,19 @@ const styles = StyleSheet.create({
   },
 });
 
-// const defaultPhotoUrl =
-//   'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
-const defaultPhotoUrl =
-  'https://scontent-gmp1-1.xx.fbcdn.net/v/t1.0-9/35362350_2128812463813083_109129312195575808_o.jpg?_nc_cat=100&_nc_ohc=UfkbqZH71McAX849PZo&_nc_ht=scontent-gmp1-1.xx&oh=e8d961f7d73f856eb7c5e9c42dfa4259&oe=5EF62D35';
-
 class MyProfile extends React.Component {
   componentDidMount() {
+    console.log('MyProfile mount');
     this.props.getMyInfo();
   }
 
   render() {
-    console.log(this.props.userInfo);
+    console.log('프로필 렌더할 때 유저정보 =', this.props.userInfo);
     if (!this.props.userInfo) {
       return <View style={styles.container} />;
     }
     const { nickname, createAt, photoPath } = this.props.userInfo;
-    const { convertDateTime, navigation, signOut } = this.props;
-    const pilePath = photoPath || defaultPhotoUrl;
+    const { convertDateTime, navigation, signOut, myUri } = this.props;
 
     return (
       <View style={styles.container}>
@@ -81,7 +76,7 @@ class MyProfile extends React.Component {
             <Image
               style={styles.photo}
               source={{
-                uri: pilePath,
+                uri: photoPath === null ? myUri : photoPath,
               }}
             />
           </View>
@@ -115,9 +110,10 @@ class MyProfile extends React.Component {
   }
 }
 
-export default inject(({ auth, helper }) => ({
+export default inject(({ auth, helper, user }) => ({
   userInfo: auth.userInfo,
   getMyInfo: auth.getMyInfo,
   signOut: auth.signOut,
   convertDateTime: helper.convertDateTime,
+  myUri: user.myUri,
 }))(observer(withNavigation(MyProfile)));
