@@ -27,10 +27,8 @@ class ReportStore {
   };
 
   reportPost = async postId => {
-    console.log('postId', postId);
     const { cat } = this.root;
     const criminalId = cat.selectedCatPost.user.id;
-    console.log('criminalId', criminalId);
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
       .then(res => true)

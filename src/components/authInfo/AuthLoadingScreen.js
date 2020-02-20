@@ -18,7 +18,6 @@ class AuthLoadingScreen extends React.Component {
         if (!res.data.accessToken) return false;
 
         await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
-        console.log('asyncStorage에 저장한 값들', res.data.user);
         return 'App';
       })
       .catch(e => {
