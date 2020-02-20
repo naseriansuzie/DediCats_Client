@@ -42,12 +42,23 @@ class CatPost extends React.Component {
   };
 
   render() {
-    const { content, createAt, user, photos, comments } = this.props.item;
-    const { processPostActions, userInfo } = this.props;
+    const { id, content, createAt, user, photos, comments } = this.props.item;
+    const {
+      processPostActions,
+      userInfo,
+      replyNo,
+      selectedCatPost,
+    } = this.props;
     const usrImgUri =
       user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
-    console.log('userInfo = ', userInfo);
-    console.log('user = ', user);
+    // console.log('포스트 아이디는 ', id);
+    // console.log('저장해둔 댓글 개수는', this.props.replyNo);
+    // if (this.props.selectedCatPost) {
+    //   console.log(
+    //     '현재 선택된 포스트 아이디는 ',
+    //     this.props.selectedCatPost.id,
+    //   );
+    // }
     return (
       <Card style={styles.container}>
         <View style={styles.reportView}>
@@ -129,7 +140,11 @@ class CatPost extends React.Component {
                   </View>
                   <View style={{ width: '45%' }}>
                     <Text note style={{ paddingLeft: 5, paddingRight: 0 }}>
-                      {comments.length > 0
+                      {replyNo > 0 &&
+                      selectedCatPost &&
+                      selectedCatPost.id === id
+                        ? `${replyNo}개의 댓글`
+                        : comments.length > 0
                         ? `${comments.length}개의 댓글`
                         : '댓글 없음'}
                     </Text>
@@ -149,7 +164,9 @@ class CatPost extends React.Component {
   }
 }
 
-export default inject(({ report, auth }) => ({
-  processPostActions: report.processPostActions,
+export default inject(({ auth, post, cat, report }) => ({
   userInfo: auth.userInfo,
+  replyNo: post.replyNo,
+  selectedCatPost: cat.selectedCatPost,
+  processPostActions: report.processPostActions,
 }))(observer(withNavigation(CatPost)));

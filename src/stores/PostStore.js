@@ -18,6 +18,8 @@ class PostStore {
 
   isLoadingPost = false;
 
+  replyNo = null;
+
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
@@ -122,6 +124,10 @@ class PostStore {
     this.isRefreshingPost = false;
     this.isLoadingPost = false;
   };
+
+  getReplyNo = () => {
+    this.replyNo = this.root.cat.selectedCatCommentList.length;
+  };
 }
 
 decorate(PostStore, {
@@ -129,6 +135,7 @@ decorate(PostStore, {
   postPage: observable,
   isLoadingPost: observable,
   isRefreshingPost: observable,
+  replyNo: observable,
   getPostList: action,
   handleLoadMorePosts: action,
   handleRefresh: action,
@@ -136,5 +143,6 @@ decorate(PostStore, {
   deletePost: action,
   setPostModify: action,
   resetPostState: action,
+  getReplyNo: action,
 });
 export default PostStore;
