@@ -62,14 +62,13 @@ class MyCatList extends React.Component {
           <View style={styles.radiusView}>
             <View style={styles.listView}>
               <Text style={styles.txt}>
-                {`${userInfo.nickname}의 돌봄이 필요한 고양이 ${myCatList[0].cats.length} 마리`}
+                {`${userInfo.nickname}님이 돌보는 고양이 ${myCatList[0].cats.length} 마리`}
               </Text>
               {myCatList[0].cats.map((cat, idx) => (
                 <MyCat
                   key={`${cat.id}_${cat.nickname}`}
-                  idx={idx}
                   catNickname={cat.nickname}
-                  catPhoto={cat.photos.path}
+                  catPhoto={cat.photos[0].path}
                   address={cat.address}
                 />
               ))}
