@@ -64,9 +64,9 @@ class PostStore {
     const postInfo =
       mode === 'new'
         ? {
-            content: selectedCatInputContent,
-            catId: selectedCatBio[0].id,
-          }
+          content: selectedCatInputContent,
+          catId: selectedCatBio[0].id,
+        }
         : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;

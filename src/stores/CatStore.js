@@ -115,6 +115,9 @@ class CatStore {
   //! 댓글 페이지
   commentPage = 0;
 
+  // 로드된 댓글을 카운트
+  unloadedComment = 10;
+
   // CatStore
   setCatPost = item => {
     this.selectedCatPost = item;
@@ -477,11 +480,11 @@ class CatStore {
       const postId = this.selectedCatPost.id;
       const url = `${SERVER_URL}/comment/${postId}/${this.commentPage}`;
       const comment = await axios.get(url);
-      console.log('서버에서 받은 코멘트들', comment.data.length);
-      this.selectedCatCommentList = this.selectedCatCommentList.concat(
-        comment.data,
-      );
-      console.log('받아온 코멘트 리스트', this.selectedCatCommentList.length);
+      if (comment) {
+        console.log('서버에서 받은 코멘트들', comment.data.length);
+        this.selectedCatCommentList = this.selectedCatCommentList.concat(comment.data);
+        console.log('받아온 코멘트 리스트', this.selectedCatCommentList.length);
+      }
       return;
     } catch (error) {
       console.error(error);
@@ -494,9 +497,15 @@ class CatStore {
     this.selectedCatComment = null;
     this.commentPage = 0;
     this.newComment = null;
+    this.unloadedComment = 10;
   };
 
-  _handleLoadMoreComments = () => {
+  _handleLoadMoreComments = async () => {
+    if (this.selectedCatCommentList.length - this.unloadedComment > 0) {
+      this.unloadedComment += 10;
+    } else {
+      this.unloadedComment = 0;
+    }
     this.commentPage += 1;
     this.getCommentList();
   };
@@ -612,6 +621,7 @@ class CatStore {
 
 decorate(CatStore, {
   commentPage: observable,
+  unloadedComment: observable,
   socketId: observable,
   isConnectSocket: observable,
   newComment: observable,
