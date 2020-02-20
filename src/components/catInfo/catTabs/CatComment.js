@@ -61,10 +61,22 @@ const CatComment = ({
           )}
           {userInfo.id === userId ? (
             <TouchableOpacity
-              onPress={async () => {
-                await deleteComment(comment);
-                resetCommentState();
-                getCommentList();
+              onPress={() => {
+                Alert.alert('댓글 삭제', '해당 댓글을 삭제하시겠습니까?', [
+                  {
+                    text: '취소',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },
+                  {
+                    text: '삭제',
+                    onPress: async () => {
+                      await deleteComment(comment);
+                      resetCommentState();
+                      getCommentList();
+                    },
+                  },
+                ]);
               }}
             >
               <Text note>삭제</Text>
