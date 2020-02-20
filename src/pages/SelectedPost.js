@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, BackHandler } from 'react-native';
+import { inject, observer } from 'mobx-react';
 import CatSelectedPost from '../components/catInfo/catTabs/CatSelectedPost';
 import CatCommentInput from '../components/catInfo/catTabs/CatCommentInput';
 
@@ -17,17 +18,48 @@ const styles = StyleSheet.create({
   flex1: { flex: 1 },
 });
 
-const SelectedPost = () => (
-  <View style={styles.container}>
-    <KeyboardAvoidingView
-      behavior="padding"
-      enabled
-      style={styles.keyboardAvoiding}
-    >
-      <CatSelectedPost style={styles.flex2} />
-      <CatCommentInput style={styles.flex1} />
-    </KeyboardAvoidingView>
-  </View>
-);
+class SelectedPost extends React.Component {
+  componentDidMount() {
+    this.handleAndroidBackButton();
+  }
 
-export default SelectedPost;
+  componentWillUnmount() {
+    this.removeAndroidBackButtonHandler();
+  }
+
+  handleAndroidBackButton = () => {
+    const { offUser, resetCommentState, navigation, getPostList } = this.props;
+    BackHandler.addEventListener('hardwareBackPress', async () => {
+      await offUser();
+      resetCommentState();
+      navigation.goBack();
+      getPostList();
+      return true;
+    });
+  };
+
+  removeAndroidBackButtonHandler = () => {
+    BackHandler.removeEventListener('hardwareBackPress', () => {});
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          enabled
+          style={styles.keyboardAvoiding}
+        >
+          <CatSelectedPost style={styles.flex2} />
+          <CatCommentInput style={styles.flex1} />
+        </KeyboardAvoidingView>
+      </View>
+    );
+  }
+}
+
+export default inject(({ cat, post }) => ({
+  offUser: cat.offUser,
+  resetCommentState: cat.resetCommentState,
+  getPostList: post.getPostList,
+}))(observer(SelectedPost));
