@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, SafeAreaView } from 'react-native';
 import {
   Container,
   Header,
@@ -14,8 +14,7 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const defaultPhotoUrl =
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+const defaultPhotoUrl = 'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +58,18 @@ class CatSelectedPost extends React.Component {
     getCommentList();
   }
 
+  _renderItem = ({ item }) => (
+    <CatComment
+      key={`comment_${item.id}`}
+      userId={item.user.id}
+      comment={item}
+      myPhoto={item.user.photoPath}
+      userNickname={item.user.nickname}
+      content={item.content}
+      date={item.createAt}
+    />
+  );
+
   render() {
     const {
       selectedCatPost,
@@ -66,10 +77,8 @@ class CatSelectedPost extends React.Component {
       convertDateTime,
     } = this.props;
 
-    const usrImgUri =
-      selectedCatPost.user.photoPath !== null
-        ? selectedCatPost.user.photoPath
-        : defaultPhotoUrl;
+    const usrImgUri = selectedCatPost.user.photoPath !== null
+      ? selectedCatPost.user.photoPath : defaultPhotoUrl;
 
     return (
       <Container style={styles.container}>
@@ -105,7 +114,20 @@ class CatSelectedPost extends React.Component {
               </Body>
             </CardItem>
           </Card>
-          <List>
+          <SafeAreaView>
+            <FlatList
+              data={selectedCatCommentList}
+              renderItem={this._renderItem}
+              keyExtractor={(item) => `post_${item.id}`}
+              showsVerticalScrollIndicator={false}
+            // onEndReached={this.props._handleLoadMorePosts}
+            // onEndReachedThreshold={0}
+            // ListFooterComponent={this.renderFooter}
+            // refreshing={this.props.isRefreshingPost}
+            // onRefresh={this.props._handleRefresh}
+            />
+          </SafeAreaView>
+          {/* <List>
             {selectedCatCommentList.length > 0 ? (
               selectedCatCommentList.map((comment, idx) => (
                 <CatComment
@@ -122,7 +144,7 @@ class CatSelectedPost extends React.Component {
             ) : (
               <Text style={styles.noComment}>댓글이 없습니다.</Text>
             )}
-          </List>
+          </List> */}
         </Content>
       </Container>
     );
