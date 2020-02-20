@@ -23,7 +23,6 @@ class PostStore {
   getPostList = async () => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
-    console.log('getPostList 실행');
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;

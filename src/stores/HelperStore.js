@@ -61,6 +61,7 @@ class HelperStore {
           cat.getSelectedCatInfo(catId);
           cat.getFollowerList(catId);
           map.getMapInfo();
+          user.getMyCatList();
         });
       })
       .catch(err => console.dir(err));
@@ -78,6 +79,7 @@ class HelperStore {
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
       this.root[store][`${type}Uri`] = result.uri;
       this.root[store][`${type}PhotoPath`] = imageTarget;
+      console.log('로컬 기기 이미지 주소', this.root[store][`${type}Uri`]);
     }
   };
 

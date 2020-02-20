@@ -155,9 +155,7 @@ class CatStore {
 
       sockets.on('new comment', comment => {
         this.newComment = comment;
-        console.log('소켓에서 받은 메시지', this.newComment);
         this.selectedCatCommentList.unshift(this.newComment);
-        console.log('변경된 커멘트 리스트', this.selectedCatCommentList.length);
       });
     };
     helper(socket);
@@ -198,9 +196,6 @@ class CatStore {
           '이 고양이 팔로우 중인가요?',
           this.selectedCatBio[1].isFollowing,
         );
-        // const replacement = this.markers;
-        // this.carousels = replacement;
-
         return true;
       })
       .catch(err => {
@@ -212,13 +207,14 @@ class CatStore {
 
   // CatStore
   followCat = catId => {
-    const { map } = this.root;
+    const { map, user } = this.root;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then(res => {
         this.getSelectedCatInfo(catId);
         this.getFollowerList(catId);
         map.getMapInfo();
+        user.getMyCatList();
       })
       .catch(err => console.dir(err));
   };
@@ -264,12 +260,6 @@ class CatStore {
       onDragstate,
       addCatPhotoPath,
     } = this;
-    console.log('수정 후', this.onDragstate);
-    console.log(
-      '수정 후',
-      this.addCatLocation.latitude,
-      this.addCatLocation.longitude,
-    );
     if (!onDragstate) {
       Alert.alert('고양이 마커를 움직여 주세요.');
       return isValidated;

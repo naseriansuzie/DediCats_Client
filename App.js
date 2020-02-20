@@ -29,13 +29,23 @@ const MyPageStack = createStackNavigator(
       navigationOptions: {
         headerStyle: {
           backgroundColor: '#edf1f5',
-          headerTintColor: '#444',
+          headerTintColor: '#444444',
           headerTitleStyle: { display: 'none' },
         },
       },
     },
-    EditMyProfile,
-    ChangePW,
+    EditMyProfile: {
+      screen: EditMyProfile,
+      navigationOptions: {
+        headerTitleStyle: { display: 'none' },
+      },
+    },
+    ChangePW: {
+      screen: ChangePW,
+      navigationOptions: {
+        headerTitleStyle: { display: 'none' },
+      },
+    },
   },
   {
     initialRouteName: 'MyPage',

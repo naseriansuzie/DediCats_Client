@@ -16,7 +16,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const styles = StyleSheet.create({
   logo: {
     alignItems: 'center',
-    padding: 50,
+    padding: 20,
   },
   displayNone: {
     display: 'none',

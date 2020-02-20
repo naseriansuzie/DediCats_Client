@@ -100,7 +100,6 @@ class CatBio extends React.Component {
   componentDidMount() {
     console.log('CatBio mount');
     const { catId } = this.props;
-    console.log('bio 정보를 불러올 고양이 id: ', catId);
     this.props.getSelectedCatInfo(catId);
     this.props.getMyInfo();
   }
