@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
   marginRight10: {
     marginRight: 10,
   },
+  width70: {
+    width: '70%',
+  },
   modificationView: { flexDirection: 'row' },
 });
 
@@ -48,6 +51,9 @@ const CatComment = ({
         <Text>{userNickname}</Text>
         <Text>{content}</Text>
         <View style={styles.modificationView}>
+          <View style={styles.width70}>
+            <Text note>{convertDateTime(date)}</Text>
+          </View>
           {userInfo.id === userId ? (
             <TouchableOpacity
               onPress={() => {
@@ -118,9 +124,7 @@ const CatComment = ({
         </View>
       </View>
     </Body>
-    <Right style={styles.marginRight10}>
-      <Text>{convertDateTime(date)}</Text>
-    </Right>
+    <Right style={styles.marginRight10} />
   </ListItem>
 );
 
