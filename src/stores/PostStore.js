@@ -132,13 +132,11 @@ class PostStore {
 
   setReplyNum = comments => {
     this.replyNum = comments.length;
-    console.log('모달 창에 들어가면서 replyNum', this.replyNum);
   };
 
   validateRefreshMode = () => {
     const { cat } = this.root;
     const commentCount = cat.selectedCatCommentList.length;
-    console.log('현재 커멘트 갯수', commentCount);
     if (commentCount !== this.replyNum) {
       this._handleRefresh();
     }
