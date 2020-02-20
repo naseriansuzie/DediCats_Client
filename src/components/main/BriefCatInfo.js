@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   intro: {
     fontSize: 15,
-    color: '#444',
+    color: '#444444',
     paddingVertical: 5,
     flexWrap: 'wrap',
   },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Header, Content, List, Text } from 'native-base';
+import { Content, Text } from 'native-base';
 import MyCat from './MyCat';
 
 const styles = StyleSheet.create({
@@ -60,11 +60,11 @@ class MyCatList extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.radiusView}>
-            <View style={styles.listView}>
+            <Content style={styles.listView}>
               <Text style={styles.txt}>
                 {`${userInfo.nickname}님이 돌보는 고양이 ${myCatList[0].cats.length} 마리`}
               </Text>
-              {myCatList[0].cats.map((cat, idx) => (
+              {myCatList[0].cats.map(cat => (
                 <MyCat
                   key={`${cat.id}_${cat.nickname}`}
                   catId={cat.id}
@@ -73,7 +73,7 @@ class MyCatList extends React.Component {
                   address={cat.address}
                 />
               ))}
-            </View>
+            </Content>
           </View>
         </View>
       );
