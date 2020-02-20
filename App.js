@@ -26,7 +26,7 @@ const MyPageStack = createStackNavigator(
   {
     MyPage,
     EditMyProfile,
-    ChangePW: { screen: ChangePW, navigationOptions: { headerShown: false } },
+    ChangePW,
   },
   {
     initialRouteName: 'MyPage',
