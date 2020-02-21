@@ -12,12 +12,14 @@ class AuthLoadingScreen extends React.Component {
   }
 
   async verifyToken() {
+    const { setMyUri } = this.props;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/token`)
       .then(async res => {
         if (!res.data.accessToken) return false;
-
+        const { photoPath } = res.data.user;
         await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
+        setMyUri(photoPath);
         return 'App';
       })
       .catch(e => {
@@ -39,6 +41,6 @@ class AuthLoadingScreen extends React.Component {
   }
 }
 
-export default inject(({ auth }) => ({
-  getMyInfo: auth.getMyInfo,
+export default inject(({ user }) => ({
+  setMyUri: user.setMyUri,
 }))(observer(AuthLoadingScreen));
