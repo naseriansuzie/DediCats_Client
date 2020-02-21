@@ -76,11 +76,17 @@ class HelperStore {
       base64: true,
     });
     if (!result.cancelled) {
+      if ((store === 'user', type === 'my')) {
+        this.root[store].tempUri = this.root[store].myUri;
+        console.log('tempUri =', this.root[store].tempUri);
+      }
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
       this.root[store][`${type}Uri`] = result.uri;
       this.root[store][`${type}PhotoPath`] = imageTarget;
+
       console.log('로컬 기기 이미지 주소', this.root[store][`${type}Uri`]);
     }
+    return result;
   };
 
   removePhoto = () => {
