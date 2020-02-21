@@ -66,6 +66,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cutTxt: { color: '#767577', fontWeight: 'bold' },
+  catTodayForm: {
+    width: '100%',
+    flexDirection: 'row',
+  },
+  picker: {
+    alignItems: 'flex-start',
+    width: '90%',
+    height: 30,
+  },
   tagGuide: { width: '100%', paddingBottom: 10 },
   tagView: {
     flexDirection: 'row',
@@ -250,24 +259,15 @@ class CatBio extends React.Component {
                     selectedCatBio.todayTime === changeToDateTime('today') ? (
                       <Text>{selectedCatBio.today}</Text>
                     ) : (
-                      <Form
-                        style={{
-                          width: '100%',
-                          flexDirection: 'row',
-                        }}
-                      >
+                      <Form style={styles.catTodayForm}>
                         <Picker
                           note
                           enabled
                           mode="dialog"
                           iosIcon={<Icon name="arrow-down" />}
-                          style={{
-                            alignItems: 'flex-start',
-                            width: '90%',
-                            height: 30,
-                          }}
+                          style={styles.picker}
                           placeholder="오늘의 건강 상태 선택하기"
-                          placeholderStyle={{ fontSize: 15 }}
+                          placeholderStyle={styles.font15}
                           selectedValue={selectedCatToday}
                           onValueChange={postCatToday}
                         >
@@ -349,20 +349,20 @@ class CatBio extends React.Component {
 }
 
 export default inject(({ cat, helper, auth }) => ({
-  selectedCatBio: cat.selectedCatBio[0],
   catId: cat.selectedCatBio[0].id,
+  getSelectedCatInfo: cat.getSelectedCatInfo,
+  getMyInfo: auth.getMyInfo,
+  selectedCatBio: cat.selectedCatBio[0],
   selectedCatToday: cat.selectedCatToday,
   selectedCatRainbowOpen: cat.selectedCatRainbowOpen,
+  toggleRainbowOpen: cat.toggleRainbowOpen,
   selectedCatCutClicked: cat.selectedCatCutClicked,
   tags: cat.selectedCatBio[2],
   selectedCatNewTag: cat.selectedCatNewTag,
-  getSelectedCatInfo: cat.getSelectedCatInfo,
-  toggleRainbowOpen: cat.toggleRainbowOpen,
   selectCut: cat.selectCut,
   postCut: cat.postCut,
   postCatToday: cat.postCatToday,
   validateTag: cat.validateTag,
   updateInput: helper.updateInput,
   changeToDateTime: helper.changeToDateTime,
-  getMyInfo: auth.getMyInfo,
 }))(observer(CatBio));

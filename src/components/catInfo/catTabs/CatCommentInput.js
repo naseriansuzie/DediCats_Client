@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
 const CatCommentInput = ({
   selectedCatInputComment,
   commentModifyState,
-  updateInput,
-  validateAddInput,
   getCommentList,
-  resetCommentState,
   addComment,
   setCommentModify,
+  resetCommentState,
+  validateAddInput,
+  updateInput,
 }) => (
   <View style={styles.container}>
     <KeyboardAvoidingView>
@@ -83,7 +83,6 @@ const CatCommentInput = ({
                 }
               }
             } catch (err) {
-              console.log('something is wrong');
               console.dir(err);
             }
           }}

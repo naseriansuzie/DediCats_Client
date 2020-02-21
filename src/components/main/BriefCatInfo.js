@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
-import { Text } from 'native-base';
-import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
+import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -62,12 +61,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   btn: {
-    width: '35%',
+    backgroundColor: '#677ef1',
     alignSelf: 'center',
-    marginLeft: 55,
+    marginTop: 10,
+    marginLeft: -80,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
-    backgroundColor: '#677ef1',
   },
   btnTxt: {
     textAlign: 'center',
@@ -110,15 +110,14 @@ const BriefCatInfo = ({
           <Text style={styles.nickName}>{item.catNickname}</Text>
           <Text style={styles.species}>추정 종: {item.catSpecies}</Text>
           <Text style={styles.address}>{item.catAddress}</Text>
-          <Text style={styles.intro}>{item.description} 안녕하세요감사합니다 미안합니다고맙습니다 맛있습니다멋있습니다</Text>
-          <Text note>자세히 보기</Text>
+          <Text style={styles.intro}>{item.description}</Text>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnTxt}>고양이 보러가기</Text>
+          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </View>
-    <TouchableOpacity
-      style={styles.closeBtn}
-      onPress={() => hideBriefCat()}
-    >
+    <TouchableOpacity style={styles.closeBtn} onPress={() => hideBriefCat()}>
       <MaterialCommunityIcons
         style={{ fontSize: 30, left: 4 }}
         name="close"

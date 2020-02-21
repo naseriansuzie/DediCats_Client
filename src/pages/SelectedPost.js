@@ -34,11 +34,12 @@ class SelectedPost extends React.Component {
 
   handleAndroidBackButton = () => {
     const {
+      navigation,
       offUser,
       resetCommentState,
-      navigation,
       validateRefreshMode,
     } = this.props;
+
     BackHandler.addEventListener('hardwareBackPress', async () => {
       await offUser();
       validateRefreshMode();

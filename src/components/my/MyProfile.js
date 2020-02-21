@@ -1,8 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Text } from 'native-base';
-import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: '75%',
-    height: '100%',
+    height: '85%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 10,
+    marginBottom: 5,
     paddingHorizontal: 20,
     borderRadius: 10,
     backgroundColor: '#6772f1',
@@ -56,10 +57,10 @@ const styles = StyleSheet.create({
 });
 
 const MyProfile = ({
-  userInfo,
-  convertDateTime,
   navigation,
+  userInfo,
   signOut,
+  convertDateTime,
   myUri,
 }) => {
   console.disableYellowBox = 'true';
@@ -68,7 +69,7 @@ const MyProfile = ({
     return <View style={styles.container} />;
   }
   const { nickname, createAt } = userInfo;
-  const defaultPhotoUrl =
+  const DEFAULT_USER_URL =
     'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
 
   return (
@@ -78,7 +79,7 @@ const MyProfile = ({
           <Image
             style={styles.photo}
             source={{
-              uri: myUri || defaultPhotoUrl,
+              uri: myUri || DEFAULT_USER_URL,
             }}
           />
         </View>
@@ -113,9 +114,7 @@ const MyProfile = ({
 
 export default inject(({ auth, helper, user }) => ({
   userInfo: auth.userInfo,
-  getMyInfo: auth.getMyInfo,
   signOut: auth.signOut,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
-  myPhotoPath: user.myPhotoPath,
 }))(observer(withNavigation(MyProfile)));

@@ -1,4 +1,6 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   Container,
   Header,
@@ -8,12 +10,7 @@ import {
   Input,
   Label,
 } from 'native-base';
-import {
-  StyleSheet, Text, TouchableOpacity, View,
-} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import { withNavigation } from 'react-navigation';
-import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
   logo: {
@@ -46,9 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChangePW = ({
-  email, findPW, updateInput, navigation
-}) => (
+const ChangePW = ({ navigation, email, findPW, updateInput }) => (
   <Container>
     <Header style={styles.displayNone} />
     <View style={styles.logo}>
@@ -65,7 +60,7 @@ const ChangePW = ({
             가입된 이메일
           </Label>
           <Input
-            onChangeText={(text) => updateInput('auth', 'email', text)}
+            onChangeText={text => updateInput('auth', 'email', text)}
             value={email}
           />
         </Item>
@@ -74,18 +69,19 @@ const ChangePW = ({
         style={styles.btn}
         onPress={async () => {
           const reuslt = await findPW();
-          if (reuslt) navigation.goBack();
+          if (reuslt) {
+            navigation.goBack();
+          }
         }}
       >
         <Text style={styles.white}>send Mail!</Text>
       </TouchableOpacity>
     </Content>
-
   </Container>
 );
 
-export default inject(({ helper, auth, user }) => ({
-  findPW: user.findPW,
+export default inject(({ auth, user, helper }) => ({
   email: auth.email,
+  findPW: user.findPW,
   updateInput: helper.updateInput,
 }))(observer(ChangePW));

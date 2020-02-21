@@ -1,4 +1,6 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   Text,
@@ -17,8 +19,6 @@ import {
   Label,
 } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { withNavigation } from 'react-navigation';
-import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
   logo: {
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scrollView: { paddingLeft: 10, paddingRight: 10 },
+  keyboardAvoiding: { width: '100%' },
   btn: {
     alignItems: 'center',
     padding: 15,
@@ -46,6 +47,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 120,
   },
+  forgetPWView: { marginTop: 30 },
+  forgetPW: { textAlign: 'center' },
+  forgetTxt: { color: 'blue', fontWeight: 'bold' },
   white: {
     color: 'white',
   },
@@ -58,12 +62,12 @@ const styles = StyleSheet.create({
 });
 
 const SignIn_Info = ({
+  navigation,
   email,
   PW,
-  updateInput,
   signIn,
+  updateInput,
   clearInput,
-  navigation,
 }) => (
   <Container>
     <Header />
@@ -72,7 +76,7 @@ const SignIn_Info = ({
     </View>
     <Content style={styles.scrollView}>
       <KeyboardAvoidingView
-        style={{ width: '100%' }}
+        style={styles.keyboardAvoiding}
         behavior="padding"
         enabled
       >
@@ -137,11 +141,11 @@ const SignIn_Info = ({
         >
           <Text style={styles.light}>Sign Up</Text>
         </TouchableOpacity>
-        <View style={{ marginTop: 30 }}>
-          <Text style={{ textAlign: 'center' }}>비밀번호를 잊으셨나요?</Text>
-          <Text style={{ textAlign: 'center' }}>
+        <View style={styles.forgetPWView}>
+          <Text style={styles.forgetPW}>비밀번호를 잊으셨나요?</Text>
+          <Text style={styles.forgetPW}>
             <Text
-              style={{ color: 'blue', fontWeight: 'bold' }}
+              style={styles.forgetTxt}
               onPress={() => {
                 clearInput(
                   'auth',

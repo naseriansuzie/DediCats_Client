@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { inject, observer } from 'mobx-react';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,10 +11,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  mapView: { flex: 1, width: '100%' },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  spotTxt: { color: '#767577', fontSize: 16, paddingVertical: 10 },
+  spotTxt: {
+    color: '#767577',
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingTop: 5,
+  },
 });
 
 class AddCatMap extends React.Component {
@@ -34,15 +40,6 @@ class AddCatMap extends React.Component {
 
   componentDidMount() {
     this.getCurrentPosition();
-    // const currentPosition = this.props.currentPosition;
-    // const markerData = {
-    //   latitude: this.props.currentPosition.latitude,
-    //   longitude: this.props.currentPosition.longitude,
-    // };
-    // this.setState({
-    //   currentPosition,
-    //   markerData,
-    // });
   }
 
   getCurrentPosition() {
@@ -54,7 +51,6 @@ class AddCatMap extends React.Component {
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0005,
         };
-        // const currentPosition = this.props.currentPosition;
         const markerData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -77,16 +73,14 @@ class AddCatMap extends React.Component {
 
   render() {
     const { markerData, currentPosition } = this.state;
-    console.log(currentPosition);
     return (
-      <View style={{ flex: 1, width: '100%' }}>
-        <Text style={styles.spotTxt}>자주 만나는 장소</Text>
+      <View style={styles.mapView}>
+        <Text style={styles.spotTxt}> 고양이를 자주 만나는 장소 선택</Text>
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation
             region={currentPosition}
-            // onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
           >
             <Marker

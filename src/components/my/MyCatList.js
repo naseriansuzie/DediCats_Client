@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   listView: {
+    alignSelf: 'center',
     paddingTop: 10,
     marginVertical: 5,
-    marginHorizontal: 20,
   },
   txt: {
     color: '#767577',
@@ -78,7 +78,6 @@ class MyCatList extends React.Component {
         </View>
       );
     }
-
     return (
       <View style={styles.noCatView}>
         <View style={styles.noCatRadiusView}>

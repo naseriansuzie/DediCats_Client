@@ -1,6 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
+import ActionSheet from 'react-native-actionsheet';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import {
   Text,
   Card,
@@ -12,9 +15,6 @@ import {
   Body,
   Right,
 } from 'native-base';
-import { withNavigation } from 'react-navigation';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import ActionSheet from 'react-native-actionsheet';
 import { AntDesign } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -32,9 +32,21 @@ const styles = StyleSheet.create({
   },
   date: { color: 'grey' },
   photo: { height: 300, width: null, flex: 1 },
+  cardItem: { alignSelf: 'flex-end' },
+  card: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+  },
+  leftSection: { width: '10%' },
+  iconColor: { color: '#6772f1' },
+  rightSection: { width: '45%' },
+  replyTxt: { paddingLeft: 5, paddingRight: 0 },
+  addReply: { width: '45%' },
+  noPadding: { paddingLeft: 0 },
 });
 
-const defaultPhotoUrl =
+const DEFAULT_USER_URL =
   'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 class CatPost extends React.Component {
@@ -47,9 +59,15 @@ class CatPost extends React.Component {
 
   render() {
     const { content, createAt, user, photos, comments } = this.props.item;
-    const { processPostActions, userInfo, setReplyNum } = this.props;
+    const {
+      item,
+      userInfo,
+      setReplyNum,
+      convertDateTime,
+      processPostActions,
+    } = this.props;
     const usrImgUri =
-      user.photoPath !== null ? user.photoPath : defaultPhotoUrl;
+      user.photoPath !== null ? user.photoPath : DEFAULT_USER_URL;
 
     return (
       <Card style={styles.container}>
@@ -64,7 +82,6 @@ class CatPost extends React.Component {
         </View>
         <ActionSheet
           ref={o => (this.ActionSheet = o)}
-          // title="Which one do you like ?"
           options={
             userInfo && userInfo.id === user.id
               ? ['수정', '삭제', '취소']
@@ -78,13 +95,13 @@ class CatPost extends React.Component {
             processPostActions(
               userInfo && userInfo.id === user.id,
               index,
-              this.props.item,
+              item,
             );
           }}
         />
         <TouchableWithoutFeedback
           onPress={() => {
-            this.setCatPostHere(this.props.item);
+            this.setCatPostHere(item);
             setReplyNum(comments);
           }}
         >
@@ -100,9 +117,7 @@ class CatPost extends React.Component {
               </Body>
             </Left>
             <Right>
-              <Text style={styles.date}>
-                {this.props.convertDateTime(createAt)}
-              </Text>
+              <Text style={styles.date}>{convertDateTime(createAt)}</Text>
             </Right>
           </CardItem>
           <CardItem cardBody>
@@ -115,33 +130,23 @@ class CatPost extends React.Component {
           <CardItem>
             <Text>{content}</Text>
           </CardItem>
-          <CardItem style={{ alignSelf: 'flex-end' }}>
+          <CardItem style={styles.cardItem}>
             <Left />
             <Right>
               <Button transparent>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    alignItems: 'center',
-                  }}
-                >
-                  <View style={{ width: '10%' }}>
-                    <Icon
-                      active
-                      name="chatbubbles"
-                      style={{ color: '#6772f1' }}
-                    />
+                <View style={styles.card}>
+                  <View style={styles.leftSection}>
+                    <Icon active name="chatbubbles" style={styles.iconColor} />
                   </View>
-                  <View style={{ width: '45%' }}>
-                    <Text note style={{ paddingLeft: 5, paddingRight: 0 }}>
+                  <View style={styles.rightSection}>
+                    <Text note style={styles.replyTxt}>
                       {comments.length > 0
                         ? `${comments.length}개의 댓글`
                         : '댓글 없음'}
                     </Text>
                   </View>
-                  <View style={{ width: '45%' }}>
-                    <Text note style={{ paddingLeft: 0 }}>
+                  <View style={styles.addReply}>
+                    <Text note style={styles.noPadding}>
                       댓글달기
                     </Text>
                   </View>
@@ -155,10 +160,9 @@ class CatPost extends React.Component {
   }
 }
 
-export default inject(({ auth, post, cat, report }) => ({
+export default inject(({ auth, post, helper, report }) => ({
   userInfo: auth.userInfo,
-  replyNum: post.replyNum,
   setReplyNum: post.setReplyNum,
-  selectedCatPost: cat.selectedCatPost,
+  convertDateTime: helper.convertDateTime,
   processPostActions: report.processPostActions,
 }))(observer(withNavigation(CatPost)));

@@ -98,8 +98,6 @@ const CatPostInput = ({
   removePhoto,
   validateAddInput,
   addPost,
-  setPostModify,
-  _handleRefresh,
 }) => (
   <View style={styles.container}>
     <View style={styles.inputView}>
@@ -158,7 +156,6 @@ const CatPostInput = ({
                       : await addPost('new');
                   }
                 } catch (err) {
-                  console.log('something is wrong');
                   console.dir(err);
                 }
               }}
@@ -180,11 +177,9 @@ export default inject(({ cat, helper, auth, post }) => ({
   selectedCatInputContent: cat.selectedCatInputContent,
   selectedCatUri: cat.selectedCatUri,
   updateInput: helper.updateInput,
-  getPermissionAsync: auth.getPermissionAsync,
   pickImage: helper.pickImage,
   removePhoto: helper.removePhoto,
   validateAddInput: helper.validateAddInput,
+  getPermissionAsync: auth.getPermissionAsync,
   addPost: post.addPost,
-  setPostModify: post.setPostModify,
-  _handleRefresh: post._handleRefresh,
 }))(observer(CatPostInput));

@@ -50,6 +50,15 @@ class ChangePW extends React.Component {
   }
 
   render() {
+    const {
+      navigation,
+      PW,
+      confirmPW,
+      reConfirmPW,
+      updateInput,
+      changePW,
+      getMyInfo,
+    } = this.props;
     return (
       <Container>
         <Header style={styles.displayNone} />
@@ -67,11 +76,9 @@ class ChangePW extends React.Component {
                 기존 비밀번호
               </Label>
               <Input
-                onChangeText={text =>
-                  this.props.updateInput('auth', 'PW', text)
-                }
+                onChangeText={text => updateInput('auth', 'PW', text)}
                 secureTextEntry
-                value={this.props.PW}
+                value={PW}
               />
             </Item>
             <Item floatingLabel>
@@ -83,11 +90,9 @@ class ChangePW extends React.Component {
                 새로운 비밀번호
               </Label>
               <Input
-                onChangeText={text =>
-                  this.props.updateInput('auth', 'confirmPW', text)
-                }
+                onChangeText={text => updateInput('auth', 'confirmPW', text)}
                 secureTextEntry
-                value={this.props.confirmPW}
+                value={confirmPW}
               />
             </Item>
             <Item floatingLabel>
@@ -99,20 +104,20 @@ class ChangePW extends React.Component {
                 새로운 비밀번호 재확인
               </Label>
               <Input
-                onChangeText={text =>
-                  this.props.updateInput('auth', 'reConfirmPW', text)
-                }
+                onChangeText={text => updateInput('auth', 'reConfirmPW', text)}
                 secureTextEntry
-                value={this.props.reConfirmPW}
+                value={reConfirmPW}
               />
             </Item>
           </Form>
           <TouchableOpacity
             style={styles.btn}
             onPress={async () => {
-              const result = await this.props.changePW();
-              this.props.getMyInfo();
-              if (result) this.props.navigation.navigate('AuthLoading');
+              const result = await changePW();
+              getMyInfo();
+              if (result) {
+                navigation.navigate('AuthLoading');
+              }
             }}
           >
             <Text style={styles.white}>비밀변호 변경</Text>

@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
-const CatPhoto = ({ path, photo, selectPhoto, navigation }) => (
+const CatPhoto = ({ navigation, path, photo, selectPhoto }) => (
   <TouchableHighlight
     onPress={async () => {
       await selectPhoto(photo);

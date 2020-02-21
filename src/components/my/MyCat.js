@@ -2,8 +2,8 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 
 const styles = StyleSheet.create({
   radius: {
@@ -29,13 +29,13 @@ const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const MyCat = ({
+  navigation,
   catId,
   catPhoto,
   address,
   catNickname,
-  unFollowCat,
-  navigation,
   getSelectedCatInfo,
+  unFollowCat,
   resetPostState,
 }) => (
   <ListItem thumbnail>
