@@ -108,15 +108,6 @@ class UserStore {
     return result;
   };
 
-  resetDefaultPhoto = async () => {
-    const defaultPhotoUrl =
-      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
-
-    this.myUri = defaultPhotoUrl;
-    this.myPhotoPath = null;
-    return new Promise((resolve, reject) => resolve(true));
-  };
-
   postMyPhoto = async () => {
     console.log('postMyPhoto 시작');
     const photoPath = await axios
@@ -127,6 +118,7 @@ class UserStore {
       )
       .then(res => {
         this.myUri = res.data.photoPath;
+        this.myPhotoPath = null;
         console.log('서버에서 받은 uri', this.myUri);
         return res.data.photoPath;
       })
@@ -134,6 +126,22 @@ class UserStore {
         console.dir(err);
       });
     return photoPath;
+  };
+
+  resetDefaultPhoto = async () => {
+    const defaultPhotoUrl =
+      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+
+    this.myUri = defaultPhotoUrl;
+    this.myPhotoPath = null;
+    return new Promise((resolve, reject) => resolve(true));
+  };
+
+  resetUserObservable = () => {
+    this.myUri = defaultPhotoUrl;
+    this.myPhotoPath = null;
+    this.myCatList = null;
+    this.unFollowedCat = null;
   };
 }
 
@@ -145,8 +153,9 @@ decorate(UserStore, {
   getMyCatList: action,
   changePW: action,
   findPW: action,
-  resetDefaultPhoto: action,
   postMyPhoto: action,
+  resetDefaultPhoto: action,
+  resetUserObservable: action,
 });
 
 export default UserStore;

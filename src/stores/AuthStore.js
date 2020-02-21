@@ -57,10 +57,11 @@ class AuthStore {
         return true;
       })
       .catch(err => {
-        if (err.response && err.response.status === 401)
+        if (err.response && err.response.status === 401) {
           Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
-        else
+        } else {
           Alert.alert('이메일 전송에 실패하였습니다. 관리자에게 문의해주세요.');
+        }
 
         console.dir(err);
         return false;
@@ -92,8 +93,9 @@ class AuthStore {
         return false;
       });
 
-    if (!result)
+    if (!result) {
       Alert.alert('회원가입에 실패하였습니다. 관리자에게 문의해주세요!');
+    }
 
     runInAction(() => {
       this.root.helper.clearInput(
@@ -132,10 +134,11 @@ class AuthStore {
         return true;
       })
       .catch(err => {
-        if (err.response && err.response.status === 401)
+        if (err.response && err.response.status === 401) {
           Alert.alert(
             '회원 정보가 일치하지 않습니다. 이메일 또는 비밀번호를 확인해주세요.',
           );
+        }
         console.dir('err : ', err);
         return false;
       });
@@ -143,10 +146,12 @@ class AuthStore {
   };
 
   signOut = async () => {
+    const { user } = this.root;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async res => {
         await AsyncStorage.removeItem('user');
+        user.resetUserObservable();
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
         return true;
