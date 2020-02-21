@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View } from 'react-native';
 import { Content, Text } from 'native-base';
 import MyCat from './MyCat';
@@ -17,9 +18,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   listView: {
+    width: '90%',
+    alignSelf: 'center',
     paddingTop: 10,
     marginVertical: 5,
-    marginHorizontal: 20,
   },
   txt: {
     color: '#767577',
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
 class MyCatList extends React.Component {
   componentDidMount() {
     console.log('MyCatList mount');
-    this.props.getMyCatList();
+    this.props.getMyCatList(this.props.navigation);
   }
 
   render() {
@@ -78,7 +80,6 @@ class MyCatList extends React.Component {
         </View>
       );
     }
-
     return (
       <View style={styles.noCatView}>
         <View style={styles.noCatRadiusView}>
@@ -93,4 +94,4 @@ export default inject(({ auth, user }) => ({
   userInfo: auth.userInfo,
   myCatList: user.myCatList,
   getMyCatList: user.getMyCatList,
-}))(observer(MyCatList));
+}))(observer(withNavigation(MyCatList)));

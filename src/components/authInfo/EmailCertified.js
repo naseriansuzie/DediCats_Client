@@ -1,4 +1,7 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import {
   Container,
   Header,
@@ -8,12 +11,10 @@ import {
   Input,
   Label,
 } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { withNavigation } from 'react-navigation';
-import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
+  hide: { display: 'none' },
   logo: {
     alignItems: 'center',
     padding: 50,
@@ -46,17 +47,17 @@ const styles = StyleSheet.create({
 });
 
 const emailCertified = ({
-  updateInput,
   navigation,
+  updateInput,
   emailVerification,
   emailCode,
   signUp,
 }) => (
   <Container>
-    <Header style={{ display: 'none' }} />
+    <Header style={styles.hide} />
     <View style={styles.logo}>
-      <Text style={styles.logoTxt}>Dedicat</Text>
-      <Text style={styles.title}>회원가입</Text>
+      <Text style={styles.logoTxt}>Dedicats</Text>
+      <Text style={styles.title}>이메일 인증</Text>
     </View>
     <Content>
       <Form>
@@ -81,11 +82,14 @@ const emailCertified = ({
         onPress={async () => {
           if (emailCode === emailVerification) {
             const signUpResult = signUp();
-            if (signUpResult) navigation.navigate('Sign In');
-          } else
+            if (signUpResult) {
+              navigation.navigate('Sign In');
+            }
+          } else {
             Alert.alert(
               '이메일 인증 코드가 다릅니다. 이메일을 다시 확인해주세요!',
             );
+          }
         }}
       >
         <Text style={styles.white}>Submit</Text>
@@ -95,8 +99,8 @@ const emailCertified = ({
 );
 
 export default inject(({ helper, auth }) => ({
+  updateInput: helper.updateInput,
   emailVerification: auth.emailVerification,
   emailCode: auth.emailCode,
   signUp: auth.signUp,
-  updateInput: helper.updateInput,
 }))(observer(withNavigation(emailCertified)));

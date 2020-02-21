@@ -1,7 +1,7 @@
 import { action, decorate } from 'mobx';
-import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
 
@@ -11,7 +11,7 @@ class ReportStore {
   }
 
   // action
-  reportCatBio = async () => {
+  reportCatBio = async navigation => {
     const { cat } = this.root;
     const catId = cat.selectedCatBio[0].id;
     const criminalId = cat.selectedCatBio[0].user.id;
@@ -22,19 +22,19 @@ class ReportStore {
           { text: '확인', onPress: () => {} },
         ]),
       )
-      .catch(err => this.alertFailure(err));
+      .catch(err => this.alertFailure(err, navigation));
     return result;
   };
 
-  reportPost = async (postId, criminalId) => {
+  reportPost = async (postId, criminalId, navigation) => {
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
       .then(res => true)
-      .catch(err => this.alertFailure(err));
+      .catch(err => this.alertFailure(err, navigation));
     return result;
   };
 
-  reportComment = async () => {
+  reportComment = async navigation => {
     const { cat } = this.root;
     const commentId = cat.selectedCatComment.id;
     const criminalId = cat.selectedCatComment.user.id;
@@ -45,11 +45,12 @@ class ReportStore {
         defaultCredential,
       )
       .then(res => true)
-      .catch(err => this.alertFailure(err));
+      .catch(err => this.alertFailure(err, navigation));
     return result;
   };
 
-  alertFailure = err => {
+  alertFailure = (err, navigation) => {
+    this.root.auth.expiredTokenHandler(err, navigation);
     console.dir(err);
     if (err.response && err.response.status === 409) {
       Alert.alert('등록이 실패되었습니다. 다시 시도해주세요.');
@@ -57,7 +58,7 @@ class ReportStore {
     return false;
   };
 
-  processPostActions = (isMyPost, idx, item) => {
+  processPostActions = (isMyPost, idx, item, navigation) => {
     const { cat, post } = this.root;
     if (isMyPost) {
       if (idx === 0) {
@@ -71,7 +72,7 @@ class ReportStore {
       }
       if (idx === 1) {
         // 게시글 삭제
-        post.deletePost(item);
+        post.deletePost(item, navigation);
       }
     } else if (isMyPost !== true && idx === 0) {
       // 게시물 신고
@@ -83,7 +84,7 @@ class ReportStore {
         },
         {
           text: '신고',
-          onPress: () => this.reportPost(item.id, item.user.id),
+          onPress: () => this.reportPost(item.id, item.user.id, navigation),
         },
       ]);
     }

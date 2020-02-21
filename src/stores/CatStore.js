@@ -1,12 +1,10 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
+import { observable, action, decorate, runInAction } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
-import * as ImagePicker from 'expo-image-picker';
 import socketio from 'socket.io-client';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
-
 class CatStore {
   constructor(root) {
     this.root = root;
@@ -162,23 +160,23 @@ class CatStore {
     helper(socket);
   };
 
-  offUser = async () => {
+  offUser = async navigation => {
     const result = await axios
       .get(
         `${SERVER_URL}/post/disconnect/?socket_id=${this.socketId}`,
         defaultCredential,
       )
       .then(res => true)
-      .catch(error => {
-        console.log(error);
-        Alert.alert('Off User Failed');
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
       });
     return result;
   };
 
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
 
-  getSelectedCatInfo = async catId => {
+  getSelectedCatInfo = async (catId, navigation) => {
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
       .then(res => {
@@ -200,6 +198,7 @@ class CatStore {
         return true;
       })
       .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
         console.dir(err);
         return false;
       });
@@ -207,17 +206,20 @@ class CatStore {
   };
 
   // CatStore
-  followCat = catId => {
-    const { map, user } = this.root;
+  followCat = (catId, navigation) => {
+    const { map, user, auth } = this.root;
     axios
       .post(`${SERVER_URL}/cat/follow/`, { catId }, defaultCredential)
       .then(res => {
         this.getSelectedCatInfo(catId);
-        this.getFollowerList(catId);
-        map.getMapInfo();
-        user.getMyCatList();
+        this.getFollowerList(catId, navigation);
+        map.getMapInfo(navigation);
+        user.getMyCatList(navigation);
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 
   // CatStore
@@ -316,7 +318,7 @@ class CatStore {
   };
 
   // CatStore
-  addCat = async () => {
+  addCat = async navigation => {
     const {
       addCatAddress,
       addCatLocation,
@@ -349,6 +351,7 @@ class CatStore {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
+          this.root.auth.expiredTokenHandler(err, navigation);
           console.dir(err);
         }
       });
@@ -362,23 +365,32 @@ class CatStore {
   };
 
   // CatStore
-  reportRainbow = async type => {
+  reportRainbow = async (type, navigation) => {
     const catId = this.selectedCatBio[0].id;
+    console.log(catId);
     const rainbow = {
       Y: 0,
       YDate: null,
       N: 0,
       NDate: null,
     };
+    console.log(rainbow);
     rainbow[type] = 1;
+    console.log(rainbow[type]);
     rainbow[`${type}Date`] = this.root.helper.makeDateTime();
+    console.log(rainbow[`${type}Date`]);
+    console.log(rainbow);
+    console.log({ catId, rainbow });
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
       .then(res => {
         this.selectedCatBio[0].rainbow = JSON.parse(res.data.rainbow);
         return res.data;
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
     return result;
   };
 
@@ -390,7 +402,7 @@ class CatStore {
   };
 
   // CatStore
-  postCut = type => {
+  postCut = (type, navigation) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     const catId = this.selectedCatBio[0].id;
@@ -407,13 +419,16 @@ class CatStore {
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('중성화 유무 등록에 실패했습니다.');
-          } else console.dir(err);
+          } else {
+            this.root.auth.expiredTokenHandler(err, navigation);
+            console.dir(err);
+          }
         });
     });
   };
 
   // CatStore
-  postCatToday = value => {
+  postCatToday = (value, navigation) => {
     const catId = this.selectedCatBio[0].id;
     this.selectedCatToday = value;
     const todayInfo = {
@@ -430,25 +445,28 @@ class CatStore {
           if (err.response && err.response.status === 409) {
             Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
             this.selectedCatToday = undefined;
-          } else console.dir(err);
+          } else {
+            this.root.auth.expiredTokenHandler(err, navigation);
+            console.dir(err);
+          }
         });
     });
   };
 
   // CatStore
-  validateTag = () => {
+  validateTag = navigation => {
     const { selectedCatNewTag } = this;
     const tags = this.selectedCatBio[2].map(tagInfo => tagInfo.tag.content);
     if (tags.includes(selectedCatNewTag)) {
       Alert.alert('이미 존재하는 태그입니다!');
       this.root.helper.clearInput('cat', 'selectedCatNewTag');
     } else {
-      this.postTag(selectedCatNewTag);
+      this.postTag(selectedCatNewTag, navigation);
     }
   };
 
   // CatStore
-  postTag = newTag => {
+  postTag = (newTag, navigation) => {
     const catId = this.selectedCatBio[0].id;
     axios
       .post(
@@ -463,21 +481,27 @@ class CatStore {
           this.root.helper.clearInput('cat', 'selectedCatNewTag');
         });
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 
-  getCommentList = async () => {
+  getCommentList = async navigation => {
     try {
       const postId = this.selectedCatPost.id;
       const url = `${SERVER_URL}/comment/${postId}/${this.commentPage}`;
       const comment = await axios.get(url);
       if (comment) {
         console.log('서버에서 받은 코멘트들', comment.data.length);
-        this.selectedCatCommentList = this.selectedCatCommentList.concat(comment.data);
+        this.selectedCatCommentList = this.selectedCatCommentList.concat(
+          comment.data,
+        );
         console.log('받아온 코멘트 리스트', this.selectedCatCommentList.length);
       }
       return;
     } catch (error) {
+      this.root.auth.expiredTokenHandler(err, navigation);
       console.error(error);
     }
     // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
@@ -491,13 +515,13 @@ class CatStore {
     this.initialComments = 0;
   };
 
-  _handleLoadMoreComments = async () => {
+  _handleLoadMoreComments = async navigation => {
     this.commentPage += 1;
-    await this.getCommentList();
+    await this.getCommentList(navigation);
   };
 
   // * 추가와 수정 둘다 가능
-  addComment = mode => {
+  addComment = (mode, navigation) => {
     const url =
       mode === 'new'
         ? `${SERVER_URL}/comment/add`
@@ -517,7 +541,10 @@ class CatStore {
         .catch(err => {
           if (err.response && err.response.status === 409) {
             Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
-          } else console.dir(err);
+          } else {
+            this.root.auth.expiredTokenHandler(err, navigation);
+            console.dir(err);
+          }
         });
     }
     const updateCommentInfo = {
@@ -554,7 +581,7 @@ class CatStore {
     this.selectedCatInputComment = comment.content;
   };
 
-  deleteComment = async comment => {
+  deleteComment = async (comment, navigation) => {
     await this.setCatComment(comment);
     axios
       .post(
@@ -567,11 +594,12 @@ class CatStore {
         Alert.alert('게시글이 삭제되었습니다.');
       })
       .catch(err => {
-        this.alertFailure(err);
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
       });
   };
 
-  getAlbums = () => {
+  getAlbums = navigation => {
     const catId = this.selectedCatBio[0].id;
     axios
       .get(`${SERVER_URL}/photo/album/${catId}`, defaultCredential)
@@ -582,6 +610,7 @@ class CatStore {
         this.selectedCatAlbum = photos;
       })
       .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
         console.dir(err);
       });
   };
@@ -590,27 +619,23 @@ class CatStore {
     this.selectedCatPhoto = photo;
   };
 
-  getFollowerList = catId => {
+  getFollowerList = (catId, navigation) => {
     axios
       .get(`${SERVER_URL}/cat/follower/${catId}`, defaultCredential)
       .then(res => {
         this.selectedCatFollowerList = res.data;
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 }
 
 decorate(CatStore, {
-  commentPage: observable,
-  initialComments: observable,
-  socketId: observable,
-  isConnectSocket: observable,
-  newComment: observable,
-  connectSocket: action,
-  offUser: action,
-  onDragstate: observable,
   addCatAddress: observable,
   addCatLocation: observable,
+  onDragstate: observable,
   addCatPhotoPath: observable,
   addCatNickname: observable,
   addCatDescription: observable,
@@ -639,6 +664,14 @@ decorate(CatStore, {
   selectedCatRainbowNReported: observable,
   selectedCatCutClicked: observable,
   selectedCatReportInfo: observable,
+  socketId: observable,
+  isConnectSocket: observable,
+  newComment: observable,
+  commentPage: observable,
+  initialComments: observable,
+  setCatPost: action,
+  connectSocket: action,
+  offUser: action,
   getSelectedCatInfo: action,
   followCat: action,
   selectCut: action,
@@ -662,7 +695,6 @@ decorate(CatStore, {
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,
-  setCatPost: action,
 });
 
 export default CatStore;

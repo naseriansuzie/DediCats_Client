@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   Text,
@@ -10,7 +11,6 @@ import {
   Alert,
 } from 'react-native';
 import { Content, Item, Label, Input, Textarea } from 'native-base';
-import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -94,11 +94,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+  width100: {
+    width: '100%',
+  },
 });
 const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
+  navigation,
   addCatUri,
   addCatNickname,
   addCatSpecies,
@@ -112,15 +116,10 @@ const AddCatBio = ({
   validateAddCat,
   getAddress,
   addCat,
-  navigation,
 }) => (
   <View style={styles.container}>
     <View style={styles.flex1}>
-      <KeyboardAvoidingView
-        style={{ width: '100%' }}
-        behavior="padding"
-        enabled
-      >
+      <KeyboardAvoidingView style={styles.width100} behavior="padding" enabled>
         <View style={styles.row}>
           <View style={styles.photoView}>
             <View style={styles.photo}>
@@ -224,24 +223,20 @@ const AddCatBio = ({
             onPress={async () => {
               const validation = await validateAddCat();
               if (validation) {
-                const addressResult = await getAddress();
+                const addressResult = await getAddress(navigation);
                 if (addressResult) {
-                  const addCatResult = await addCat();
+                  const addCatResult = await addCat(navigation);
                   if (addCatResult) {
                     navigation.goBack();
-                    await getMapInfo();
+                    await getMapInfo(navigation);
                   } else {
-                    console.log('등록 실패');
                     Alert.alert('고양이를 등록할 수 없습니다');
                     navigation.goBack();
                   }
                 } else {
-                  console.log('주소검증 실패');
                   Alert.alert('고양이를 등록할 수 없습니다');
                   navigation.goBack();
                 }
-              } else {
-                console.log('검증 실패');
               }
             }}
           >

@@ -1,4 +1,13 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -8,18 +17,10 @@ import {
   Input,
   Label,
 } from 'native-base';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  KeyboardAvoidingView,
-} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { withNavigation } from 'react-navigation';
-import { inject, observer } from 'mobx-react';
 
 const styles = StyleSheet.create({
+  hide: { display: 'none' },
   logo: {
     alignItems: 'center',
     padding: 50,
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
   },
+  keyboardAvoiding: { width: '100%' },
   btn: {
     alignItems: 'center',
     padding: 15,
@@ -52,17 +54,17 @@ const styles = StyleSheet.create({
 });
 
 const SignUp_Info = ({
+  navigation,
   email,
   nickname,
   confirmPW,
   reConfirmPW,
-  updateInput,
   validateSignUp,
   emailCertified,
-  navigation,
+  updateInput,
 }) => (
   <Container>
-    <Header style={{ display: 'none' }} />
+    <Header style={styles.hide} />
     <View style={styles.logo}>
       <Text
         style={styles.logoTxt}
@@ -74,7 +76,7 @@ const SignUp_Info = ({
     </View>
     <Content>
       <KeyboardAvoidingView
-        style={{ width: '100%' }}
+        style={styles.keyboardAvoiding}
         behavior="padding"
         enabled
       >
@@ -94,7 +96,7 @@ const SignUp_Info = ({
           </Item>
           <Item floatingLabel>
             <Label>
-              <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
+              <MaterialCommunityIcons name="paw" style={styles.font16} />{' '}
               nickname
             </Label>
             <Input
@@ -138,7 +140,9 @@ const SignUp_Info = ({
             if (!validation) return;
 
             const emailResult = await emailCertified();
-            if (emailResult) navigation.navigate('Email Certified');
+            if (emailResult) {
+              navigation.navigate('Email Certified');
+            }
           }}
         >
           <Text style={styles.white}>Submit</Text>
@@ -153,7 +157,6 @@ SignUp_Info.navigationOptions = {
 };
 
 export default inject(({ auth, helper }) => ({
-  isSignUp: auth.isSignUp,
   email: auth.email,
   nickName: auth.nickName,
   confirmPW: auth.confirmPW,
@@ -161,5 +164,4 @@ export default inject(({ auth, helper }) => ({
   validateSignUp: auth.validateSignUp,
   emailCertified: auth.emailCertified,
   updateInput: helper.updateInput,
-  clearInput: helper.clearInput,
 }))(observer(withNavigation(SignUp_Info)));

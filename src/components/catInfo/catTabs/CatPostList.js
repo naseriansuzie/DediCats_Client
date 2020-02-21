@@ -1,4 +1,7 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
+import * as Font from 'expo-font';
 import {
   StyleSheet,
   View,
@@ -7,8 +10,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
-import { inject, observer } from 'mobx-react';
-import * as Font from 'expo-font';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
 
@@ -38,11 +39,11 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
-  state = { loading: true }
+  state = { loading: true };
 
   componentDidMount() {
     console.log('CatPostList mount');
-    this.props.getPostList();
+    this.props.getPostList(this.props.navigation);
   }
 
   loadFont = async () => {
@@ -52,7 +53,7 @@ class CatPostList extends React.Component {
       Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
     });
     this.setState({ loading: false });
-  }
+  };
 
   _renderItem = ({ item }) => (
     <CatPost
@@ -64,14 +65,21 @@ class CatPostList extends React.Component {
   );
 
   renderFooter = () =>
-    (this.props.isLoadingPost ? (
+    this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
-    ) : <View />);
+    ) : (
+      <View />
+    );
 
   render() {
-    const { postList, _handleLoadMorePosts, isRefreshingPost, _handleRefresh } = this.props;
+    const {
+      postList,
+      _handleLoadMorePosts,
+      isRefreshingPost,
+      _handleRefresh,
+    } = this.props;
     if (this.state.loading) {
       this.loadFont();
       return <View />;
@@ -112,4 +120,4 @@ export default inject(({ cat, post, helper }) => ({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
-}))(observer(CatPostList));
+}))(observer(withNavigation(CatPostList)));

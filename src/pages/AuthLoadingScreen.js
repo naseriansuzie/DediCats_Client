@@ -1,9 +1,8 @@
 import React from 'react';
-import axios from 'axios';
-import { ActivityIndicator, StatusBar, View, AsyncStorage } from 'react-native';
-
-import { AUTH_SERVER } from 'react-native-dotenv';
 import { inject, observer } from 'mobx-react';
+import axios from 'axios';
+import { AUTH_SERVER } from 'react-native-dotenv';
+import { ActivityIndicator, StatusBar, View, AsyncStorage } from 'react-native';
 
 class AuthLoadingScreen extends React.Component {
   // lifecycle
@@ -16,22 +15,20 @@ class AuthLoadingScreen extends React.Component {
     const result = await axios
       .post(`${AUTH_SERVER}/auth/token`)
       .then(async res => {
-        if (!res.data.accessToken) return false;
+        if (!res.data.accessToken) {
+          return false;
+        }
         const { photoPath } = res.data.user;
         await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
         setMyUri(photoPath);
         return 'App';
       })
-      .catch(e => {
-        console.log(e);
-        return 'Auth';
-      });
+      .catch(e => 'Auth');
 
     return this.props.navigation.navigate(result);
   }
 
   render() {
-    console.disableYellowBox = 'true';
     return (
       <View>
         <ActivityIndicator />

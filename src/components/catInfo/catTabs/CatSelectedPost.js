@@ -1,6 +1,15 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, Text, Image, FlatList, SafeAreaView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -13,13 +22,15 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const defaultPhotoUrl = 'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+const DEFAULT_USER_URL =
+  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
 
 const styles = StyleSheet.create({
   container: {
     flex: 3,
     width: '100%',
   },
+  hide: { display: 'none' },
   cardView: {
     flex: 1,
     borderWidth: 10,
@@ -43,6 +54,8 @@ const styles = StyleSheet.create({
     height: 300,
     width: 380,
   },
+  message: { paddingTop: 20 },
+  loadMore: { textAlign: 'center', fontSize: 20 },
   noComment: { color: '#7f8296', paddingTop: 15, paddingLeft: 15 },
   flex1: { flex: 1 },
 });
@@ -53,7 +66,7 @@ class CatSelectedPost extends React.Component {
   componentDidMount() {
     const { getCommentList } = this.props;
     console.log('CatSelectedPost mount');
-    getCommentList();
+    getCommentList(this.props.navigation);
   }
 
   _renderItem = ({ item }) => (
@@ -69,19 +82,22 @@ class CatSelectedPost extends React.Component {
 
   render() {
     const {
+      navigation,
       selectedCatPost,
       selectedCatCommentList,
-      convertDateTime,
       initialComments,
-      _handleLoadMoreComments
+      _handleLoadMoreComments,
+      convertDateTime,
     } = this.props;
 
-    const usrImgUri = selectedCatPost.user.photoPath !== null
-      ? selectedCatPost.user.photoPath : defaultPhotoUrl;
+    const usrImgUri =
+      selectedCatPost.user.photoPath !== null
+        ? selectedCatPost.user.photoPath
+        : DEFAULT_USER_URL;
 
     return (
       <Container style={styles.container}>
-        <Header style={{ display: 'none' }} />
+        <Header style={styles.hide} />
         <Content>
           <Card style={styles.cardView}>
             <CardItem style={styles.flex1}>
@@ -107,26 +123,23 @@ class CatSelectedPost extends React.Component {
                 ) : (
                   <View />
                 )}
-                <Text style={{ paddingTop: 20 }}>
-                  {selectedCatPost.content}
-                </Text>
+                <Text style={styles.message}>{selectedCatPost.content}</Text>
               </Body>
             </CardItem>
           </Card>
           {selectedCatCommentList.length > 0 ? (
             <SafeAreaView>
-              {initialComments - selectedCatCommentList.length > 0
-                ? (
-                  <TouchableOpacity
-                    onPress={() => _handleLoadMoreComments()}
-                  >
-                    <Text style={{ textAlign: 'center', fontSize: 20 }}>load comments</Text>
-                  </TouchableOpacity>
-                ) : null}
+              {initialComments - selectedCatCommentList.length > 0 ? (
+                <TouchableOpacity
+                  onPress={() => _handleLoadMoreComments(navigation)}
+                >
+                  <Text style={styles.loadMore}>load comments</Text>
+                </TouchableOpacity>
+              ) : null}
               <FlatList
                 data={selectedCatCommentList}
                 renderItem={this._renderItem}
-                keyExtractor={(item) => `post_${item.id}`}
+                keyExtractor={item => `post_${item.id}`}
                 showsVerticalScrollIndicator={false}
                 inverted
               />
@@ -143,8 +156,8 @@ class CatSelectedPost extends React.Component {
 export default inject(({ cat, helper }) => ({
   selectedCatPost: cat.selectedCatPost,
   selectedCatCommentList: cat.selectedCatCommentList,
-  convertDateTime: helper.convertDateTime,
+  initialComments: cat.initialComments,
   getCommentList: cat.getCommentList,
   _handleLoadMoreComments: cat._handleLoadMoreComments,
-  initialComments: cat.initialComments,
-}))(observer(CatSelectedPost));
+  convertDateTime: helper.convertDateTime,
+}))(observer(withNavigation(CatSelectedPost)));

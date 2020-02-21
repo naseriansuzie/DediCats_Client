@@ -12,6 +12,8 @@ class AuthStore {
     this.root = root;
   }
 
+  isSignUp = false;
+
   email = '';
 
   nickname = '';
@@ -19,8 +21,6 @@ class AuthStore {
   confirmPW = '';
 
   reConfirmPW = '';
-
-  photoPath = '';
 
   PW = '';
 
@@ -177,11 +177,18 @@ class AuthStore {
       }
     }
   };
+
+  expiredTokenHandler = async (err, navigation) => {
+    if (err.response && err.response.status === 401) {
+      Alert.alert('다시 로그인해주십시오.');
+      await this.signOut();
+      navigation.navigate('AuthLoading');
+    }
+  };
 }
 
 decorate(AuthStore, {
   isSignUp: observable,
-  isSignIn: observable,
   email: observable,
   nickname: observable,
   confirmPW: observable,
@@ -189,15 +196,14 @@ decorate(AuthStore, {
   PW: observable,
   emailVerification: observable,
   emailCode: observable,
-  myInfo: observable,
+  userInfo: observable,
   validateSignUp: action,
   emailCertified: action,
   signUp: action,
-  validateSignIn: action,
   signIn: action,
   signOut: action,
-  updateState: action,
-  getPermissionAsync: action,
   getMyInfo: action,
+  getPermissionAsync: action,
+  expiredTokenHandler: action,
 });
 export default AuthStore;

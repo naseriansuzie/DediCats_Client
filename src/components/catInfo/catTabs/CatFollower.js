@@ -8,10 +8,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const defaultPhotoUrl =
+const DEFAULT_USER_URL =
   'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
-// const defaultPhotoUrl =
-//   'https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg';
 
 const CatFollower = ({ idx, myPhoto, userNickName, catName }) => {
   if (typeof idx === 'number') {
@@ -20,7 +18,7 @@ const CatFollower = ({ idx, myPhoto, userNickName, catName }) => {
         <Left>
           <Thumbnail
             square
-            source={{ uri: myPhoto || defaultPhotoUrl }}
+            source={{ uri: myPhoto || DEFAULT_USER_URL }}
             style={styles.radius}
           />
         </Left>

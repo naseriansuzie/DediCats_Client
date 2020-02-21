@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Text } from 'react-native';
 import { Content } from 'native-base';
 import CatPhoto from './CatPhoto';
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
 class CatAlbum extends React.Component {
   componentDidMount() {
     console.log('CatAlbum mount');
-    this.props.getAlbums();
+    this.props.getAlbums(this.props.navigation);
   }
 
   render() {
@@ -92,4 +93,4 @@ export default inject(({ cat }) => ({
   nickname: cat.selectedCatBio[0].nickname,
   getAlbums: cat.getAlbums,
   selectPhoto: cat.selectPhoto,
-}))(observer(CatAlbum));
+}))(observer(withNavigation(CatAlbum)));

@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import { Button, ListItem, Content, Text } from 'native-base';
-import ActionSheet from 'react-native-actionsheet';
 import { MAIL_TO } from 'react-native-dotenv';
 import * as MailComposer from 'expo-mail-composer';
+import ActionSheet from 'react-native-actionsheet';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { Button, ListItem, Content, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -77,7 +77,7 @@ class MyProfile_Elements extends React.Component {
 
   render() {
     console.disableYellowBox = 'true';
-    const defaultPhotoUrl =
+    const DEFAULT_USER_URL =
       'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
     const {
       navigation,
@@ -101,7 +101,7 @@ class MyProfile_Elements extends React.Component {
           <Image
             style={styles.myPhoto}
             source={{
-              uri: myUri || defaultPhotoUrl,
+              uri: myUri || DEFAULT_USER_URL,
             }}
           />
           {myPhotoPath ? (
@@ -109,7 +109,7 @@ class MyProfile_Elements extends React.Component {
               <TouchableOpacity
                 style={styles.photoEditionItem}
                 onPress={async () => {
-                  await postMyPhoto();
+                  await postMyPhoto(navigation);
                   setEditingMode('no');
                 }}
               >
@@ -153,7 +153,7 @@ class MyProfile_Elements extends React.Component {
               if (myUri !== null) {
                 if (index === 1) {
                   setEditingMode('yes');
-                  await deleteMyPhoto();
+                  await deleteMyPhoto(navigation);
                   setEditingMode('no');
                 }
               }

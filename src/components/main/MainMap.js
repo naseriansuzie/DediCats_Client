@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/state-in-constructor */
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import {
   StyleSheet,
@@ -11,9 +13,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import { MaterialIcons } from '@expo/vector-icons';
-import { inject, observer } from 'mobx-react';
 import BriefCatInfo from './BriefCatInfo';
 import MainMarker from './MainMarker';
 
@@ -163,14 +163,11 @@ class MainMap extends React.Component {
 
 export default inject(({ map, auth }) => ({
   getMyInfo: auth.getMyInfo,
+  requestMapPermission: map.requestMapPermission,
   markers: map.markers,
   selectedMarker: map.selectedMarker,
-  getMapInfo: map.getMapInfo,
-  currentPosition: map.currentPosition,
   currentRegion: map.currentRegion,
-  currentBoundingBox: map.currentBoundingBox,
   permissionState: map.permissionState,
-  requestMapPermission: map.requestMapPermission,
   getCurrentPosition: map.getCurrentPosition,
   onRegionChangeComplete: map.onRegionChangeComplete,
   isShowingBriefCat: map.isShowingBriefCat,

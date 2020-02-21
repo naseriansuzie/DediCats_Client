@@ -1,8 +1,8 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
+import { observable, action, decorate } from 'mobx';
 import axios from 'axios';
-import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
+import { SERVER_URL } from 'react-native-dotenv';
 import * as Permissions from 'expo-permissions';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
 
@@ -37,14 +37,12 @@ class MapStore {
 
   isShowingBriefCat = false;
 
-  carousels = [];
-
   markers = [];
 
   selectedMarker = null;
 
   // actions
-  getMapInfo = async () => {
+  getMapInfo = async navigation => {
     const currentBound = this.currentBoundingBox;
     await axios
       .post(`${SERVER_URL}/map`, { location: currentBound }, defaultCredential)
@@ -52,7 +50,10 @@ class MapStore {
         this.markers = res.data;
         return true;
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 
   requestMapPermission = async () => {
@@ -70,7 +71,7 @@ class MapStore {
     }
   };
 
-  getCurrentPosition = () => {
+  getCurrentPosition = navigation => {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
@@ -80,12 +81,15 @@ class MapStore {
           longitude,
           longitudeDelta: 0.0005,
         };
-        this.onRegionChangeComplete({
-          latitude,
-          latitudeDelta: 0.005,
-          longitude,
-          longitudeDelta: 0.005,
-        });
+        this.onRegionChangeComplete(
+          {
+            latitude,
+            latitudeDelta: 0.005,
+            longitude,
+            longitudeDelta: 0.005,
+          },
+          navigation,
+        );
       },
       error => {
         Alert.alert(error.code, error.message);
@@ -94,7 +98,7 @@ class MapStore {
     );
   };
 
-  onRegionChangeComplete = async region => {
+  onRegionChangeComplete = async (region, navigation) => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
       NElatitude: region.latitude + region.latitudeDelta / 2, // northLat - max lat
@@ -102,7 +106,7 @@ class MapStore {
       SWlatitude: region.latitude - region.latitudeDelta / 2, // southLat - min lat
       SWlongitude: region.longitude - region.longitudeDelta / 2, // westLng - min lng
     };
-    await this.getMapInfo();
+    await this.getMapInfo(navigation);
   };
 
   // {latitude: Number, longitude: Number}
@@ -120,7 +124,7 @@ class MapStore {
     this.selectedMarker = item;
     this.isShowingBriefCat = true;
     callback();
-  }
+  };
 }
 
 decorate(MapStore, {

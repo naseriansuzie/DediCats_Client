@@ -1,7 +1,8 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View } from 'react-native';
 import { Container, Header, Content, List, Text } from 'native-base';
-import { inject, observer } from 'mobx-react';
 import CatFollower from './CatFollower';
 
 const styles = StyleSheet.create({
@@ -46,11 +47,11 @@ const styles = StyleSheet.create({
 class CatFollowerList extends React.Component {
   componentDidMount() {
     console.log('CatFollowerList mount');
-    this.props.getFollowerList(this.props.catId);
+    this.props.getFollowerList(this.props.catId, this.props.navigation);
   }
 
   render() {
-    const { myInfo, selectedCatFollowerList, nickname } = this.props;
+    const { selectedCatFollowerList, nickname } = this.props;
     if (
       selectedCatFollowerList &&
       selectedCatFollowerList[0].users.length > 0
@@ -102,8 +103,8 @@ class CatFollowerList extends React.Component {
 }
 
 export default inject(({ cat }) => ({
-  selectedCatFollowerList: cat.selectedCatFollowerList,
   catId: cat.selectedCatBio[0].id,
-  nickname: cat.selectedCatBio[0].nickname,
   getFollowerList: cat.getFollowerList,
-}))(observer(CatFollowerList));
+  nickname: cat.selectedCatBio[0].nickname,
+  selectedCatFollowerList: cat.selectedCatFollowerList,
+}))(observer(withNavigation(CatFollowerList)));

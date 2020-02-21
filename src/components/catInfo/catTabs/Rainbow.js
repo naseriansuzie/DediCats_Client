@@ -1,9 +1,10 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Alert } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { List, ListItem, Left, Body, Right, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   list: {
@@ -35,14 +36,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+  font30: { fontSize: 30 },
+  reportTxt: { color: '#767577' },
 });
 const Rainbow = ({
+  navigation,
   nickName,
   rainbow,
   selectedCatRainbowYReported,
   selectedCatRainbowNReported,
-  disableReportBtn,
   reportRainbow,
+  disableReportBtn,
 }) => (
   <List style={styles.list}>
     <ListItem style={styles.guideList}>
@@ -56,7 +60,7 @@ const Rainbow = ({
     <ListItem avatar>
       <Left>
         <MaterialCommunityIcons
-          style={{ fontSize: 30 }}
+          style={styles.font30}
           name="paw-off"
           color="#767577"
         />
@@ -92,7 +96,7 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    const result = await reportRainbow('Y');
+                    const result = await reportRainbow('Y', navigation);
                     if (result) {
                       disableReportBtn('Y');
                     }
@@ -109,7 +113,7 @@ const Rainbow = ({
     <ListItem avatar>
       <Left>
         <MaterialCommunityIcons
-          style={{ fontSize: 30 }}
+          style={styles.font30}
           name="paw"
           color="#f38847"
         />
@@ -147,7 +151,7 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    const result = await reportRainbow('N');
+                    const result = await reportRainbow('N', navigation);
                     if (result) {
                       disableReportBtn('N');
                     }
@@ -156,7 +160,7 @@ const Rainbow = ({
               ]);
             }}
           >
-            <Text style={{ color: '#767577' }}>신고</Text>
+            <Text style={styles.reportTxt}>신고</Text>
           </TouchableOpacity>
         )}
       </Right>
@@ -171,4 +175,4 @@ export default inject(({ cat }) => ({
   selectedCatRainbowNReported: cat.selectedCatRainbowNReported,
   reportRainbow: cat.reportRainbow,
   disableReportBtn: cat.disableReportBtn,
-}))(observer(Rainbow));
+}))(observer(withNavigation(Rainbow)));

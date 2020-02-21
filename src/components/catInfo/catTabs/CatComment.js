@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
 import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 
@@ -17,20 +18,19 @@ const styles = StyleSheet.create({
   modificationView: { flexDirection: 'row' },
 });
 
-const defaultPhotoUrl =
+const DEFAULT_USER_URL =
   'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
-// const defaultPhotoUrl =
-//   'https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg';
 
 const CatComment = ({
+  navigation,
   comment,
   userId,
   myPhoto,
   userNickname,
   content,
   date,
-  convertDateTime,
   userInfo,
+  convertDateTime,
   reportComment,
   setCatComment,
   modifyComment,
@@ -42,7 +42,7 @@ const CatComment = ({
     <Left>
       <Thumbnail
         square
-        source={{ uri: myPhoto || defaultPhotoUrl }}
+        source={{ uri: myPhoto || DEFAULT_USER_URL }}
         style={styles.radius}
       />
     </Left>
@@ -77,9 +77,9 @@ const CatComment = ({
                   {
                     text: '삭제',
                     onPress: async () => {
-                      await deleteComment(comment);
+                      await deleteComment(comment, navigation);
                       resetCommentState();
-                      getCommentList();
+                      getCommentList(navigation);
                     },
                   },
                 ]);
@@ -108,7 +108,7 @@ const CatComment = ({
                       text: '신고',
                       onPress: async () => {
                         setCatComment(comment);
-                        const reportResult = await reportComment();
+                        const reportResult = await reportComment(navigation);
                         if (reportResult) {
                           Alert.alert('댓글 신고가 완료 되었습니다.');
                         }
@@ -128,7 +128,8 @@ const CatComment = ({
   </ListItem>
 );
 
-export default inject(({ helper, report, cat, auth }) => ({
+export default inject(({ auth, helper, report, cat }) => ({
+  userInfo: auth.userInfo,
   convertDateTime: helper.convertDateTime,
   reportComment: report.reportComment,
   setCatComment: cat.setCatComment,
@@ -136,5 +137,4 @@ export default inject(({ helper, report, cat, auth }) => ({
   deleteComment: cat.deleteComment,
   resetCommentState: cat.resetCommentState,
   getCommentList: cat.getCommentList,
-  userInfo: auth.userInfo,
-}))(observer(CatComment));
+}))(observer(withNavigation(CatComment)));

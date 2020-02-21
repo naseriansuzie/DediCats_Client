@@ -1,9 +1,9 @@
 import { action, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
 
@@ -51,20 +51,23 @@ class HelperStore {
     return false;
   };
 
-  unFollowCat = catId => {
+  unFollowCat = (catId, navigation) => {
     const { cat, user, map } = this.root;
     axios
       .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
       .then(res => {
         user.unFollowedCat = catId;
         runInAction(() => {
-          cat.getSelectedCatInfo(catId);
-          cat.getFollowerList(catId);
-          map.getMapInfo();
-          user.getMyCatList();
+          cat.getSelectedCatInfo(catId, navigation);
+          cat.getFollowerList(catId, navigation);
+          map.getMapInfo(navigation);
+          user.getMyCatList(navigation);
         });
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 
   pickImage = async (store, type) => {
