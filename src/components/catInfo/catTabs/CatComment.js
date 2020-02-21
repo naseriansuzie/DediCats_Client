@@ -32,7 +32,7 @@ const CatComment = ({
   convertDateTime,
   userInfo,
   reportComment,
-  setSelectedCatComment,
+  setCatComment,
   modifyComment,
   deleteComment,
   resetCommentState,
@@ -107,7 +107,7 @@ const CatComment = ({
                     {
                       text: '신고',
                       onPress: async () => {
-                        setSelectedCatComment(comment);
+                        setCatComment(comment);
                         const reportResult = await reportComment();
                         if (reportResult) {
                           Alert.alert('댓글 신고가 완료 되었습니다.');
@@ -131,7 +131,7 @@ const CatComment = ({
 export default inject(({ helper, report, cat, auth }) => ({
   convertDateTime: helper.convertDateTime,
   reportComment: report.reportComment,
-  setSelectedCatComment: cat.setSelectedCatComment,
+  setCatComment: cat.setCatComment,
   modifyComment: cat.modifyComment,
   deleteComment: cat.deleteComment,
   resetCommentState: cat.resetCommentState,
