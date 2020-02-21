@@ -113,7 +113,7 @@ class CatSelectedPost extends React.Component {
               </Body>
             </CardItem>
           </Card>
-          {selectedCatPost.comments.length > 0 ? (
+          {selectedCatCommentList.length > 0 ? (
             <SafeAreaView>
               {initialComments - selectedCatCommentList.length > 0
                 ? (
