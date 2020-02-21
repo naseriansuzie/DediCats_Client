@@ -1,6 +1,11 @@
 import React from 'react';
 import {
-  StyleSheet, Text, TouchableOpacity, View, Alert,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   Container,
@@ -66,70 +71,95 @@ const SignIn_Info = ({
       <Text style={styles.logoTxt}>Dedicats</Text>
     </View>
     <Content style={styles.scrollView}>
-      <Form>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons
-              style={styles.font16}
-              name="email-check-outline"
-            />{' '}
-            hello@cat.com
-          </Label>
-          <Input
-            onChangeText={(text) => {
-              updateInput('auth', 'email', text);
-            }}
-            value={email}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons style={styles.font16} name="lock-outline" />{' '}
-            Password
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('auth', 'PW', text)}
-            secureTextEntry
-            value={PW}
-          />
-        </Item>
-      </Form>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={async () => {
-          if (email && PW) {
-            const signInResult = await signIn();
-            if (signInResult) navigation.navigate('AuthLoading');
-            return;
-          }
+      <KeyboardAvoidingView
+        style={{ width: '100%' }}
+        behavior="padding"
+        enabled
+      >
+        <Form>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons
+                style={styles.font16}
+                name="email-check-outline"
+              />{' '}
+              hello@cat.com
+            </Label>
+            <Input
+              onChangeText={text => {
+                updateInput('auth', 'email', text);
+              }}
+              value={email}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons
+                style={styles.font16}
+                name="lock-outline"
+              />{' '}
+              Password
+            </Label>
+            <Input
+              onChangeText={text => updateInput('auth', 'PW', text)}
+              secureTextEntry
+              value={PW}
+            />
+          </Item>
+        </Form>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={async () => {
+            if (email && PW) {
+              const signInResult = await signIn();
+              if (signInResult) navigation.navigate('AuthLoading');
+              return;
+            }
 
-          Alert.alert('모든 정보를 입력해주세요.');
-        }}
-      >
-        <Text style={styles.white}>Log In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.signUpBtn}
-        onPress={() => {
-          clearInput('auth', 'email', 'PW', 'nickname', 'confirmPW', 'reConfirmPW');
-          navigation.navigate('Sign Up');
-        }}
-      >
-        <Text style={styles.light}>Sign Up</Text>
-      </TouchableOpacity>
-      <View style={{ marginTop: 30 }}>
-        <Text style={{ textAlign: 'center' }}>비밀번호를 잊으셨나요?</Text>
-        <Text style={{ textAlign: 'center' }}>
-          <Text
-            style={{ color: 'blue', fontWeight: 'bold' }}
-            onPress={() => {
-              clearInput('auth', 'email', 'PW', 'nickname', 'confirmPW', 'reConfirmPW');
-              navigation.navigate('findPW');
-            }}
-          >여기
-          </Text>를 클릭해주세요
-        </Text>
-      </View>
+            Alert.alert('모든 정보를 입력해주세요.');
+          }}
+        >
+          <Text style={styles.white}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.signUpBtn}
+          onPress={() => {
+            clearInput(
+              'auth',
+              'email',
+              'PW',
+              'nickname',
+              'confirmPW',
+              'reConfirmPW',
+            );
+            navigation.navigate('Sign Up');
+          }}
+        >
+          <Text style={styles.light}>Sign Up</Text>
+        </TouchableOpacity>
+        <View style={{ marginTop: 30 }}>
+          <Text style={{ textAlign: 'center' }}>비밀번호를 잊으셨나요?</Text>
+          <Text style={{ textAlign: 'center' }}>
+            <Text
+              style={{ color: 'blue', fontWeight: 'bold' }}
+              onPress={() => {
+                clearInput(
+                  'auth',
+                  'email',
+                  'PW',
+                  'nickname',
+                  'confirmPW',
+                  'reConfirmPW',
+                );
+                navigation.navigate('findPW');
+              }}
+            >
+              여기
+            </Text>
+            를 클릭해주세요
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
     </Content>
   </Container>
 );
