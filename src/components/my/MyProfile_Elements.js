@@ -42,6 +42,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
   },
+  photoEdition: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 5,
+  },
+  photoEditionItem: {
+    paddingHorizontal: 5,
+  },
+  photoEditionTxt: {
+    color: '#677ef1',
+  },
   content: { width: '95%' },
   listView: { flexDirection: 'row' },
   nickname: { width: '30%', paddingLeft: 0 },
@@ -65,6 +77,9 @@ class MyProfile_Elements extends React.Component {
   }
 
   render() {
+    console.disableYellowBox = 'true';
+    const defaultPhotoUrl =
+      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
     const {
       navigation,
       getPermissionAsync,
@@ -73,6 +88,8 @@ class MyProfile_Elements extends React.Component {
       convertDateTime,
       postMyPhoto,
       myUri,
+      myPhotoPath,
+      resetDefaultPhoto,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -83,16 +100,44 @@ class MyProfile_Elements extends React.Component {
           <Image
             style={styles.myPhoto}
             source={{
-              uri: userInfo.photoPath === null ? myUri : userInfo.photoPath,
+              uri:
+                userInfo.photoPath === null && myPhotoPath === null
+                  ? myUri
+                  : userInfo.photoPath === null && myPhotoPath
+                  ? myPhotoPath
+                  : userInfo.photoPath && myPhotoPath
+                  ? myPhotoPath
+                  : userInfo.photoPath,
             }}
           />
-          <TouchableOpacity
-            onPress={() => {
-              this._showActionSheet();
-            }}
-          >
-            <Text>사진수정</Text>
-          </TouchableOpacity>
+          {myPhotoPath ? (
+            <View style={styles.photoEdition}>
+              <TouchableOpacity
+                style={styles.photoEditionItem}
+                onPress={() => {
+                  postMyPhoto();
+                }}
+              >
+                <Text style={styles.photoEditionTxt}>변경 완료</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoEditionItem}
+                onPress={() => {
+                  resetDefaultPhoto();
+                }}
+              >
+                <Text style={styles.photoEditionTxt}>취소</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                this._showActionSheet();
+              }}
+            >
+              <Text>사진수정</Text>
+            </TouchableOpacity>
+          )}
 
           <ActionSheet
             ref={o => (this.ActionSheet = o)}
@@ -103,7 +148,6 @@ class MyProfile_Elements extends React.Component {
               if (index === 0) {
                 await getPermissionAsync();
                 await pickImage('user', 'my');
-                postMyPhoto();
               }
               if (index === 1) {
                 // delete 함수 짜야함
@@ -196,5 +240,7 @@ export default inject(({ auth, helper, user }) => ({
   pickImage: helper.pickImage,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
+  myPhotoPath: user.myPhotoPath,
   postMyPhoto: user.postMyPhoto,
+  resetDefaultPhoto: user.resetDefaultPhoto,
 }))(observer(withNavigation(MyProfile_Elements)));

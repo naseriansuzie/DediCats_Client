@@ -62,12 +62,16 @@ class MyProfile extends React.Component {
   }
 
   render() {
+    console.disableYellowBox = 'true';
     console.log('프로필 렌더할 때 유저정보 =', this.props.userInfo);
     if (!this.props.userInfo) {
       return <View style={styles.container} />;
     }
-    const { nickname, createAt, photoPath } = this.props.userInfo;
+    const { userInfo } = this.props;
+    const { nickname, createAt } = userInfo;
     const { convertDateTime, navigation, signOut, myUri } = this.props;
+    const defaultPhotoUrl =
+      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
 
     return (
       <View style={styles.container}>
@@ -76,7 +80,12 @@ class MyProfile extends React.Component {
             <Image
               style={styles.photo}
               source={{
-                uri: photoPath === null ? myUri : photoPath,
+                uri:
+                  userInfo.photoPath === null
+                    ? myUri
+                    : userInfo.photoPath !== null && myUri !== defaultPhotoUrl
+                    ? myUri
+                    : userInfo.photoPath,
               }}
             />
           </View>
@@ -116,4 +125,5 @@ export default inject(({ auth, helper, user }) => ({
   signOut: auth.signOut,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
+  myPhotoPath: user.myPhotoPath,
 }))(observer(withNavigation(MyProfile)));
