@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   catPhoto: {
-    width: '80%',
+    width: '75%',
     height: '100%',
     resizeMode: 'stretch',
     overflow: 'hidden',
