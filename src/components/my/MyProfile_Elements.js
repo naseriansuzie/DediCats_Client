@@ -138,18 +138,24 @@ class MyProfile_Elements extends React.Component {
           <ActionSheet
             ref={o => (this.ActionSheet = o)}
             title="프로필 사진 설정"
-            options={['앨범에서 사진 선택', '기본 이미지로 변경', '취소']}
-            cancelButtonIndex={2}
+            options={
+              myUri === null
+                ? ['앨범에서 사진 선택', '취소']
+                : ['앨범에서 사진 선택', '기본 이미지로 변경', '취소']
+            }
+            cancelButtonIndex={myUri === null ? 1 : 2}
             onPress={async index => {
               if (index === 0) {
                 await getPermissionAsync();
                 await pickImage('user', 'my');
                 setEditingMode('yes');
               }
-              if (index === 1) {
-                setEditingMode('yes');
-                await deleteMyPhoto();
-                setEditingMode('no');
+              if (myUri !== null) {
+                if (index === 1) {
+                  setEditingMode('yes');
+                  await deleteMyPhoto();
+                  setEditingMode('no');
+                }
               }
             }}
           />
