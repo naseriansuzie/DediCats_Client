@@ -115,12 +115,13 @@ class CatStore {
   //! 댓글 페이지
   commentPage = 0;
 
-  // 로드된 댓글을 카운트
-  unloadedComment = 10;
+  // 처음 방에 입장했을 때 댓글 수
+  initialComments = 0;
 
   // CatStore
   setCatPost = item => {
     this.selectedCatPost = item;
+    this.initialComments = item.comments.length;
     this.connectSocket();
   };
 
@@ -487,17 +488,12 @@ class CatStore {
     this.selectedCatComment = null;
     this.commentPage = 0;
     this.newComment = null;
-    this.unloadedComment = 10;
+    this.initialComments = 0;
   };
 
   _handleLoadMoreComments = async () => {
-    if (this.selectedCatCommentList.length - this.unloadedComment > 0) {
-      this.unloadedComment += 10;
-    } else {
-      this.unloadedComment = 0;
-    }
     this.commentPage += 1;
-    this.getCommentList();
+    await this.getCommentList();
   };
 
   // * 추가와 수정 둘다 가능
@@ -514,6 +510,7 @@ class CatStore {
       return axios
         .post(url, newCommentInfo, defaultCredential)
         .then(res => {
+          this.initialComments += 1;
           this.root.helper.clearInput('cat', 'selectedCatInputComment');
           return res;
         })
@@ -566,6 +563,7 @@ class CatStore {
         defaultCredential,
       )
       .then(res => {
+        this.initialComments -= 1;
         Alert.alert('게시글이 삭제되었습니다.');
       })
       .catch(err => {
@@ -604,7 +602,7 @@ class CatStore {
 
 decorate(CatStore, {
   commentPage: observable,
-  unloadedComment: observable,
+  initialComments: observable,
   socketId: observable,
   isConnectSocket: observable,
   newComment: observable,
