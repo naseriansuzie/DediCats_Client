@@ -66,9 +66,9 @@ class PostStore {
     const postInfo =
       mode === 'new'
         ? {
-          content: selectedCatInputContent,
-          catId: selectedCatBio[0].id,
-        }
+            content: selectedCatInputContent,
+            catId: selectedCatBio[0].id,
+          }
         : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
@@ -84,6 +84,7 @@ class PostStore {
         );
         this._handleRefresh();
         this.setPostModify();
+        cat.getAlbums();
         return res.data;
       })
       .catch(err => {
@@ -111,6 +112,7 @@ class PostStore {
       .then(res => {
         Alert.alert('게시글이 삭제되었습니다.');
         this._handleRefresh();
+        cat.getAlbums();
       })
       .catch(err => {
         this.alertFailure(err);

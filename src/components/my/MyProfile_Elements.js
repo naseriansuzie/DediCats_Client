@@ -4,6 +4,8 @@ import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import { Button, ListItem, Content, Text } from 'native-base';
 import ActionSheet from 'react-native-actionsheet';
+import { MAIL_TO } from 'react-native-dotenv';
+import * as MailComposer from 'expo-mail-composer';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -31,8 +33,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   myPhoto: {
-    width: 170,
-    height: 170,
+    width: 150,
+    height: 150,
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
   field: { width: '70%' },
   disabledBtn: { width: '100%' },
   editTxt: { color: '#677ef1', fontWeight: 'bold' },
+  askTxt: { color: '#677ef1' },
   font16: {
     fontSize: 16,
   },
@@ -168,10 +171,15 @@ class MyProfile_Elements extends React.Component {
             <ListItem>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('ChangePW');
+                  MailComposer.composeAsync({
+                    recipients: [MAIL_TO],
+                    subject: 'Dedicats 문의',
+                    body: '',
+                    isHtml: false,
+                  });
                 }}
               >
-                <Text>문의하기</Text>
+                <Text style={styles.askTxt}>문의하기</Text>
               </TouchableOpacity>
             </ListItem>
           </Content>

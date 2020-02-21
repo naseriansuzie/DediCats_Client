@@ -36,12 +36,14 @@ const MyCat = ({
   unFollowCat,
   navigation,
   getSelectedCatInfo,
+  resetPostState,
 }) => (
   <ListItem thumbnail>
     <TouchableWithoutFeedback
       onPress={async () => {
         const result = await getSelectedCatInfo(catId);
         if (result) {
+          resetPostState();
           navigation.navigate('CatInfo');
         }
       }}
@@ -58,6 +60,7 @@ const MyCat = ({
       onPress={async () => {
         const result = await getSelectedCatInfo(catId);
         if (result) {
+          resetPostState();
           navigation.navigate('CatInfo');
         }
       }}
@@ -75,7 +78,8 @@ const MyCat = ({
   </ListItem>
 );
 
-export default inject(({ cat, helper }) => ({
+export default inject(({ cat, helper, post }) => ({
   getSelectedCatInfo: cat.getSelectedCatInfo,
   unFollowCat: helper.unFollowCat,
+  resetPostState: post.resetPostState,
 }))(observer(withNavigation(MyCat)));

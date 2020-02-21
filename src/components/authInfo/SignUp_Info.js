@@ -9,7 +9,11 @@ import {
   Label,
 } from 'native-base';
 import {
-  StyleSheet, Text, TouchableOpacity, View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
@@ -69,65 +73,77 @@ const SignUp_Info = ({
       <Text style={styles.title}>회원가입</Text>
     </View>
     <Content>
-      <Form>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons
-              name="email-check-outline"
-              style={styles.font16}
-            />{' '}
-            hello@cat.com
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('auth', 'email', text)}
-            value={email}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
-            nickname
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('auth', 'nickname', text)}
-            value={nickname}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('auth', 'confirmPW', text)}
-            secureTextEntry
-            value={confirmPW}
-          />
-        </Item>
-        <Item floatingLabel>
-          <Label>
-            <MaterialCommunityIcons name="lock-outline" style={styles.font16} />{' '}
-            Password 재확인
-          </Label>
-          <Input
-            onChangeText={(text) => updateInput('auth', 'reConfirmPW', text)}
-            secureTextEntry
-            value={reConfirmPW}
-          />
-        </Item>
-      </Form>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={async () => {
-          const validation = validateSignUp();
-          if (!validation) return;
-
-          const emailResult = await emailCertified();
-          if (emailResult) navigation.navigate('Email Certified');
-        }}
+      <KeyboardAvoidingView
+        style={{ width: '100%' }}
+        behavior="padding"
+        enabled
       >
-        <Text style={styles.white}>Submit</Text>
-      </TouchableOpacity>
+        <Form>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons
+                name="email-check-outline"
+                style={styles.font16}
+              />{' '}
+              hello@cat.com
+            </Label>
+            <Input
+              onChangeText={text => updateInput('auth', 'email', text)}
+              value={email}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons name="paw" style={{ fontSize: 16 }} />{' '}
+              nickname
+            </Label>
+            <Input
+              onChangeText={text => updateInput('auth', 'nickname', text)}
+              value={nickname}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                style={styles.font16}
+              />{' '}
+              Password
+            </Label>
+            <Input
+              onChangeText={text => updateInput('auth', 'confirmPW', text)}
+              secureTextEntry
+              value={confirmPW}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                style={styles.font16}
+              />{' '}
+              Password 재확인
+            </Label>
+            <Input
+              onChangeText={text => updateInput('auth', 'reConfirmPW', text)}
+              secureTextEntry
+              value={reConfirmPW}
+            />
+          </Item>
+        </Form>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={async () => {
+            const validation = validateSignUp();
+            if (!validation) return;
+
+            const emailResult = await emailCertified();
+            if (emailResult) navigation.navigate('Email Certified');
+          }}
+        >
+          <Text style={styles.white}>Submit</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </Content>
   </Container>
 );

@@ -26,9 +26,7 @@ class ReportStore {
     return result;
   };
 
-  reportPost = async postId => {
-    const { cat } = this.root;
-    const criminalId = cat.selectedCatPost.user.id;
+  reportPost = async (postId, criminalId) => {
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
       .then(res => true)
@@ -85,7 +83,7 @@ class ReportStore {
         },
         {
           text: '신고',
-          onPress: () => this.reportPost(item.id),
+          onPress: () => this.reportPost(item.id, item.user.id),
         },
       ]);
     }

@@ -1,5 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, BackHandler } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  BackHandler,
+} from 'react-native';
 import { inject, observer } from 'mobx-react';
 import CatSelectedPost from '../components/catInfo/catTabs/CatSelectedPost';
 import CatCommentInput from '../components/catInfo/catTabs/CatCommentInput';
@@ -28,19 +33,24 @@ class SelectedPost extends React.Component {
   }
 
   handleAndroidBackButton = () => {
-    const { offUser, resetCommentState, navigation, validateRefreshMode } = this.props;
+    const {
+      offUser,
+      resetCommentState,
+      navigation,
+      validateRefreshMode,
+    } = this.props;
     BackHandler.addEventListener('hardwareBackPress', async () => {
       await offUser();
+      validateRefreshMode();
       resetCommentState();
       navigation.goBack();
-      validateRefreshMode();
       return true;
     });
   };
 
   removeAndroidBackButtonHandler = () => {
     BackHandler.removeEventListener('hardwareBackPress', () => {});
-  }
+  };
 
   render() {
     return (
