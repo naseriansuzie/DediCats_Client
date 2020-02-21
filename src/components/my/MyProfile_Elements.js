@@ -42,6 +42,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
   },
+  photoEdition: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 5,
+  },
+  photoEditionItem: {
+    paddingHorizontal: 5,
+  },
+  photoEditionTxt: {
+    color: '#677ef1',
+  },
   content: { width: '95%' },
   listView: { flexDirection: 'row' },
   nickname: { width: '30%', paddingLeft: 0 },
@@ -61,18 +73,24 @@ class MyProfile_Elements extends React.Component {
 
   componentDidMount() {
     console.log('MyProfile_Elements mount');
-    this.props.getMyInfo();
   }
 
   render() {
+    console.disableYellowBox = 'true';
+    const defaultPhotoUrl =
+      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
     const {
       navigation,
+      userInfo,
       getPermissionAsync,
       pickImage,
-      userInfo,
       convertDateTime,
-      postMyPhoto,
       myUri,
+      myPhotoPath,
+      setEditingMode,
+      postMyPhoto,
+      resetDefaultPhoto,
+      deleteMyPhoto,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -83,30 +101,61 @@ class MyProfile_Elements extends React.Component {
           <Image
             style={styles.myPhoto}
             source={{
-              uri: userInfo.photoPath === null ? myUri : userInfo.photoPath,
+              uri: myUri || defaultPhotoUrl,
             }}
           />
-          <TouchableOpacity
-            onPress={() => {
-              this._showActionSheet();
-            }}
-          >
-            <Text>사진수정</Text>
-          </TouchableOpacity>
+          {myPhotoPath ? (
+            <View style={styles.photoEdition}>
+              <TouchableOpacity
+                style={styles.photoEditionItem}
+                onPress={async () => {
+                  await postMyPhoto();
+                  setEditingMode('no');
+                }}
+              >
+                <Text style={styles.photoEditionTxt}>변경 완료</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoEditionItem}
+                onPress={async () => {
+                  await resetDefaultPhoto();
+                  setEditingMode('no');
+                }}
+              >
+                <Text style={styles.photoEditionTxt}>취소</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                this._showActionSheet();
+              }}
+            >
+              <Text>사진수정</Text>
+            </TouchableOpacity>
+          )}
 
           <ActionSheet
             ref={o => (this.ActionSheet = o)}
             title="프로필 사진 설정"
-            options={['앨범에서 사진 선택', '기본 이미지로 변경', '취소']}
-            cancelButtonIndex={2}
+            options={
+              myUri === null
+                ? ['앨범에서 사진 선택', '취소']
+                : ['앨범에서 사진 선택', '기본 이미지로 변경', '취소']
+            }
+            cancelButtonIndex={myUri === null ? 1 : 2}
             onPress={async index => {
               if (index === 0) {
                 await getPermissionAsync();
                 await pickImage('user', 'my');
-                postMyPhoto();
+                setEditingMode('yes');
               }
-              if (index === 1) {
-                // delete 함수 짜야함
+              if (myUri !== null) {
+                if (index === 1) {
+                  setEditingMode('yes');
+                  await deleteMyPhoto();
+                  setEditingMode('no');
+                }
               }
             }}
           />
@@ -191,10 +240,13 @@ class MyProfile_Elements extends React.Component {
 
 export default inject(({ auth, helper, user }) => ({
   userInfo: auth.userInfo,
-  getMyInfo: auth.getMyInfo,
   getPermissionAsync: auth.getPermissionAsync,
   pickImage: helper.pickImage,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
+  myPhotoPath: user.myPhotoPath,
+  setEditingMode: user.setEditingMode,
   postMyPhoto: user.postMyPhoto,
+  resetDefaultPhoto: user.resetDefaultPhoto,
+  deleteMyPhoto: user.deleteMyPhoto,
 }))(observer(withNavigation(MyProfile_Elements)));

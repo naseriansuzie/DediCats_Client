@@ -36,9 +36,19 @@ const MyPageStack = createStackNavigator(
     },
     EditMyProfile: {
       screen: EditMyProfile,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: () => (
+          <HeaderBackButton
+            onPress={async () => {
+              if (root.user.isEditing) {
+                await root.user.resetDefaultPhoto();
+              }
+              navigation.goBack();
+            }}
+          />
+        ),
         headerTitleStyle: { display: 'none' },
-      },
+      }),
     },
     ChangePW: {
       screen: ChangePW,
@@ -174,6 +184,7 @@ const RootNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(RootNavigator);
 
 export default function App() {
+  console.log('MyProfile_Elements mount');
   return (
     <Provider {...root}>
       <AppContainer />

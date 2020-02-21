@@ -55,60 +55,61 @@ const styles = StyleSheet.create({
   },
 });
 
-class MyProfile extends React.Component {
-  componentDidMount() {
-    console.log('MyProfile mount');
-    this.props.getMyInfo();
+const MyProfile = ({
+  userInfo,
+  convertDateTime,
+  navigation,
+  signOut,
+  myUri,
+}) => {
+  console.disableYellowBox = 'true';
+  console.log('프로필 렌더할 때 uri', myUri);
+  if (!userInfo) {
+    return <View style={styles.container} />;
   }
+  const { nickname, createAt } = userInfo;
+  const defaultPhotoUrl =
+    'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
 
-  render() {
-    console.log('프로필 렌더할 때 유저정보 =', this.props.userInfo);
-    if (!this.props.userInfo) {
-      return <View style={styles.container} />;
-    }
-    const { nickname, createAt, photoPath } = this.props.userInfo;
-    const { convertDateTime, navigation, signOut, myUri } = this.props;
+  return (
+    <View style={styles.container}>
+      <View style={styles.profileView}>
+        <View style={styles.photoView}>
+          <Image
+            style={styles.photo}
+            source={{
+              uri: myUri || defaultPhotoUrl,
+            }}
+          />
+        </View>
+        <View style={styles.infoView}>
+          <Text style={styles.nickName}>{nickname}</Text>
+          <Text style={styles.address}>
+            {`가입일 : ${convertDateTime(createAt).slice(0, 8)}`}
+          </Text>
 
-    return (
-      <View style={styles.container}>
-        <View style={styles.profileView}>
-          <View style={styles.photoView}>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: photoPath === null ? myUri : photoPath,
-              }}
-            />
-          </View>
-          <View style={styles.infoView}>
-            <Text style={styles.nickName}>{nickname}</Text>
-            <Text style={styles.address}>
-              {`가입일 : ${convertDateTime(createAt).slice(0, 8)}`}
-            </Text>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              navigation.navigate('EditMyProfile');
+            }}
+          >
+            <Text style={styles.btnTxt}>회원정보 수정</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={() => {
-                navigation.navigate('EditMyProfile');
-              }}
-            >
-              <Text style={styles.btnTxt}>회원정보 수정</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={async () => {
-                const result = await signOut();
-                if (result) navigation.navigate('AuthLoading');
-              }}
-            >
-              <Text style={{ paddingTop: 5, color: '#677ef1' }}>로그아웃</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={async () => {
+              const result = await signOut();
+              if (result) navigation.navigate('AuthLoading');
+            }}
+          >
+            <Text style={{ paddingTop: 5, color: '#677ef1' }}>로그아웃</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 export default inject(({ auth, helper, user }) => ({
   userInfo: auth.userInfo,
@@ -116,4 +117,5 @@ export default inject(({ auth, helper, user }) => ({
   signOut: auth.signOut,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
+  myPhotoPath: user.myPhotoPath,
 }))(observer(withNavigation(MyProfile)));

@@ -12,7 +12,11 @@ class UserStore {
   }
 
   // observable
-  myUri = defaultPhotoUrl;
+  myUri = null;
+
+  tempUri = null;
+
+  isEditing = false;
 
   myPhotoPath = null;
 
@@ -20,11 +24,65 @@ class UserStore {
 
   unFollowedCat = null;
 
+  setMyUri = photoPath => {
+    this.myUri = photoPath;
+    this.tempUri = photoPath;
+    console.log('myUri =', this.myUri);
+  };
+
   getMyCatList = () => {
     axios
       .get(`${SERVER_URL}/cat/catlist`, defaultCredential)
       .then(res => (this.myCatList = res.data))
       .catch(err => console.dir(err));
+  };
+
+  setEditingMode = answer => {
+    if (answer === 'yes') {
+      this.isEditing = true;
+    } else this.isEditing = false;
+    console.log('editing 중인가요? ', this.isEditing);
+  };
+
+  postMyPhoto = async () => {
+    console.log('postMyPhoto 시작');
+    const photoPath = await axios
+      .post(
+        `${SERVER_URL}/photo/profile`,
+        { photoPath: this.myPhotoPath },
+        defaultCredential,
+      )
+      .then(res => {
+        this.myUri = res.data.photoPath;
+        console.log('서버에서 받은 uri', this.myUri);
+        this.myPhotoPath = null;
+        return res.data.photoPath;
+      })
+      .catch(err => {
+        console.dir(err);
+      });
+    return photoPath;
+  };
+
+  deleteMyPhoto = async () => {
+    console.log('deleteMyPhoto 시작');
+    const photoPath = await axios
+      .post(`${SERVER_URL}/photo/profile/delete`, defaultCredential)
+      .then(res => {
+        this.myUri = null;
+        return true;
+      })
+      .catch(err => console.dir(err));
+    return photoPath;
+  };
+
+  resetDefaultPhoto = async () => {
+    if (this.myUri !== this.tempUri && this.isEditing) {
+      this.myUri = this.tempUri;
+    }
+    this.myPhotoPath = null;
+    this.isEditing = false;
+    return new Promise((resolve, reject) => resolve(true));
   };
 
   changePW = async () => {
@@ -108,45 +166,30 @@ class UserStore {
     return result;
   };
 
-  resetDefaultPhoto = async () => {
-    const defaultPhotoUrl =
-      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
-
+  resetUserObservable = () => {
     this.myUri = defaultPhotoUrl;
     this.myPhotoPath = null;
-    return new Promise((resolve, reject) => resolve(true));
-  };
-
-  postMyPhoto = async () => {
-    console.log('postMyPhoto 시작');
-    const photoPath = await axios
-      .post(
-        `${SERVER_URL}/photo/profile`,
-        { photoPath: this.myPhotoPath },
-        defaultCredential,
-      )
-      .then(res => {
-        this.myUri = res.data.photoPath;
-        console.log('서버에서 받은 uri', this.myUri);
-        return res.data.photoPath;
-      })
-      .catch(err => {
-        console.dir(err);
-      });
-    return photoPath;
+    this.myCatList = null;
+    this.unFollowedCat = null;
   };
 }
 
 decorate(UserStore, {
   myUri: observable,
+  tempUri: observable,
+  isEditing: observable,
   myPhotoPath: observable,
   myCatList: observable,
   unFollowedCat: observable,
+  setMyUri: action,
   getMyCatList: action,
+  setEditingMode: action,
+  postMyPhoto: action,
+  deleteMyPhoto: action,
+  resetDefaultPhoto: action,
   changePW: action,
   findPW: action,
-  resetDefaultPhoto: action,
-  postMyPhoto: action,
+  resetUserObservable: action,
 });
 
 export default UserStore;
