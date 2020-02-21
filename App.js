@@ -40,7 +40,9 @@ const MyPageStack = createStackNavigator(
         headerLeft: () => (
           <HeaderBackButton
             onPress={async () => {
-              await root.user.resetDefaultPhoto();
+              if (root.user.isEditing) {
+                await root.user.resetDefaultPhoto();
+              }
               navigation.goBack();
             }}
           />

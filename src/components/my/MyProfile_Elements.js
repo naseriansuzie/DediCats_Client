@@ -73,7 +73,6 @@ class MyProfile_Elements extends React.Component {
 
   componentDidMount() {
     console.log('MyProfile_Elements mount');
-    this.props.getMyInfo();
   }
 
   render() {
@@ -82,14 +81,16 @@ class MyProfile_Elements extends React.Component {
       'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
     const {
       navigation,
+      userInfo,
       getPermissionAsync,
       pickImage,
-      userInfo,
       convertDateTime,
-      postMyPhoto,
       myUri,
       myPhotoPath,
+      setEditingMode,
+      postMyPhoto,
       resetDefaultPhoto,
+      deleteMyPhoto,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -100,30 +101,25 @@ class MyProfile_Elements extends React.Component {
           <Image
             style={styles.myPhoto}
             source={{
-              uri:
-                userInfo.photoPath === null && myPhotoPath === null
-                  ? myUri
-                  : userInfo.photoPath === null && myPhotoPath
-                  ? myPhotoPath
-                  : userInfo.photoPath && myPhotoPath
-                  ? myPhotoPath
-                  : userInfo.photoPath,
+              uri: myUri || defaultPhotoUrl,
             }}
           />
           {myPhotoPath ? (
             <View style={styles.photoEdition}>
               <TouchableOpacity
                 style={styles.photoEditionItem}
-                onPress={() => {
-                  postMyPhoto();
+                onPress={async () => {
+                  await postMyPhoto();
+                  setEditingMode('no');
                 }}
               >
                 <Text style={styles.photoEditionTxt}>변경 완료</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.photoEditionItem}
-                onPress={() => {
-                  resetDefaultPhoto();
+                onPress={async () => {
+                  await resetDefaultPhoto();
+                  setEditingMode('no');
                 }}
               >
                 <Text style={styles.photoEditionTxt}>취소</Text>
@@ -148,9 +144,12 @@ class MyProfile_Elements extends React.Component {
               if (index === 0) {
                 await getPermissionAsync();
                 await pickImage('user', 'my');
+                setEditingMode('yes');
               }
               if (index === 1) {
-                // delete 함수 짜야함
+                setEditingMode('yes');
+                await deleteMyPhoto();
+                setEditingMode('no');
               }
             }}
           />
@@ -235,12 +234,13 @@ class MyProfile_Elements extends React.Component {
 
 export default inject(({ auth, helper, user }) => ({
   userInfo: auth.userInfo,
-  getMyInfo: auth.getMyInfo,
   getPermissionAsync: auth.getPermissionAsync,
   pickImage: helper.pickImage,
   convertDateTime: helper.convertDateTime,
   myUri: user.myUri,
   myPhotoPath: user.myPhotoPath,
+  setEditingMode: user.setEditingMode,
   postMyPhoto: user.postMyPhoto,
   resetDefaultPhoto: user.resetDefaultPhoto,
+  deleteMyPhoto: user.deleteMyPhoto,
 }))(observer(withNavigation(MyProfile_Elements)));
