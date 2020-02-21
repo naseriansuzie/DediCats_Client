@@ -30,11 +30,14 @@ class UserStore {
     console.log('myUri =', this.myUri);
   };
 
-  getMyCatList = () => {
+  getMyCatList = navigation => {
     axios
       .get(`${SERVER_URL}/cat/catlist`, defaultCredential)
       .then(res => (this.myCatList = res.data))
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
   };
 
   setEditingMode = answer => {
@@ -44,8 +47,7 @@ class UserStore {
     console.log('editing 중인가요? ', this.isEditing);
   };
 
-  postMyPhoto = async () => {
-    console.log('postMyPhoto 시작');
+  postMyPhoto = async navigation => {
     const photoPath = await axios
       .post(
         `${SERVER_URL}/photo/profile`,
@@ -54,25 +56,27 @@ class UserStore {
       )
       .then(res => {
         this.myUri = res.data.photoPath;
-        console.log('서버에서 받은 uri', this.myUri);
         this.myPhotoPath = null;
         return res.data.photoPath;
       })
       .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
         console.dir(err);
       });
     return photoPath;
   };
 
-  deleteMyPhoto = async () => {
-    console.log('deleteMyPhoto 시작');
+  deleteMyPhoto = async navigation => {
     const photoPath = await axios
       .post(`${SERVER_URL}/photo/profile/delete`, defaultCredential)
       .then(res => {
         this.myUri = null;
         return true;
       })
-      .catch(err => console.dir(err));
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
+      });
     return photoPath;
   };
 

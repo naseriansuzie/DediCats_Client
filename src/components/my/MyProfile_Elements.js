@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { MAIL_TO } from 'react-native-dotenv';
 import * as MailComposer from 'expo-mail-composer';
 import ActionSheet from 'react-native-actionsheet';
-import { withNavigation } from 'react-navigation';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { Button, ListItem, Content, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -109,7 +109,7 @@ class MyProfile_Elements extends React.Component {
               <TouchableOpacity
                 style={styles.photoEditionItem}
                 onPress={async () => {
-                  await postMyPhoto();
+                  await postMyPhoto(navigation);
                   setEditingMode('no');
                 }}
               >
@@ -153,7 +153,7 @@ class MyProfile_Elements extends React.Component {
               if (myUri !== null) {
                 if (index === 1) {
                   setEditingMode('yes');
-                  await deleteMyPhoto();
+                  await deleteMyPhoto(navigation);
                   setEditingMode('no');
                 }
               }

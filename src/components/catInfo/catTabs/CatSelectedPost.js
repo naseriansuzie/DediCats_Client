@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   View,
@@ -65,7 +66,7 @@ class CatSelectedPost extends React.Component {
   componentDidMount() {
     const { getCommentList } = this.props;
     console.log('CatSelectedPost mount');
-    getCommentList();
+    getCommentList(this.props.navigation);
   }
 
   _renderItem = ({ item }) => (
@@ -81,6 +82,7 @@ class CatSelectedPost extends React.Component {
 
   render() {
     const {
+      navigation,
       selectedCatPost,
       selectedCatCommentList,
       initialComments,
@@ -128,7 +130,9 @@ class CatSelectedPost extends React.Component {
           {selectedCatCommentList.length > 0 ? (
             <SafeAreaView>
               {initialComments - selectedCatCommentList.length > 0 ? (
-                <TouchableOpacity onPress={() => _handleLoadMoreComments()}>
+                <TouchableOpacity
+                  onPress={() => _handleLoadMoreComments(navigation)}
+                >
                   <Text style={styles.loadMore}>load comments</Text>
                 </TouchableOpacity>
               ) : null}
@@ -156,4 +160,4 @@ export default inject(({ cat, helper }) => ({
   getCommentList: cat.getCommentList,
   _handleLoadMoreComments: cat._handleLoadMoreComments,
   convertDateTime: helper.convertDateTime,
-}))(observer(CatSelectedPost));
+}))(observer(withNavigation(CatSelectedPost)));

@@ -20,7 +20,7 @@ class PostStore {
 
   replyNum = null;
 
-  getPostList = async () => {
+  getPostList = async navigation => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
@@ -37,23 +37,24 @@ class PostStore {
         this.isLoadingPost = false;
       }
     } catch (error) {
+      this.root.auth.expiredTokenHandler(err, navigation);
       console.error(error);
     }
   };
 
-  _handleLoadMorePosts = () => {
+  _handleLoadMorePosts = navigation => {
     this.isLoadingPost = true;
     this.postPage += 1;
-    this.getPostList();
+    this.getPostList(navigation);
   };
 
-  _handleRefresh = () => {
+  _handleRefresh = navigation => {
     this.isRefreshingPost = true;
     this.postPage = 0;
-    this.getPostList();
+    this.getPostList(navigation);
   };
 
-  addPost = mode => {
+  addPost = (mode, navigation) => {
     const url =
       mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
     const { cat, helper } = this.root;
@@ -82,9 +83,9 @@ class PostStore {
           'selectedCatPhotoPath',
           'selectedCatUri',
         );
-        this._handleRefresh();
+        this._handleRefresh(navigation);
         this.setPostModify();
-        cat.getAlbums();
+        cat.getAlbums(navigation);
         return res.data;
       })
       .catch(err => {
@@ -92,15 +93,15 @@ class PostStore {
           Alert.alert(
             '등록 과정에 문제가 발생했습니다. 관리자에게 문의해주세요.',
           );
-          // 로직 확인 필요
         } else {
           Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
+          this.root.auth.expiredTokenHandler(err, navigation);
           console.dir(err);
         }
       });
   };
 
-  deletePost = item => {
+  deletePost = (item, navigation) => {
     const { cat } = this.root;
     cat.selectedCatPost = item;
     axios
@@ -111,11 +112,12 @@ class PostStore {
       )
       .then(res => {
         Alert.alert('게시글이 삭제되었습니다.');
-        this._handleRefresh();
-        cat.getAlbums();
+        this._handleRefresh(navigation);
+        cat.getAlbums(navigation);
       })
       .catch(err => {
-        this.alertFailure(err);
+        this.root.auth.expiredTokenHandler(err, navigation);
+        console.dir(err);
       });
   };
 
@@ -135,11 +137,11 @@ class PostStore {
     this.replyNum = comments.length;
   };
 
-  validateRefreshMode = () => {
+  validateRefreshMode = navigation => {
     const { cat } = this.root;
     const commentCount = cat.selectedCatCommentList.length;
     if (commentCount !== this.replyNum) {
-      this._handleRefresh();
+      this._handleRefresh(navigation);
     }
   };
 }

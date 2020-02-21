@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   View,
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
 });
 
 const CatCommentInput = ({
+  navigation,
   selectedCatInputComment,
   commentModifyState,
   getCommentList,
@@ -74,12 +76,12 @@ const CatCommentInput = ({
               const validation = validateAddInput('selectedCatInputComment');
               if (validation) {
                 if (commentModifyState) {
-                  await addComment('update');
+                  await addComment('update', navigation);
                   setCommentModify();
                   resetCommentState();
-                  getCommentList();
+                  getCommentList(navigation);
                 } else {
-                  await addComment('new');
+                  await addComment('new', navigation);
                 }
               }
             } catch (err) {
@@ -105,4 +107,4 @@ export default inject(({ cat, helper }) => ({
   resetCommentState: cat.resetCommentState,
   validateAddInput: helper.validateAddInput,
   updateInput: helper.updateInput,
-}))(observer(CatCommentInput));
+}))(observer(withNavigation(CatCommentInput)));

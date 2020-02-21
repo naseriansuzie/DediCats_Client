@@ -6,7 +6,7 @@ import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Signin from './src/pages/Signin';
 import Signup from './src/pages/Signup';
-import AuthLoadingScreen from './src/components/authInfo/AuthLoadingScreen';
+import AuthLoadingScreen from './src/pages/AuthLoadingScreen';
 import Main from './src/pages/Main';
 import CatInfo from './src/pages/CatInfo';
 import AddCatTab from './src/pages/AddCatTab';
@@ -92,8 +92,8 @@ const MainStack = createStackNavigator(
         headerLeft: () => (
           <HeaderBackButton
             onPress={async () => {
-              await root.cat.offUser();
-              root.post.validateRefreshMode();
+              await root.cat.offUser(navigation);
+              root.post.validateRefreshMode(navigation);
               root.cat.resetCommentState();
               navigation.goBack();
             }}

@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
 });
 
 const BriefCatInfo = ({
+  navigation,
   getSelectedCatInfo,
   item,
-  navigation,
   hideBriefCat,
   resetPostState,
 }) => (
@@ -96,7 +96,7 @@ const BriefCatInfo = ({
       <TouchableWithoutFeedback
         style={styles.row}
         onPress={async () => {
-          const result = await getSelectedCatInfo(item.catId);
+          const result = await getSelectedCatInfo(item.catId, navigation);
           if (result) {
             resetPostState();
             navigation.navigate('CatInfo');

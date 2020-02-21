@@ -102,6 +102,7 @@ const DEFAULT_CAT =
   'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
 
 const AddCatBio = ({
+  navigation,
   addCatUri,
   addCatNickname,
   addCatSpecies,
@@ -115,7 +116,6 @@ const AddCatBio = ({
   validateAddCat,
   getAddress,
   addCat,
-  navigation,
 }) => (
   <View style={styles.container}>
     <View style={styles.flex1}>
@@ -223,12 +223,12 @@ const AddCatBio = ({
             onPress={async () => {
               const validation = await validateAddCat();
               if (validation) {
-                const addressResult = await getAddress();
+                const addressResult = await getAddress(navigation);
                 if (addressResult) {
-                  const addCatResult = await addCat();
+                  const addCatResult = await addCat(navigation);
                   if (addCatResult) {
                     navigation.goBack();
-                    await getMapInfo();
+                    await getMapInfo(navigation);
                   } else {
                     Alert.alert('고양이를 등록할 수 없습니다');
                     navigation.goBack();

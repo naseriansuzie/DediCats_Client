@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import * as Font from 'expo-font';
 import {
   StyleSheet,
@@ -42,7 +43,7 @@ class CatPostList extends React.Component {
 
   componentDidMount() {
     console.log('CatPostList mount');
-    this.props.getPostList();
+    this.props.getPostList(this.props.navigation);
   }
 
   loadFont = async () => {
@@ -119,4 +120,4 @@ export default inject(({ cat, post, helper }) => ({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
-}))(observer(CatPostList));
+}))(observer(withNavigation(CatPostList)));

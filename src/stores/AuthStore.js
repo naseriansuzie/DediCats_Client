@@ -177,6 +177,14 @@ class AuthStore {
       }
     }
   };
+
+  expiredTokenHandler = async (err, navigation) => {
+    if (err.response && err.response.status === 401) {
+      Alert.alert('다시 로그인해주십시오.');
+      await this.signOut();
+      navigation.navigate('AuthLoading');
+    }
+  };
 }
 
 decorate(AuthStore, {
@@ -196,5 +204,6 @@ decorate(AuthStore, {
   signOut: action,
   getMyInfo: action,
   getPermissionAsync: action,
+  expiredTokenHandler: action,
 });
 export default AuthStore;

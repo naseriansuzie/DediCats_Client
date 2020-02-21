@@ -1,11 +1,12 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   View,
   KeyboardAvoidingView,
   BackHandler,
 } from 'react-native';
-import { inject, observer } from 'mobx-react';
 import CatSelectedPost from '../components/catInfo/catTabs/CatSelectedPost';
 import CatCommentInput from '../components/catInfo/catTabs/CatCommentInput';
 
@@ -41,8 +42,8 @@ class SelectedPost extends React.Component {
     } = this.props;
 
     BackHandler.addEventListener('hardwareBackPress', async () => {
-      await offUser();
-      validateRefreshMode();
+      await offUser(this.props.navigation);
+      validateRefreshMode(this.props.navigatino);
       resetCommentState();
       navigation.goBack();
       return true;
@@ -73,4 +74,4 @@ export default inject(({ cat, post }) => ({
   offUser: cat.offUser,
   resetCommentState: cat.resetCommentState,
   validateRefreshMode: post.validateRefreshMode,
-}))(observer(SelectedPost));
+}))(observer(withNavigation(SelectedPost)));

@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { List, ListItem, Left, Body, Right, Text } from 'native-base';
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
   reportTxt: { color: '#767577' },
 });
 const Rainbow = ({
+  navigation,
   nickName,
   rainbow,
   selectedCatRainbowYReported,
@@ -94,7 +96,7 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    const result = await reportRainbow('Y');
+                    const result = await reportRainbow('Y', navigation);
                     if (result) {
                       disableReportBtn('Y');
                     }
@@ -149,7 +151,7 @@ const Rainbow = ({
                 {
                   text: '신고',
                   onPress: async () => {
-                    const result = await reportRainbow('N');
+                    const result = await reportRainbow('N', navigation);
                     if (result) {
                       disableReportBtn('N');
                     }
@@ -173,4 +175,4 @@ export default inject(({ cat }) => ({
   selectedCatRainbowNReported: cat.selectedCatRainbowNReported,
   reportRainbow: cat.reportRainbow,
   disableReportBtn: cat.disableReportBtn,
-}))(observer(Rainbow));
+}))(observer(withNavigation(Rainbow)));

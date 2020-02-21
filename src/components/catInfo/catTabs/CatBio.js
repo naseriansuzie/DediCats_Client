@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   View,
@@ -109,12 +110,13 @@ class CatBio extends React.Component {
   componentDidMount() {
     console.log('CatBio mount');
     const { catId } = this.props;
-    this.props.getSelectedCatInfo(catId);
+    this.props.getSelectedCatInfo(catId, this.props.navigation);
     this.props.getMyInfo();
   }
 
   render() {
     const {
+      navigation,
       selectedCatBio,
       selectedCatToday,
       selectedCatRainbowOpen,
@@ -191,7 +193,7 @@ class CatBio extends React.Component {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
                             await selectCut('selectedCat', 'Y');
-                            postCut('Y');
+                            postCut('Y', navigation);
                           }
                         }}
                       >
@@ -215,7 +217,7 @@ class CatBio extends React.Component {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
                             await selectCut('selectedCat', 'N');
-                            postCut('N');
+                            postCut('N', navigation);
                           }
                         }}
                       >
@@ -239,7 +241,7 @@ class CatBio extends React.Component {
                             Alert.alert('중성화 정보를 이미 입력하셨습니다.');
                           } else {
                             await selectCut('selectedCat', 'unknown');
-                            postCut('unknown');
+                            postCut('unknown', navigation);
                           }
                         }}
                       >
@@ -365,4 +367,4 @@ export default inject(({ cat, helper, auth }) => ({
   validateTag: cat.validateTag,
   updateInput: helper.updateInput,
   changeToDateTime: helper.changeToDateTime,
-}))(observer(CatBio));
+}))(observer(withNavigation(CatBio)));

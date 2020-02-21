@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Text } from 'native-base';
 import ActionSheet from 'react-native-actionsheet';
@@ -33,8 +34,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   catPhoto: {
-    width: '75%',
-    height: '100%',
+    width: '80%',
+    height: '90%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
     color: 'white',
-    marginVertical: 5,
+    marginVertical: 10,
   },
   address: {
     fontSize: 15,
@@ -79,7 +80,13 @@ class CatProfile extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();
 
   render() {
-    const { selectedCatBio, followCat, unFollowCat, reportCatBio } = this.props;
+    const {
+      navigation,
+      selectedCatBio,
+      followCat,
+      unFollowCat,
+      reportCatBio,
+    } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.reportView}>
@@ -97,7 +104,7 @@ class CatProfile extends React.Component {
           cancelButtonIndex={1}
           onPress={index => {
             if (index === 0) {
-              reportCatBio();
+              reportCatBio(navigation);
             }
           }}
         />
@@ -124,14 +131,14 @@ class CatProfile extends React.Component {
               {selectedCatBio[1].isFollowing ? (
                 <TouchableOpacity
                   style={styles.btn}
-                  onPress={() => unFollowCat(selectedCatBio[0].id)}
+                  onPress={() => unFollowCat(selectedCatBio[0].id, navigation)}
                 >
                   <Text style={styles.btnTxt}>Unfollow</Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
                   style={styles.btn}
-                  onPress={() => followCat(selectedCatBio[0].id)}
+                  onPress={() => followCat(selectedCatBio[0].id, navigation)}
                 >
                   <Text style={styles.btnTxt}>Follow</Text>
                 </TouchableOpacity>
@@ -151,4 +158,4 @@ export default inject(({ cat, helper, report }) => ({
   followCat: cat.followCat,
   unFollowCat: helper.unFollowCat,
   reportCatBio: report.reportCatBio,
-}))(observer(CatProfile));
+}))(observer(withNavigation(CatProfile)));

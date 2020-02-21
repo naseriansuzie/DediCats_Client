@@ -60,6 +60,7 @@ class CatPost extends React.Component {
   render() {
     const { content, createAt, user, photos, comments } = this.props.item;
     const {
+      navigation,
       item,
       userInfo,
       setReplyNum,
@@ -96,6 +97,7 @@ class CatPost extends React.Component {
               userInfo && userInfo.id === user.id,
               index,
               item,
+              navigation,
             );
           }}
         />

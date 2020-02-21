@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   photo: {
-    width: '75%',
-    height: '85%',
+    width: '80%',
+    height: '90%',
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  logOut: { paddingTop: 5, color: '#677ef1' },
 });
 
 const MyProfile = ({
@@ -101,10 +102,12 @@ const MyProfile = ({
           <TouchableOpacity
             onPress={async () => {
               const result = await signOut();
-              if (result) navigation.navigate('AuthLoading');
+              if (result) {
+                navigation.navigate('AuthLoading');
+              }
             }}
           >
-            <Text style={{ paddingTop: 5, color: '#677ef1' }}>로그아웃</Text>
+            <Text style={styles.logOut}>로그아웃</Text>
           </TouchableOpacity>
         </View>
       </View>
