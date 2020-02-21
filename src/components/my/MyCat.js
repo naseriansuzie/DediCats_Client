@@ -6,9 +6,11 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 
 const styles = StyleSheet.create({
+  list: { paddingLeft: 10 },
   radius: {
     borderRadius: 15,
   },
+  body: { paddingRight: 40 },
   btn: {
     alignItems: 'center',
     paddingVertical: 10,
@@ -38,10 +40,10 @@ const MyCat = ({
   unFollowCat,
   resetPostState,
 }) => (
-  <ListItem thumbnail>
+  <ListItem thumbnail style={styles.list}>
     <TouchableWithoutFeedback
       onPress={async () => {
-        const result = await getSelectedCatInfo(catId);
+        const result = await getSelectedCatInfo(catId, navigation);
         if (result) {
           resetPostState();
           navigation.navigate('CatInfo');
@@ -58,20 +60,23 @@ const MyCat = ({
     </TouchableWithoutFeedback>
     <TouchableWithoutFeedback
       onPress={async () => {
-        const result = await getSelectedCatInfo(catId);
+        const result = await getSelectedCatInfo(catId, navigation);
         if (result) {
           resetPostState();
           navigation.navigate('CatInfo');
         }
       }}
     >
-      <Body>
+      <Body style={styles.body}>
         <Text>{catNickname}</Text>
         <Text note>{address}</Text>
       </Body>
     </TouchableWithoutFeedback>
     <Right>
-      <TouchableOpacity style={styles.btn} onPress={() => unFollowCat(catId)}>
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => unFollowCat(catId, navigation)}
+      >
         <Text style={styles.btnTxt}>Unfollow</Text>
       </TouchableOpacity>
     </Right>
