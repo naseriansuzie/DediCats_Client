@@ -68,10 +68,10 @@ class CatPostList extends React.Component {
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
-    ) : null);
+    ) : <View />);
 
   render() {
-    const { postList } = this.props;
+    const { postList, _handleLoadMorePosts, isRefreshingPost, _handleRefresh } = this.props;
     if (this.state.loading) {
       this.loadFont();
       return <View />;
@@ -88,11 +88,12 @@ class CatPostList extends React.Component {
               renderItem={this._renderItem}
               keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
               showsVerticalScrollIndicator={false}
-              onEndReached={this.props._handleLoadMorePosts}
-              onEndReachedThreshold={0}
+              onEndReached={_handleLoadMorePosts}
+              onEndReachedThreshold={0.3}
               ListFooterComponent={this.renderFooter}
-              refreshing={this.props.isRefreshingPost}
-              onRefresh={this.props._handleRefresh}
+              refreshing={isRefreshingPost}
+              onRefresh={_handleRefresh}
+              initialNumToRender={3}
             />
           </SafeAreaView>
         </View>

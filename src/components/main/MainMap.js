@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     left: 20,
     borderRadius: 30,
     backgroundColor: '#d2d2d2',
+    opacity: 0.8,
   },
   myLocationIcon: {
     fontSize: 30,

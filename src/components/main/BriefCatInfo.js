@@ -14,32 +14,45 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 210,
     width: 345,
-    paddingHorizontal: 20,
     paddingTop: 0,
     borderRadius: 20,
     borderWidth: 2,
     borderColor: '#677ef1',
+    flexDirection: 'row',
+  },
+  content: {
+    width: '100%',
+    paddingLeft: 10,
   },
   closeBtn: {
-    alignItems: 'flex-end',
-    paddingTop: 10,
-    paddingRight: 5,
+    position: 'absolute',
+    width: '13%',
+    height: '16%',
     fontSize: 20,
+    marginTop: 10,
+    zIndex: 1,
+    top: -10,
+    right: 0,
   },
   cardImg: {
-    height: 110,
-    width: 110,
+    height: 120,
+    width: 120,
     alignItems: 'center',
     marginTop: 10,
+    marginLeft: 5,
     borderRadius: 10,
   },
   nickName: {
-    fontSize: 16,
+    fontSize: 20,
     marginTop: 10,
     fontWeight: 'bold',
   },
+  species: {
+    fontSize: 16,
+    paddingTop: 10,
+  },
   address: {
-    fontSize: 15,
+    fontSize: 16,
     paddingTop: 10,
   },
   intro: {
@@ -61,31 +74,25 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: 'bold',
   },
-  row: { flexDirection: 'row' },
+  row: {
+    flexDirection: 'row',
+    height: '100%',
+    width: '100%',
+    marginTop: 10,
+  },
   row45: { width: '45%' },
   row55: { width: '55%' },
 });
 
 const BriefCatInfo = ({
   getSelectedCatInfo,
-  followCat,
-  unFollowCat,
   item,
   navigation,
   hideBriefCat,
   resetPostState,
 }) => (
   <View style={styles.card}>
-    <View>
-      <View style={styles.closeBtn}>
-        <TouchableOpacity onPress={() => hideBriefCat()}>
-          <MaterialCommunityIcons
-            style={{ fontSize: 23, left: 10 }}
-            name="close"
-            color="#767577"
-          />
-        </TouchableOpacity>
-      </View>
+    <View style={styles.content}>
       <TouchableWithoutFeedback
         style={styles.row}
         onPress={async () => {
@@ -101,32 +108,26 @@ const BriefCatInfo = ({
         </View>
         <View style={styles.row55}>
           <Text style={styles.nickName}>{item.catNickname}</Text>
+          <Text style={styles.species}>추정 종: {item.catSpecies}</Text>
           <Text style={styles.address}>{item.catAddress}</Text>
-          <Text style={styles.intro}>{item.description}</Text>
+          <Text style={styles.intro}>{item.description} 안녕하세요감사합니다 미안합니다고맙습니다 맛있습니다멋있습니다</Text>
           <Text note>자세히 보기</Text>
         </View>
       </TouchableWithoutFeedback>
-      {item.isFollowing ? (
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => unFollowCat(item.catId)}
-        >
-          <Text style={styles.btnTxt}>UnFollow</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => followCat(item.catId)}
-        >
-          <Text style={styles.btnTxt}>Follow</Text>
-        </TouchableOpacity>
-      )}
     </View>
+    <TouchableOpacity
+      style={styles.closeBtn}
+      onPress={() => hideBriefCat()}
+    >
+      <MaterialCommunityIcons
+        style={{ fontSize: 30, left: 4 }}
+        name="close"
+        color="#767577"
+      />
+    </TouchableOpacity>
   </View>
 );
-export default inject(({ cat, helper, post }) => ({
+export default inject(({ cat, post }) => ({
   getSelectedCatInfo: cat.getSelectedCatInfo,
-  followCat: cat.followCat,
-  unFollowCat: helper.unFollowCat,
   resetPostState: post.resetPostState,
 }))(observer(withNavigation(BriefCatInfo)));
