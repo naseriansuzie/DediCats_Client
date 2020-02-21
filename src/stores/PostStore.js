@@ -1,7 +1,7 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
+import { observable, action, decorate } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
 
@@ -66,9 +66,9 @@ class PostStore {
     const postInfo =
       mode === 'new'
         ? {
-          content: selectedCatInputContent,
-          catId: selectedCatBio[0].id,
-        }
+            content: selectedCatInputContent,
+            catId: selectedCatBio[0].id,
+          }
         : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
@@ -147,12 +147,12 @@ class PostStore {
 decorate(PostStore, {
   postList: observable,
   postPage: observable,
-  isLoadingPost: observable,
   isRefreshingPost: observable,
+  isLoadingPost: observable,
   replyNum: observable,
   getPostList: action,
-  handleLoadMorePosts: action,
-  handleRefresh: action,
+  _handleLoadMorePosts: action,
+  _handleRefresh: action,
   addPost: action,
   deletePost: action,
   setPostModify: action,

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 
 const defaultCredential = { withCredentials: true };
-const defaultPhotoUrl =
+const DEFAULT_USER_URL =
   'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
 class UserStore {
   constructor(root) {
@@ -167,7 +167,7 @@ class UserStore {
   };
 
   resetUserObservable = () => {
-    this.myUri = defaultPhotoUrl;
+    this.myUri = DEFAULT_USER_URL;
     this.myPhotoPath = null;
     this.myCatList = null;
     this.unFollowedCat = null;

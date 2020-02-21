@@ -1,8 +1,8 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
+import { observable, action, decorate } from 'mobx';
 import axios from 'axios';
-import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
+import { SERVER_URL } from 'react-native-dotenv';
 import * as Permissions from 'expo-permissions';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
 
@@ -36,8 +36,6 @@ class MapStore {
   permissionState = false;
 
   isShowingBriefCat = false;
-
-  carousels = [];
 
   markers = [];
 
@@ -120,7 +118,7 @@ class MapStore {
     this.selectedMarker = item;
     this.isShowingBriefCat = true;
     callback();
-  }
+  };
 }
 
 decorate(MapStore, {

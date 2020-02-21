@@ -1,12 +1,10 @@
-import { observable, action, computed, decorate, runInAction } from 'mobx';
-import { Alert } from 'react-native';
+import { observable, action, decorate, runInAction } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
-import * as ImagePicker from 'expo-image-picker';
 import socketio from 'socket.io-client';
+import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
-
 class CatStore {
   constructor(root) {
     this.root = root;
@@ -473,7 +471,9 @@ class CatStore {
       const comment = await axios.get(url);
       if (comment) {
         console.log('서버에서 받은 코멘트들', comment.data.length);
-        this.selectedCatCommentList = this.selectedCatCommentList.concat(comment.data);
+        this.selectedCatCommentList = this.selectedCatCommentList.concat(
+          comment.data,
+        );
         console.log('받아온 코멘트 리스트', this.selectedCatCommentList.length);
       }
       return;
@@ -601,16 +601,9 @@ class CatStore {
 }
 
 decorate(CatStore, {
-  commentPage: observable,
-  initialComments: observable,
-  socketId: observable,
-  isConnectSocket: observable,
-  newComment: observable,
-  connectSocket: action,
-  offUser: action,
-  onDragstate: observable,
   addCatAddress: observable,
   addCatLocation: observable,
+  onDragstate: observable,
   addCatPhotoPath: observable,
   addCatNickname: observable,
   addCatDescription: observable,
@@ -639,6 +632,15 @@ decorate(CatStore, {
   selectedCatRainbowNReported: observable,
   selectedCatCutClicked: observable,
   selectedCatReportInfo: observable,
+  socketId: observable,
+  isConnectSocket: observable,
+  newComment: observable,
+  commentPage: observable,
+  initialComments: observable,
+
+  setCatPost: action,
+  connectSocket: action,
+  offUser: action,
   getSelectedCatInfo: action,
   followCat: action,
   selectCut: action,
@@ -662,7 +664,6 @@ decorate(CatStore, {
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,
-  setCatPost: action,
 });
 
 export default CatStore;
