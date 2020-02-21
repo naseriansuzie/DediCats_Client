@@ -28,7 +28,6 @@ class PostStore {
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
       const post = await axios.get(url);
       if (post) {
-        this.isLoadingPost = true;
         if (this.isRefreshingPost) {
           this.postList = post.data;
           this.isRefreshingPost = false;
@@ -43,6 +42,7 @@ class PostStore {
   };
 
   _handleLoadMorePosts = () => {
+    this.isLoadingPost = true;
     this.postPage += 1;
     this.getPostList();
   };
@@ -66,9 +66,9 @@ class PostStore {
     const postInfo =
       mode === 'new'
         ? {
-            content: selectedCatInputContent,
-            catId: selectedCatBio[0].id,
-          }
+          content: selectedCatInputContent,
+          catId: selectedCatBio[0].id,
+        }
         : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
