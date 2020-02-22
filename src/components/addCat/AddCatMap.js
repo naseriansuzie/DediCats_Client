@@ -32,6 +32,10 @@ class AddCatMap extends React.Component {
       longitude: 0,
       longitudeDelta: 0.005,
     },
+    markerData: {
+      latitude: 0,
+      longitude: 0,
+    },
   };
 
   componentDidMount() {
@@ -49,8 +53,13 @@ class AddCatMap extends React.Component {
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0005,
         };
+        const markerData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
         this.setState({
           currentPosition,
+          markerData,
         });
         setAddCatLocation(coords);
       },
@@ -65,9 +74,19 @@ class AddCatMap extends React.Component {
     this.setState({ currentPosition: region });
   };
 
+  onMarkerChange = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    this.setState({
+      markerData: {
+        latitude,
+        longitude,
+      },
+    });
+    this.props.onMarkerChange(e);
+  }
+
   render() {
-    const { currentPosition } = this.state;
-    const { addCatLocation, onMarkerChange } = this.props;
+    const { currentPosition, markerData } = this.state;
     return (
       <View style={styles.mapView}>
         <Text style={styles.spotTxt}> 고양이를 자주 만나는 장소 선택</Text>
@@ -78,12 +97,12 @@ class AddCatMap extends React.Component {
             region={currentPosition}
             onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
-            onPress={(e) => onMarkerChange(e)}
+            onPress={(e) => this.onMarkerChange(e)}
           >
-            {this.props.addCatLocation && (
+            {this.state.markerData && (
               <Marker coordinate={{
-                latitude: addCatLocation.latitude,
-                longitude: addCatLocation.longitude,
+                latitude: markerData.latitude,
+                longitude: markerData.longitude,
               }}
               />
             )}
