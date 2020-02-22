@@ -5,6 +5,7 @@ import MapStore from './MapStore';
 import PostStore from './PostStore';
 import ReportStore from './ReportStore';
 import UserStore from './UserStore';
+import CommentStore from './CommentStore';
 
 class RootStore {
   constructor() {
@@ -15,6 +16,7 @@ class RootStore {
     this.post = new PostStore(this);
     this.report = new ReportStore(this);
     this.user = new UserStore(this);
+    this.comment = new CommentStore(this);
   }
 }
 
