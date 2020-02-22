@@ -223,18 +223,16 @@ const AddCatBio = ({
             onPress={async () => {
               const validation = await validateAddCat();
               if (validation) {
-                const addressResult = await getAddress(navigation);
-                if (addressResult) {
-                  const addCatResult = await addCat(navigation);
-                  if (addCatResult) {
-                    navigation.goBack();
-                    await getMapInfo(navigation);
-                  } else {
-                    Alert.alert('고양이를 등록할 수 없습니다');
-                    navigation.goBack();
-                  }
-                } else {
-                  Alert.alert('고양이를 등록할 수 없습니다');
+                try {
+                  await getAddress(navigation);
+                  await addCat(navigation);
+                  navigation.goBack();
+                  await getMapInfo(navigation);
+                } catch (err) {
+                  console.dir(err);
+                  Alert.alert(
+                    '고양이를 등록할 수 없습니다. 관리자에게 문의해주세요.',
+                  );
                   navigation.goBack();
                 }
               }
