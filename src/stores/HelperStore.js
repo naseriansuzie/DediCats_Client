@@ -1,7 +1,6 @@
-import { action, decorate, runInAction, observable } from 'mobx';
+import { action, decorate, runInAction } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
-import * as Font from 'expo-font';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { Alert } from 'react-native';
@@ -110,17 +109,6 @@ class HelperStore {
 
   // 'YYYY/MM/DD HH:MM a/pm
   convertDateTime = str => moment(str).format('YY/MM/DD h:mm a');
-
-  loadingFont = true;
-
-  loadFont = async () => {
-    await Font.loadAsync({
-      Roboto: require('native-base/Fonts/Roboto.ttf'),
-      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-      Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
-    });
-    this.loadingFont = false;
-  };
 }
 
 decorate(HelperStore, {
@@ -134,7 +122,5 @@ decorate(HelperStore, {
   makeDateTime: action,
   changeToDateTime: action,
   convertDateTime: action,
-  loadingFont: observable,
-  loadFont: action,
 });
 export default HelperStore;
