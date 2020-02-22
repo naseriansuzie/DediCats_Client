@@ -1,7 +1,6 @@
 import { observable, action, decorate, runInAction } from 'mobx';
 import axios from 'axios';
 import { SERVER_URL, KAKAO_MAPS_API_KEY } from 'react-native-dotenv';
-import socketio from 'socket.io-client';
 import { Alert } from 'react-native';
 
 const defaultCredential = { withCredentials: true };
@@ -91,9 +90,10 @@ class CatStore {
 
   // CatStore
   setCatPost = item => {
+    const { comment } = this.root;
     this.selectedCatPost = item;
-    this.root.comment.initialComments = item.comments.length;
-    this.root.comment.connectSocket();
+    comment.initialComments = item.comments.length;
+    comment.connectSocket();
   };
 
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
