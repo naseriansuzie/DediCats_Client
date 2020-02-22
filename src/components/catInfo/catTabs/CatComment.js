@@ -78,7 +78,7 @@ const CatComment = ({
                     text: '삭제',
                     onPress: async () => {
                       await deleteComment(comment, navigation);
-                      resetCommentState();
+                      resetCommentState('delete');
                       getCommentList(navigation);
                     },
                   },
