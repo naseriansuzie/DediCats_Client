@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
+import * as Font from 'expo-font';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
 
@@ -38,10 +39,23 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
+  state ={ loadingFont: true }
+
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
   }
+
+  loadFont = async () => {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
+    });
+    this.setState({
+      loadingFont: false,
+    });
+  };
 
   _renderItem = ({ item }) => (
     <CatPost
@@ -67,11 +81,10 @@ class CatPostList extends React.Component {
       _handleLoadMorePosts,
       isRefreshingPost,
       _handleRefresh,
-      loading,
-      loadFont,
     } = this.props;
-    if (loading) {
-      loadFont();
+    const { loadingFont } = this.state;
+    if (loadingFont) {
+      this.loadFont();
       return <View />;
     }
     return (
@@ -110,6 +123,4 @@ export default inject(({ cat, post, helper, comment }) => ({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
-  loadingFont: helper.loadingFont,
-  loadFont: helper.loadFont,
 }))(observer(withNavigation(CatPostList)));
