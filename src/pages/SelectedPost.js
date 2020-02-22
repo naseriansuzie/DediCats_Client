@@ -70,8 +70,8 @@ class SelectedPost extends React.Component {
   }
 }
 
-export default inject(({ cat, post }) => ({
-  offUser: cat.offUser,
-  resetCommentState: cat.resetCommentState,
+export default inject(({ post, comment }) => ({
+  offUser: comment.offUser,
+  resetCommentState: comment.resetCommentState,
   validateRefreshMode: post.validateRefreshMode,
 }))(observer(withNavigation(SelectedPost)));
