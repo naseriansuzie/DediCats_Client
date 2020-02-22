@@ -128,13 +128,13 @@ const CatComment = ({
   </ListItem>
 );
 
-export default inject(({ auth, helper, report, cat }) => ({
+export default inject(({ auth, helper, report, comment }) => ({
   userInfo: auth.userInfo,
   convertDateTime: helper.convertDateTime,
   reportComment: report.reportComment,
-  setCatComment: cat.setCatComment,
-  modifyComment: cat.modifyComment,
-  deleteComment: cat.deleteComment,
-  resetCommentState: cat.resetCommentState,
-  getCommentList: cat.getCommentList,
+  setCatComment: comment.setCatComment,
+  modifyComment: comment.modifyComment,
+  deleteComment: comment.deleteComment,
+  resetCommentState: comment.resetCommentState,
+  getCommentList: comment.getCommentList,
 }))(observer(withNavigation(CatComment)));
