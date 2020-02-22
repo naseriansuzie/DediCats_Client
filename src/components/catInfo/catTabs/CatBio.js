@@ -44,6 +44,14 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
   },
+  content: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderColor: '#f38847',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+  },
   rainbowView: { alignItems: 'flex-end' },
   reportBtn: { marginTop: 10, marginRight: 25 },
   cut: { width: '100%', paddingBottom: 10 },
@@ -160,9 +168,10 @@ class CatBio extends React.Component {
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Text style={styles.width100}>
-                      {`추정 종 : ${selectedCatBio.species}`}
-                    </Text>
+                    <Text style={styles.width100}>{'추정하는 종 : '}</Text>
+                    <CardItem style={styles.content}>
+                      <Text>{selectedCatBio.species}</Text>
+                    </CardItem>
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -170,86 +179,9 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       {`${selectedCatBio.nickname} 고양이를 소개해요!`}
                     </Text>
-                    <Text>{`${selectedCatBio.description}`}</Text>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Text style={styles.cut}>중성화 유무</Text>
-                    <View style={styles.row}>
-                      <TouchableHighlight
-                        style={
-                          selectedCatCutClicked.Y
-                            ? styles.noPeanut
-                            : styles.peanut
-                        }
-                        underlayColor="#f38847"
-                        onPress={async () => {
-                          if (
-                            selectedCatCutClicked.Y ||
-                            selectedCatCutClicked.N ||
-                            selectedCatCutClicked.unknown
-                          ) {
-                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
-                          } else {
-                            await selectCut('selectedCat', 'Y');
-                            postCut('Y', navigation);
-                          }
-                        }}
-                      >
-                        <Text style={styles.cutTxt}>
-                          Yes {selectedCatBio.cut.Y}
-                        </Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight
-                        style={
-                          selectedCatCutClicked.N
-                            ? styles.noPeanut
-                            : styles.peanut
-                        }
-                        underlayColor="#f38847"
-                        onPress={async () => {
-                          if (
-                            selectedCatCutClicked.Y ||
-                            selectedCatCutClicked.N ||
-                            selectedCatCutClicked.unknown
-                          ) {
-                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
-                          } else {
-                            await selectCut('selectedCat', 'N');
-                            postCut('N', navigation);
-                          }
-                        }}
-                      >
-                        <Text style={styles.cutTxt}>
-                          No {selectedCatBio.cut.N}
-                        </Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight
-                        style={
-                          selectedCatCutClicked.unknown
-                            ? styles.noPeanut
-                            : styles.peanut
-                        }
-                        underlayColor="#f38847"
-                        onPress={async () => {
-                          if (
-                            selectedCatCutClicked.Y ||
-                            selectedCatCutClicked.N ||
-                            selectedCatCutClicked.unknown
-                          ) {
-                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
-                          } else {
-                            await selectCut('selectedCat', 'unknown');
-                            postCut('unknown', navigation);
-                          }
-                        }}
-                      >
-                        <Text style={styles.cutTxt}>
-                          몰라요 {selectedCatBio.cut.unknown}
-                        </Text>
-                      </TouchableHighlight>
-                    </View>
+                    <CardItem style={styles.content}>
+                      <Text>{`${selectedCatBio.description}`}</Text>
+                    </CardItem>
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -259,7 +191,9 @@ class CatBio extends React.Component {
                     </Text>
                     {selectedCatBio.today &&
                     selectedCatBio.todayTime === changeToDateTime('today') ? (
-                      <Text>{selectedCatBio.today}</Text>
+                      <CardItem style={styles.content}>
+                        <Text>{selectedCatBio.today}</Text>
+                      </CardItem>
                     ) : (
                       <Form style={styles.catTodayForm}>
                         <Picker
@@ -294,6 +228,85 @@ class CatBio extends React.Component {
                         </Picker>
                       </Form>
                     )}
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text style={styles.cut}>중성화 유무</Text>
+                    <View style={styles.row}>
+                      <TouchableHighlight
+                        style={
+                          selectedCatCutClicked.Y
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
+                        underlayColor="#f38847"
+                        onPress={async () => {
+                          if (
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
+                          ) {
+                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
+                          } else {
+                            await postCut('Y', navigation);
+                            selectCut('selectedCat', 'Y');
+                          }
+                        }}
+                      >
+                        <Text style={styles.cutTxt}>
+                          Yes {selectedCatBio.cut.Y}
+                        </Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight
+                        style={
+                          selectedCatCutClicked.N
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
+                        underlayColor="#f38847"
+                        onPress={async () => {
+                          if (
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
+                          ) {
+                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
+                          } else {
+                            await postCut('N', navigation);
+                            selectCut('selectedCat', 'N');
+                          }
+                        }}
+                      >
+                        <Text style={styles.cutTxt}>
+                          No {selectedCatBio.cut.N}
+                        </Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight
+                        style={
+                          selectedCatCutClicked.unknown
+                            ? styles.noPeanut
+                            : styles.peanut
+                        }
+                        underlayColor="#f38847"
+                        onPress={async () => {
+                          if (
+                            selectedCatCutClicked.Y ||
+                            selectedCatCutClicked.N ||
+                            selectedCatCutClicked.unknown
+                          ) {
+                            Alert.alert('중성화 정보를 이미 입력하셨습니다.');
+                          } else {
+                            await postCut('unknown', navigation);
+                            selectCut('selectedCat', 'unknown');
+                          }
+                        }}
+                      >
+                        <Text style={styles.cutTxt}>
+                          몰라요 {selectedCatBio.cut.unknown}
+                        </Text>
+                      </TouchableHighlight>
+                    </View>
                   </Body>
                 </CardItem>
                 <CardItem>

@@ -50,8 +50,9 @@ AddCatModal.navigationOptions = ({ navigation }) => {
   };
 
   return {
-    title: 'Add Cat',
-    headerLeft: () => <HeaderBackButton onPress={() => onBack()} />,
+    headerLeft: () => (
+      <HeaderBackButton title="뒤로가기" onPress={() => onBack()} />
+    ),
   };
 };
 

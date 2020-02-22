@@ -43,8 +43,8 @@ class SelectedPost extends React.Component {
 
     BackHandler.addEventListener('hardwareBackPress', async () => {
       await offUser(this.props.navigation);
-      validateRefreshMode(this.props.navigatino);
-      resetCommentState();
+      validateRefreshMode(this.props.navigation);
+      resetCommentState('back');
       navigation.goBack();
       return true;
     });
@@ -70,8 +70,8 @@ class SelectedPost extends React.Component {
   }
 }
 
-export default inject(({ cat, post }) => ({
-  offUser: cat.offUser,
-  resetCommentState: cat.resetCommentState,
+export default inject(({ post, comment }) => ({
+  offUser: comment.offUser,
+  resetCommentState: comment.resetCommentState,
   validateRefreshMode: post.validateRefreshMode,
 }))(observer(withNavigation(SelectedPost)));

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
 const CatCommentInput = ({
   navigation,
-  selectedCatInputComment,
+  inputComment,
   commentModifyState,
   getCommentList,
   addComment,
@@ -61,11 +61,11 @@ const CatCommentInput = ({
         <Form style={styles.inputForm}>
           <Textarea
             style={styles.textArea}
-            rowSpan={selectedCatInputComment.length > 27 ? 3 : 2}
+            rowSpan={inputComment.length > 27 ? 3 : 2}
             placeholder="댓글을 입력해주세요."
-            value={selectedCatInputComment}
+            value={inputComment}
             onChangeText={text =>
-              updateInput('cat', 'selectedCatInputComment', text)
+              updateInput('comment', 'inputComment', text)
             }
           />
         </Form>
@@ -73,15 +73,15 @@ const CatCommentInput = ({
           style={styles.submitBtn}
           onPress={async () => {
             try {
-              const validation = validateAddInput('selectedCatInputComment');
+              const validation = validateAddInput('comment', 'inputComment');
               if (validation) {
                 if (commentModifyState) {
                   await addComment('update', navigation);
                   setCommentModify();
-                  resetCommentState();
+                  resetCommentState('update');
                   getCommentList(navigation);
                 } else {
-                  await addComment('new', navigation);
+                  addComment('new', navigation);
                 }
               }
             } catch (err) {
@@ -98,13 +98,13 @@ const CatCommentInput = ({
   </View>
 );
 
-export default inject(({ cat, helper }) => ({
-  selectedCatInputComment: cat.selectedCatInputComment,
-  commentModifyState: cat.commentModifyState,
-  getCommentList: cat.getCommentList,
-  addComment: cat.addComment,
-  setCommentModify: cat.setCommentModify,
-  resetCommentState: cat.resetCommentState,
+export default inject(({ helper, comment }) => ({
+  inputComment: comment.inputComment,
+  commentModifyState: comment.commentModifyState,
+  getCommentList: comment.getCommentList,
+  addComment: comment.addComment,
+  setCommentModify: comment.setCommentModify,
+  resetCommentState: comment.resetCommentState,
   validateAddInput: helper.validateAddInput,
   updateInput: helper.updateInput,
 }))(observer(withNavigation(CatCommentInput)));

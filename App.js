@@ -4,6 +4,7 @@ import { Provider } from 'mobx-react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Signin from './src/pages/Signin';
 import Signup from './src/pages/Signup';
 import AuthLoadingScreen from './src/pages/AuthLoadingScreen';
@@ -27,10 +28,13 @@ const MyPageStack = createStackNavigator(
     MyPage: {
       screen: MyPage,
       navigationOptions: {
+        headerTitle: false,
         headerStyle: {
           backgroundColor: '#edf1f5',
           headerTintColor: '#444444',
           headerTitleStyle: { display: 'none' },
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
         },
       },
     },
@@ -47,6 +51,10 @@ const MyPageStack = createStackNavigator(
             }}
           />
         ),
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
         headerTitleStyle: { display: 'none' },
       }),
     },
@@ -70,20 +78,41 @@ MyPageStack.navigationOptions = ({ navigation }) => {
 
   return {
     tabBarVisible,
+    title: '마이페이지',
+    tabBarIcon: ({ focused }) => {
+      const color = focused ? '#677ef1' : '#767577';
+      const size = '30';
+      return (
+        <MaterialCommunityIcons
+          size={size}
+          name="account-heart"
+          color={color}
+        />
+      );
+    },
+    tabBarOptions: { activeTintColor: '#677ef1' },
   };
 };
 
 const MainStack = createStackNavigator(
   {
-    Main,
+    Main: {
+      screen: Main,
+      navigationOptions: {
+        headerTitle: false,
+      },
+    },
     CatInfo: {
       screen: CatInfo,
       navigationOptions: {
         headerStyle: {
           backgroundColor: '#6772f1',
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
         },
         headerTintColor: 'white',
         headerTitleStyle: { display: 'none' },
+        headerBackTitle: 'Back',
       },
     },
     SelectedPost: {
@@ -92,9 +121,9 @@ const MainStack = createStackNavigator(
         headerLeft: () => (
           <HeaderBackButton
             onPress={async () => {
-              await root.cat.offUser(navigation);
+              await root.comment.offUser(navigation);
               root.post.validateRefreshMode(navigation);
-              root.cat.resetCommentState();
+              root.comment.resetCommentState('back');
               navigation.goBack();
             }}
           />
@@ -116,6 +145,15 @@ MainStack.navigationOptions = ({ navigation }) => {
 
   return {
     tabBarVisible,
+    title: 'Home',
+    tabBarIcon: ({ focused }) => {
+      const color = focused ? '#677ef1' : '#767577';
+      const size = '30';
+      return (
+        <MaterialCommunityIcons size={size} name="home-outline" color={color} />
+      );
+    },
+    tabBarOptions: { activeTintColor: '#677ef1' },
   };
 };
 
@@ -147,7 +185,16 @@ const AppStack = createStackNavigator(
         headerShown: false,
       },
     },
-    AddCatModal,
+    AddCatModal: {
+      screen: AddCatModal,
+      navigationOptions: {
+        headerTitle: false,
+        headerStyle: {
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+      },
+    },
   },
   {
     initialRouteName: 'Home',
