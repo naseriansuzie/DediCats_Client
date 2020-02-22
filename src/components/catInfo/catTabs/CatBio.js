@@ -44,6 +44,14 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
   },
+  content: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderColor: '#f38847',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+  },
   rainbowView: { alignItems: 'flex-end' },
   reportBtn: { marginTop: 10, marginRight: 25 },
   cut: { width: '100%', paddingBottom: 10 },
@@ -160,9 +168,10 @@ class CatBio extends React.Component {
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Text style={styles.width100}>
-                      {`추정 종 : ${selectedCatBio.species}`}
-                    </Text>
+                    <Text style={styles.width100}>{'추정하는 종 : '}</Text>
+                    <CardItem style={styles.content}>
+                      <Text>{selectedCatBio.species}</Text>
+                    </CardItem>
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -170,7 +179,55 @@ class CatBio extends React.Component {
                     <Text style={styles.width100}>
                       {`${selectedCatBio.nickname} 고양이를 소개해요!`}
                     </Text>
-                    <Text>{`${selectedCatBio.description}`}</Text>
+                    <CardItem style={styles.content}>
+                      <Text>{`${selectedCatBio.description}`}</Text>
+                    </CardItem>
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text style={styles.width100}>
+                      오늘 {selectedCatBio.nickname}의 건강 상태
+                    </Text>
+                    {selectedCatBio.today &&
+                    selectedCatBio.todayTime === changeToDateTime('today') ? (
+                      <CardItem style={styles.content}>
+                        <Text>{selectedCatBio.today}</Text>
+                      </CardItem>
+                    ) : (
+                      <Form style={styles.catTodayForm}>
+                        <Picker
+                          note
+                          enabled
+                          mode="dialog"
+                          iosIcon={<Icon name="arrow-down" />}
+                          style={styles.picker}
+                          placeholder="오늘의 건강 상태 선택하기"
+                          placeholderStyle={styles.font15}
+                          selectedValue={selectedCatToday}
+                          onValueChange={postCatToday}
+                        >
+                          <Picker.Item
+                            label="😼기운 넘쳐요"
+                            value="😼기운 넘쳐요"
+                          />
+                          <Picker.Item label="😺튼튼해요" value="😺튼튼해요" />
+                          <Picker.Item
+                            label="😻사랑스러워요"
+                            value="😻사랑스러워요"
+                          />
+                          <Picker.Item
+                            label="😾가까이 가지 마세요"
+                            value="😾가까이 가지 마세요"
+                          />
+                          <Picker.Item
+                            label="😿기운이 없어요"
+                            value="😿기운이 없어요"
+                          />
+                          <Picker.Item label="🙀아파요" value="🙀아파요" />
+                        </Picker>
+                      </Form>
+                    )}
                   </Body>
                 </CardItem>
                 <CardItem>
@@ -250,50 +307,6 @@ class CatBio extends React.Component {
                         </Text>
                       </TouchableHighlight>
                     </View>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Text style={styles.width100}>
-                      오늘 {selectedCatBio.nickname}의 건강 상태
-                    </Text>
-                    {selectedCatBio.today &&
-                    selectedCatBio.todayTime === changeToDateTime('today') ? (
-                      <Text>{selectedCatBio.today}</Text>
-                    ) : (
-                      <Form style={styles.catTodayForm}>
-                        <Picker
-                          note
-                          enabled
-                          mode="dialog"
-                          iosIcon={<Icon name="arrow-down" />}
-                          style={styles.picker}
-                          placeholder="오늘의 건강 상태 선택하기"
-                          placeholderStyle={styles.font15}
-                          selectedValue={selectedCatToday}
-                          onValueChange={postCatToday}
-                        >
-                          <Picker.Item
-                            label="😼기운 넘쳐요"
-                            value="😼기운 넘쳐요"
-                          />
-                          <Picker.Item label="😺튼튼해요" value="😺튼튼해요" />
-                          <Picker.Item
-                            label="😻사랑스러워요"
-                            value="😻사랑스러워요"
-                          />
-                          <Picker.Item
-                            label="😾가까이 가지 마세요"
-                            value="😾가까이 가지 마세요"
-                          />
-                          <Picker.Item
-                            label="😿기운이 없어요"
-                            value="😿기운이 없어요"
-                          />
-                          <Picker.Item label="🙀아파요" value="🙀아파요" />
-                        </Picker>
-                      </Form>
-                    )}
                   </Body>
                 </CardItem>
                 <CardItem>
