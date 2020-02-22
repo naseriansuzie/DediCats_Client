@@ -89,7 +89,7 @@ class UserStore {
     return new Promise((resolve, reject) => resolve(true));
   };
 
-  changePW = async () => {
+  changePW = async navigation => {
     const { PW, confirmPW, reConfirmPW } = this.root.auth;
 
     if (!PW || !confirmPW || !reConfirmPW) {
@@ -118,11 +118,11 @@ class UserStore {
           this.root.helper.clearInput('auth', 'PW', 'confirmPW', 'reConfirmPW');
           return true;
         }
-
         return false;
       })
       .catch(err => {
         console.dir(err);
+        this.root.auth.expiredTokenHandler(err, navigation);
         if (err.response.status === 402) {
           Alert.alert(
             '기존 비밀번호가 일치하지 않습니다. 비밀번호를 확인해주세요',
@@ -138,7 +138,7 @@ class UserStore {
     return result;
   };
 
-  findPW = async () => {
+  findPW = async navigation => {
     const { email } = this.root.auth;
     const result = await axios
       .post(`${SERVER_URL}/signup/findpw`, { email }, defaultCredential)
@@ -162,6 +162,7 @@ class UserStore {
         if (err.response.status === 401) {
           Alert.alert('가입된 이메일이 아닙니다. 이메일을 확인해주세요');
         } else {
+          this.root.auth.expiredTokenHandler(err, navigation);
           Alert.alert('에러가 발생하였습니다. 관리자에게 문의해주세요');
         }
         return false;

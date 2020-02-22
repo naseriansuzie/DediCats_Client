@@ -180,10 +180,32 @@ class AuthStore {
   };
 
   expiredTokenHandler = async (err, navigation) => {
-    if (err.response && err.response.status === 401) {
-      Alert.alert('다시 로그인해주십시오.');
-      await this.signOut();
-      navigation.navigate('AuthLoading');
+    if (
+      (err.response && err.response.status === 401) ||
+      err.code === 'ECONNABORTED'
+    ) {
+      // axios timeOut 로그
+      console.log(`A timeout happened on url ${err.config.url}`);
+
+      // accessToken 요청
+      const statusCode = axios
+        .post(`${AUTH_SERVER}/auth/token`, defaultCredential)
+        .then(res => res.status)
+        .catch(err => {
+          console.dir(err);
+          return err.response.status;
+        });
+
+      if (statusCode === 200) {
+        // accessToken 정상 도착
+        Alert.alert('재시도해주십시오.');
+      }
+      if (statusCode === 401) {
+        // refreshToken이 만료된 상태
+        Alert.alert('로그인이 필요합니다.');
+        await this.signOut();
+        navigation.navigate('AuthLoading');
+      }
     }
   };
 }

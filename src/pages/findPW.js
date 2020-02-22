@@ -68,7 +68,7 @@ const ChangePW = ({ navigation, email, findPW, updateInput }) => (
       <TouchableOpacity
         style={styles.btn}
         onPress={async () => {
-          const reuslt = await findPW();
+          const reuslt = await findPW(navigation);
           if (reuslt) {
             navigation.goBack();
           }

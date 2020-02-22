@@ -113,7 +113,7 @@ class ChangePW extends React.Component {
           <TouchableOpacity
             style={styles.btn}
             onPress={async () => {
-              const result = await changePW();
+              const result = await changePW(navigation);
               getMyInfo();
               if (result) {
                 navigation.navigate('AuthLoading');
