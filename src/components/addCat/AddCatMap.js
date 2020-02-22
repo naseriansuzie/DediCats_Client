@@ -27,22 +27,22 @@ class AddCatMap extends React.Component {
   // eslint-disable-next-line react/state-in-constructor
   state = {
     currentPosition: {
-      latitude: 0,
+      latitude: 37,
       latitudeDelta: 0.0015,
-      longitude: 0,
+      longitude: 127,
       longitudeDelta: 0.005,
     },
     markerData: {
-      latitude: 0,
-      longitude: 0,
+      latitude: 37,
+      longitude: 127,
     },
   };
 
-  componentDidMount() {
-    this.getCurrentPosition();
+  componentDidMount = async () => {
+    await this.getCurrentPosition();
   }
 
-  getCurrentPosition() {
+  getCurrentPosition = async () => {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { coords } = position;
