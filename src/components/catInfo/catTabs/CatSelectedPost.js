@@ -84,7 +84,7 @@ class CatSelectedPost extends React.Component {
     const {
       navigation,
       selectedCatPost,
-      selectedCatCommentList,
+      commentList,
       initialComments,
       _handleLoadMoreComments,
       convertDateTime,
@@ -127,9 +127,9 @@ class CatSelectedPost extends React.Component {
               </Body>
             </CardItem>
           </Card>
-          {selectedCatCommentList.length > 0 ? (
+          {commentList.length > 0 ? (
             <SafeAreaView>
-              {initialComments - selectedCatCommentList.length > 0 ? (
+              {initialComments - commentList.length > 0 ? (
                 <TouchableOpacity
                   onPress={() => _handleLoadMoreComments(navigation)}
                 >
@@ -137,7 +137,7 @@ class CatSelectedPost extends React.Component {
                 </TouchableOpacity>
               ) : null}
               <FlatList
-                data={selectedCatCommentList}
+                data={commentList}
                 renderItem={this._renderItem}
                 keyExtractor={item => `post_${item.id}`}
                 showsVerticalScrollIndicator={false}
@@ -153,9 +153,9 @@ class CatSelectedPost extends React.Component {
   }
 }
 
-export default inject(({ cat, helper }) => ({
+export default inject(({ cat, helper, comment }) => ({
   selectedCatPost: cat.selectedCatPost,
-  selectedCatCommentList: cat.selectedCatCommentList,
+  commentList: comment.commentList,
   initialComments: cat.initialComments,
   getCommentList: cat.getCommentList,
   _handleLoadMoreComments: cat._handleLoadMoreComments,
