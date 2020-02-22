@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, Image } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 10,
     paddingTop: 5,
+    textAlign: 'center',
   },
 });
 
@@ -104,7 +105,12 @@ class AddCatMap extends React.Component {
                 latitude: markerData.latitude,
                 longitude: markerData.longitude,
               }}
-              />
+              >
+                <Image
+                  source={require('../../../catPawMarker.png')}
+                  style={{height: 40, width: 40 }}
+                />
+              </Marker>
             )}
           </MapView>
         </View>
