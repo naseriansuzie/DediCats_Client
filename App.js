@@ -31,6 +31,8 @@ const MyPageStack = createStackNavigator(
           backgroundColor: '#edf1f5',
           headerTintColor: '#444444',
           headerTitleStyle: { display: 'none' },
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
         },
       },
     },
@@ -47,6 +49,10 @@ const MyPageStack = createStackNavigator(
             }}
           />
         ),
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
         headerTitleStyle: { display: 'none' },
       }),
     },
@@ -81,6 +87,8 @@ const MainStack = createStackNavigator(
       navigationOptions: {
         headerStyle: {
           backgroundColor: '#6772f1',
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
         },
         headerTintColor: 'white',
         headerTitleStyle: { display: 'none' },
