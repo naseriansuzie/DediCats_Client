@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     alignItems: 'center',
+    bottom: 30,
   },
   logo: {
     flex: 1,
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 30,
     borderColor: '#edf1f5',
-    borderWidth: 1,
+    // borderWidth: 1,
     marginBottom: 20,
   },
   photoEdition: {
@@ -165,7 +166,6 @@ class MyProfile_Elements extends React.Component {
               }
             }}
           />
-
           <Content style={styles.content}>
             <ListItem style={styles.listView}>
               <View style={styles.nickname}>
