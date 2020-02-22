@@ -35,9 +35,9 @@ class ReportStore {
   };
 
   reportComment = async navigation => {
-    const { cat } = this.root;
-    const commentId = cat.selectedCatComment.id;
-    const criminalId = cat.selectedCatComment.user.id;
+    const { comment } = this.root;
+    const commentId = comment.selectedComment.id;
+    const criminalId = comment.selectedComment.user.id;
     const result = await axios
       .post(
         `${SERVER_URL}/report`,

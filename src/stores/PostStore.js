@@ -138,8 +138,8 @@ class PostStore {
   };
 
   validateRefreshMode = navigation => {
-    const { cat } = this.root;
-    const commentCount = cat.selectedCatCommentList.length;
+    const { commentList } = this.root.comment;
+    const commentCount = commentList.length;
     if (commentCount !== this.replyNum) {
       this._handleRefresh(navigation);
     }

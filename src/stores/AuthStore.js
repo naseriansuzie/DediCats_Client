@@ -146,12 +146,13 @@ class AuthStore {
   };
 
   signOut = async () => {
-    const { user } = this.root;
+    const { user, map } = this.root;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async res => {
         await AsyncStorage.removeItem('user');
         user.resetUserObservable();
+        map.hideBriefCat();
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
         return true;

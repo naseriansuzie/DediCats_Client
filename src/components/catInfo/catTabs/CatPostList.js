@@ -1,7 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import * as Font from 'expo-font';
 import {
   StyleSheet,
   View,
@@ -39,21 +38,10 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
-  state = { loading: true };
-
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
   }
-
-  loadFont = async () => {
-    await Font.loadAsync({
-      Roboto: require('native-base/Fonts/Roboto.ttf'),
-      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-      Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
-    });
-    this.setState({ loading: false });
-  };
 
   _renderItem = ({ item }) => (
     <CatPost
@@ -65,13 +53,13 @@ class CatPostList extends React.Component {
   );
 
   renderFooter = () =>
-    this.props.isLoadingPost ? (
+    (this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
     ) : (
       <View />
-    );
+    ));
 
   render() {
     const {
@@ -79,9 +67,11 @@ class CatPostList extends React.Component {
       _handleLoadMorePosts,
       isRefreshingPost,
       _handleRefresh,
+      loading,
+      loadFont,
     } = this.props;
-    if (this.state.loading) {
-      this.loadFont();
+    if (loading) {
+      loadFont();
       return <View />;
     }
     return (
@@ -110,9 +100,9 @@ class CatPostList extends React.Component {
   }
 }
 
-export default inject(({ cat, post, helper }) => ({
+export default inject(({ cat, post, helper, comment }) => ({
   catId: cat.selectedCatBio[0].id,
-  setCatPost: cat.setCatPost,
+  setCatPost: comment.setCatPost,
   postList: post.postList,
   getPostList: post.getPostList,
   _handleLoadMorePosts: post._handleLoadMorePosts,
@@ -120,4 +110,6 @@ export default inject(({ cat, post, helper }) => ({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
+  loadingFont: helper.loadingFont,
+  loadFont: helper.loadFont,
 }))(observer(withNavigation(CatPostList)));
