@@ -98,13 +98,13 @@ const CatCommentInput = ({
   </View>
 );
 
-export default inject(({ cat, helper, comment }) => ({
+export default inject(({ helper, comment }) => ({
   inputComment: comment.inputComment,
-  commentModifyState: cat.commentModifyState,
-  getCommentList: cat.getCommentList,
-  addComment: cat.addComment,
-  setCommentModify: cat.setCommentModify,
-  resetCommentState: cat.resetCommentState,
+  commentModifyState: comment.commentModifyState,
+  getCommentList: comment.getCommentList,
+  addComment: comment.addComment,
+  setCommentModify: comment.setCommentModify,
+  resetCommentState: comment.resetCommentState,
   validateAddInput: helper.validateAddInput,
   updateInput: helper.updateInput,
 }))(observer(withNavigation(CatCommentInput)));
