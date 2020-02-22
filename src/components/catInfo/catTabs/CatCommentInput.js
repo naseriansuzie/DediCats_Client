@@ -73,15 +73,15 @@ const CatCommentInput = ({
           style={styles.submitBtn}
           onPress={async () => {
             try {
-              const validation = validateAddInput('inputComment');
+              const validation = validateAddInput('comment', 'inputComment');
               if (validation) {
                 if (commentModifyState) {
                   await addComment('update', navigation);
                   setCommentModify();
-                  resetCommentState();
+                  resetCommentState('update');
                   getCommentList(navigation);
                 } else {
-                  await addComment('new', navigation);
+                  addComment('new', navigation);
                 }
               }
             } catch (err) {
