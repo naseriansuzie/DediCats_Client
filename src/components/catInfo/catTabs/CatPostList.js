@@ -110,9 +110,9 @@ class CatPostList extends React.Component {
   }
 }
 
-export default inject(({ cat, post, helper }) => ({
+export default inject(({ cat, post, helper, comment }) => ({
   catId: cat.selectedCatBio[0].id,
-  setCatPost: cat.setCatPost,
+  setCatPost: comment.setCatPost,
   postList: post.postList,
   getPostList: post.getPostList,
   _handleLoadMorePosts: post._handleLoadMorePosts,
