@@ -33,7 +33,11 @@ const CatInfoTabs = ({ selectedCatBio }) => (
         <Header hasTabs style={styles.hide} />
         <Tabs
           tabBarUnderlineStyle={styles.tab}
-          tabContainerStyle={{ elevation: 0, shadowOpacity: 0, borderBottomWidth: 0 }}
+          tabContainerStyle={{
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          }}
         >
           <Tab
             heading="Bio"
@@ -45,7 +49,7 @@ const CatInfoTabs = ({ selectedCatBio }) => (
             <CatBio />
           </Tab>
           <Tab
-            heading="Posts"
+            heading="Post"
             tabStyle={styles.tab}
             textStyle={styles.textColor}
             activeTabStyle={styles.activeTab}
@@ -54,7 +58,7 @@ const CatInfoTabs = ({ selectedCatBio }) => (
             <CatPostList />
           </Tab>
           <Tab
-            heading="Albums"
+            heading="Album"
             tabStyle={styles.tab}
             textStyle={styles.textColor}
             activeTabStyle={styles.activeTab}
@@ -63,7 +67,7 @@ const CatInfoTabs = ({ selectedCatBio }) => (
             <CatAlbum />
           </Tab>
           <Tab
-            heading="Followers"
+            heading="Follower"
             tabStyle={styles.tab}
             textStyle={styles.textColor}
             activeTabStyle={styles.activeTab}
