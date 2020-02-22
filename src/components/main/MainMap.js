@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Image,
+  Text,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import BriefCatInfo from './BriefCatInfo';
@@ -23,10 +25,22 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
   },
+  title: {
+    height: '10%',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    bottom: height * 0.001,
+  },
+  titleText: {
+    fontSize: height * 0.06,
+    color: '#677ef1',
+    marginLeft: 20,
+  },
   map: {
     width,
-    height,
-    ...StyleSheet.absoluteFillObject,
+    height: '90%',
   },
   carousel: {
     position: 'absolute',
@@ -48,7 +62,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     position: 'absolute',
-    top: 20,
+    top: height * 0.1,
     left: 20,
     borderRadius: 30,
     backgroundColor: '#d2d2d2',
@@ -107,8 +121,8 @@ class MainMap extends React.Component {
     const region = {
       latitude: item.latitude,
       longitude: item.longitude,
-      latitudeDelta: 0.0035,
-      longitudeDelta: 0.0035,
+      latitudeDelta: 0.002,
+      longitudeDelta: 0.002,
     };
     setSelectedMarker(item, () => this._map.animateToRegion(region));
   };
@@ -125,6 +139,15 @@ class MainMap extends React.Component {
     if (permissionState === true && currentRegion.longitude !== 0) {
       return (
         <View style={styles.container}>
+          <View style={styles.title}>
+            <View>
+              <Text style={styles.titleText}>DediCats</Text>
+            </View>
+            <Image
+              source={require('../../../DediCatsLogo.png')}
+              style={{height: 70, width: 70, right: 10, }}
+            />
+          </View>
           <MapView
             provider={PROVIDER_GOOGLE}
             ref={map => (this._map = map)}

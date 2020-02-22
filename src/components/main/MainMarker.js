@@ -1,6 +1,6 @@
 import React from 'react';
 import { Marker } from 'react-native-maps';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 
 class MainMarker extends React.Component {
   state = { tracksViewChanges: true };
@@ -26,7 +26,12 @@ class MainMarker extends React.Component {
           onPress={() => this.props.onMarkerPressed(marker)}
           tracksViewChanges={this.state.tracksViewChanges}
           onLoad={this.stopRendering}
-        />
+        >
+          <Image
+            source={require('../../../catPawMarker.png')}
+            style={{height: 40, width: 40 }}
+          />
+        </Marker>
       );
     }
     return <View />;
