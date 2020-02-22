@@ -89,7 +89,7 @@ class AddCatMap extends React.Component {
     const { currentPosition, markerData } = this.state;
     return (
       <View style={styles.mapView}>
-        <Text style={styles.spotTxt}> 고양이를 자주 만나는 장소 선택</Text>
+        <Text style={styles.spotTxt}> 자주 만나는 장소 선택</Text>
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
