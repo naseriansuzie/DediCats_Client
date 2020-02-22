@@ -31,7 +31,10 @@ const CatInfoTabs = ({ selectedCatBio }) => (
     {selectedCatBio && selectedCatBio.length > 0 ? (
       <View>
         <Header hasTabs style={styles.hide} />
-        <Tabs tabBarUnderlineStyle={styles.hide} activeTabStyle={styles.hide}>
+        <Tabs
+          tabBarUnderlineStyle={styles.tab}
+          tabContainerStyle={{ elevation: 0, shadowOpacity: 0, borderBottomWidth: 0 }}
+        >
           <Tab
             heading="Bio"
             tabStyle={styles.tab}
