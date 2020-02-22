@@ -108,16 +108,23 @@ const MainStack = createStackNavigator(
     },
     CatInfo: {
       screen: CatInfo,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: () => (
+          <HeaderBackButton
+            tintColor="white"
+            onPress={() => {
+              root.cat.resetRainbowReport();
+              navigation.goBack();
+            }}
+          />
+        ),
+        headerTitleStyle: { display: 'none' },
         headerStyle: {
           backgroundColor: '#6772f1',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
         },
-        headerTintColor: 'white',
-        headerTitleStyle: { display: 'none' },
-        headerBackTitle: 'Back',
-      },
+      }),
     },
     SelectedPost: {
       screen: SelectedPost,
@@ -132,12 +139,14 @@ const MainStack = createStackNavigator(
             }}
           />
         ),
+        headerTitle: false,
       }),
     },
     PhotoModal,
   },
   {
     initialRouteName: 'Main',
+    // defaultNavigationOptions: { headerTintColor: 'white' },
   },
 );
 
