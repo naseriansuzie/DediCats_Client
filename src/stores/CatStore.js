@@ -88,16 +88,7 @@ class CatStore {
   // 해당 고양이(포스트) 신고
   selectedCatReportInfo = null;
 
-  // CatStore
-  setCatPost = item => {
-    const { comment } = this.root;
-    this.selectedCatPost = item;
-    comment.initialComments = item.comments.length;
-    comment.connectSocket();
-  };
-
   //! catId, catNickname, catAddress, latitude, longitude, description, catProfile
-
   getSelectedCatInfo = async (catId, navigation) => {
     const result = await axios
       .get(`${SERVER_URL}/cat/${catId}`, defaultCredential)
@@ -469,7 +460,6 @@ decorate(CatStore, {
   selectedCatRainbowNReported: observable,
   selectedCatCutClicked: observable,
   selectedCatReportInfo: observable,
-  setCatPost: action,
   getSelectedCatInfo: action,
   followCat: action,
   selectCut: action,
