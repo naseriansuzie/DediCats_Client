@@ -43,8 +43,8 @@ class SelectedPost extends React.Component {
 
     BackHandler.addEventListener('hardwareBackPress', async () => {
       await offUser(this.props.navigation);
-      validateRefreshMode(this.props.navigatino);
-      resetCommentState();
+      validateRefreshMode(this.props.navigation);
+      resetCommentState('back');
       navigation.goBack();
       return true;
     });
