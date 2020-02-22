@@ -156,8 +156,8 @@ class CatSelectedPost extends React.Component {
 export default inject(({ cat, helper, comment }) => ({
   selectedCatPost: cat.selectedCatPost,
   commentList: comment.commentList,
-  initialComments: cat.initialComments,
-  getCommentList: cat.getCommentList,
-  _handleLoadMoreComments: cat._handleLoadMoreComments,
+  initialComments: comment.initialComments,
+  getCommentList: comment.getCommentList,
+  _handleLoadMoreComments: comment._handleLoadMoreComments,
   convertDateTime: helper.convertDateTime,
 }))(observer(withNavigation(CatSelectedPost)));
