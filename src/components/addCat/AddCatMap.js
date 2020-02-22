@@ -70,7 +70,7 @@ class AddCatMap extends React.Component {
     const { addCatLocation, onMarkerChange } = this.props;
     return (
       <View style={styles.mapView}>
-        <Text style={styles.spotTxt}> 고양이를 자주 만나는 장소 선택</Text>
+        <Text style={styles.spotTxt}> 자주 만나는 장소 선택</Text>
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -78,13 +78,14 @@ class AddCatMap extends React.Component {
             region={currentPosition}
             onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
-            onPress={(e) => onMarkerChange(e)}
+            onPress={e => onMarkerChange(e)}
           >
             {this.props.addCatLocation && (
-              <Marker coordinate={{
-                latitude: addCatLocation.latitude,
-                longitude: addCatLocation.longitude,
-              }}
+              <Marker
+                coordinate={{
+                  latitude: addCatLocation.latitude,
+                  longitude: addCatLocation.longitude,
+                }}
               />
             )}
           </MapView>
