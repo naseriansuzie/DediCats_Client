@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation';
 import { MAIL_TO } from 'react-native-dotenv';
 import * as MailComposer from 'expo-mail-composer';
 import ActionSheet from 'react-native-actionsheet';
+import * as Font from 'expo-font';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { Button, ListItem, Content, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -70,11 +71,24 @@ const styles = StyleSheet.create({
 });
 
 class MyProfile_Elements extends React.Component {
+  state ={ loadingFont: true };
+
   _showActionSheet = () => this.ActionSheet.show();
 
   componentDidMount() {
     console.log('MyProfile_Elements mount');
   }
+
+  loadFont = async () => {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
+    });
+    this.setState({
+      loadingFont: false,
+    });
+  };
 
   render() {
     console.disableYellowBox = 'true';
@@ -92,11 +106,10 @@ class MyProfile_Elements extends React.Component {
       postMyPhoto,
       resetDefaultPhoto,
       deleteMyPhoto,
-      loading,
-      loadFont,
     } = this.props;
-    if (loading) {
-      loadFont();
+    const { loadingFont } = this.state;
+    if (loadingFont) {
+      this.loadFont();
       return <View />;
     }
     return (
@@ -255,6 +268,4 @@ export default inject(({ auth, helper, user }) => ({
   postMyPhoto: user.postMyPhoto,
   resetDefaultPhoto: user.resetDefaultPhoto,
   deleteMyPhoto: user.deleteMyPhoto,
-  loadingFont: helper.loadingFont,
-  loadFont: helper.loadFont,
 }))(observer(withNavigation(MyProfile_Elements)));
