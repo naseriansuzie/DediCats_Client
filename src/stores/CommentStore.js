@@ -39,8 +39,9 @@ class CommentStore {
 
   // socket 연결 시작
   connectSocket = () => {
+    const { cat } = this.root;
     const socket = socketio.connect(`${SERVER_URL}`, {
-      query: `postId=${this.root.post.selectedCatPost.id}`,
+      query: `postId=${cat.selectedCatPost.id}`,
     });
     const helper = sockets => {
       sockets.emit('new comment', 'hello');
@@ -133,7 +134,7 @@ class CommentStore {
         .post(url, newCommentInfo, defaultCredential)
         .then(res => {
           this.initialComments += 1;
-          this.root.helper.clearInput('cat', 'inputComment');
+          this.root.helper.clearInput('comment', 'inputComment');
           return res;
         })
         .catch(err => {
@@ -152,7 +153,7 @@ class CommentStore {
     return axios
       .post(url, updateCommentInfo, defaultCredential)
       .then(res => {
-        this.root.helper.clearInput('cat', 'inputComment');
+        this.root.helper.clearInput('comment', 'inputComment');
         return res.data;
       })
       .catch(err => {
