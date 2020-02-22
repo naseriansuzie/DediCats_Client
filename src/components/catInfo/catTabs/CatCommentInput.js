@@ -65,7 +65,7 @@ const CatCommentInput = ({
             placeholder="댓글을 입력해주세요."
             value={inputComment}
             onChangeText={text =>
-              updateInput('cat', 'inputComment', text)
+              updateInput('comment', 'inputComment', text)
             }
           />
         </Form>
