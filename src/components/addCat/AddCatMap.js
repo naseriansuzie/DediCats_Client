@@ -32,10 +32,6 @@ class AddCatMap extends React.Component {
       longitude: 0,
       longitudeDelta: 0.005,
     },
-    markerData: {
-      latitude: 0,
-      longitude: 0,
-    },
   };
 
   componentDidMount() {
@@ -45,20 +41,18 @@ class AddCatMap extends React.Component {
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
+        const { coords } = position;
+        const { setAddCatLocation } = this.props;
         const currentPosition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
           latitudeDelta: 0.0015,
           longitudeDelta: 0.0005,
         };
-        const markerData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
         this.setState({
           currentPosition,
-          markerData,
         });
+        setAddCatLocation(coords);
       },
       error => {
         Alert.alert(error.code, error.message);
@@ -72,7 +66,8 @@ class AddCatMap extends React.Component {
   };
 
   render() {
-    const { markerData, currentPosition } = this.state;
+    const { currentPosition } = this.state;
+    const { addCatLocation, onMarkerChange } = this.props;
     return (
       <View style={styles.mapView}>
         <Text style={styles.spotTxt}> 고양이를 자주 만나는 장소 선택</Text>
@@ -81,16 +76,17 @@ class AddCatMap extends React.Component {
             provider={PROVIDER_GOOGLE}
             showsUserLocation
             region={currentPosition}
+            onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
+            onPress={(e) => onMarkerChange(e)}
           >
-            <Marker
-              draggable
-              onDragEnd={this.props.onDragEnd}
-              coordinate={{
-                latitude: markerData.latitude,
-                longitude: markerData.longitude,
+            {this.props.addCatLocation && (
+              <Marker coordinate={{
+                latitude: addCatLocation.latitude,
+                longitude: addCatLocation.longitude,
               }}
-            />
+              />
+            )}
           </MapView>
         </View>
       </View>
@@ -98,7 +94,9 @@ class AddCatMap extends React.Component {
   }
 }
 
-export default inject(({ map }) => ({
+export default inject(({ map, cat }) => ({
   currentPosition: map.currentPosition,
-  onDragEnd: map.onDragEnd,
+  onMarkerChange: map.onMarkerChange,
+  setAddCatLocation: map.setAddCatLocation,
+  addCatLocation: cat.addCatLocation,
 }))(observer(AddCatMap));

@@ -110,7 +110,14 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
-  onDragEnd = e => {
+  setAddCatLocation = (coords) => {
+    this.root.cat.addCatLocation = {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    };
+  }
+
+  onMarkerChange = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
@@ -139,7 +146,8 @@ decorate(MapStore, {
   requestMapPermission: action,
   getCurrentPosition: action,
   onRegionChangeComplete: action,
-  onDragEnd: action,
+  setAddCatLocation: action,
+  onMarkerChange: action,
   hideBriefCat: action,
   setSelectedMarker: action,
 });
