@@ -43,8 +43,8 @@ class HelperStore {
   };
 
   // selectedCat inputComment, inputContent
-  validateAddInput = type => {
-    if (this.root.cat[type]) {
+  validateAddInput = (store, type) => {
+    if (this.root.[store][type]) {
       return true;
     }
     Alert.alert('글을 입력하신 후 등록해주세요!');
