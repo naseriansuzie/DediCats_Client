@@ -223,7 +223,7 @@ class CatStore {
   };
 
   // CatStore
-  selectCut = (variable, type) => {
+  selectCut = async (variable, type) => {
     if (variable === 'addCat') {
       this[`${variable}Cut`] = { Y: 0, N: 0, unknown: 0 };
     }
@@ -374,18 +374,13 @@ class CatStore {
       N: 0,
       NDate: null,
     };
-    console.log(rainbow);
     rainbow[type] = 1;
-    console.log(rainbow[type]);
     rainbow[`${type}Date`] = this.root.helper.makeDateTime();
-    console.log(rainbow[`${type}Date`]);
-    console.log(rainbow);
-    console.log({ catId, rainbow });
     const result = axios
       .post(`${SERVER_URL}/cat/rainbow`, { catId, rainbow }, defaultCredential)
       .then(res => {
         this.selectedCatBio[0].rainbow = JSON.parse(res.data.rainbow);
-        return res.data;
+        return JSON.parse(res.data.rainbow);
       })
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation);
@@ -402,29 +397,29 @@ class CatStore {
   };
 
   // CatStore
-  postCut = (type, navigation) => {
+  postCut = async (type, navigation) => {
     const request = { Y: 0, N: 0, unknown: 0 };
     request[type] = 1;
     const catId = this.selectedCatBio[0].id;
-    runInAction(() => {
-      axios
-        .post(
-          `${SERVER_URL}/cat/cut`,
-          { catId, catCut: request },
-          defaultCredential,
-        )
-        .then(res => {
-          this.selectedCatBio[0].cut = JSON.parse(res.data.cut);
-        })
-        .catch(err => {
-          if (err.response && err.response.status === 409) {
-            Alert.alert('중성화 유무 등록에 실패했습니다.');
-          } else {
-            this.root.auth.expiredTokenHandler(err, navigation);
-            console.dir(err);
-          }
-        });
-    });
+    const result = axios
+      .post(
+        `${SERVER_URL}/cat/cut`,
+        { catId, catCut: request },
+        defaultCredential,
+      )
+      .then(res => {
+        this.selectedCatBio[0].cut = JSON.parse(res.data.cut);
+        return JSON.parse(res.data.cut);
+      })
+      .catch(err => {
+        if (err.response && err.response.status === 409) {
+          Alert.alert('중성화 유무 등록에 실패했습니다.');
+        } else {
+          this.root.auth.expiredTokenHandler(err, navigation);
+          console.dir(err);
+        }
+      });
+    return result;
   };
 
   // CatStore
