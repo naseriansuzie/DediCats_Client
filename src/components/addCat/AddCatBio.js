@@ -230,7 +230,7 @@ const AddCatBio = ({
                     navigation.goBack();
                     await getMapInfo(navigation);
                   } else {
-                    Alert.alert('고양이를 등록할 수 없습니다');
+                    Alert.alert('고양이 추가가 불가합니다');
                     navigation.goBack();
                   }
                 } else {
