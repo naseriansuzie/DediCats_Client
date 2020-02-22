@@ -37,6 +37,12 @@ class CommentStore {
   // 처음 방에 입장했을 때 댓글 수
   initialComments = 0;
 
+  setCatPost = item => {
+    this.root.cat.selectedCatPost = item;
+    this.initialComments = item.comments.length;
+    this.connectSocket();
+  };
+
   // socket 연결 시작
   connectSocket = () => {
     const { cat } = this.root;
@@ -87,14 +93,14 @@ class CommentStore {
   // 선택한 포스트 기준으로 댓글 리스트를 받아오는 함수
   getCommentList = async navigation => {
     try {
-      const postId = this.root.post.selectedCatPost.id;
+      const postId = this.root.cat.selectedCatPost.id;
       const url = `${SERVER_URL}/comment/${postId}/${this.commentPage}`;
       const comment = await axios.get(url);
       if (comment) {
-        console.log('서버에서 받은 코멘트들', comment.data.length);
         this.commentList = this.commentList.concat(
           comment.data,
         );
+        console.log('서버에서 받은 코멘트들', this.initialComments);
         console.log('받아온 코멘트 리스트', this.commentList.length);
       }
       return;
@@ -105,12 +111,14 @@ class CommentStore {
   };
 
   // 댓글 창에서 나갈 때 리셋
-  resetCommentState = () => {
+  resetCommentState = (type) => {
     this.commentList = [];
     this.selectedComment = null;
     this.commentPage = 0;
     this.newComment = null;
-    this.initialComments = 0;
+    if (type === 'back') {
+      this.initialComments = 0;
+    }
   };
 
   // 예전 댓글 로드
@@ -122,12 +130,11 @@ class CommentStore {
   // * 댓글 추가와 수정 둘다 가능
   addComment = (mode, navigation) => {
     const url =
-      mode === 'new'
-        ? `${SERVER_URL}/comment/add`
-        : `${SERVER_URL}/comment/update`;
+    mode === 'new'
+      ? `${SERVER_URL}/comment/add`
+      : `${SERVER_URL}/comment/update`;
 
-    const postId = this.root.post.selectedCatPost.id;
-
+    const postId = this.root.cat.selectedCatPost.id;
     if (mode === 'new') {
       const newCommentInfo = { postId, content: this.inputComment };
       return axios
@@ -146,6 +153,7 @@ class CommentStore {
           }
         });
     }
+
     const updateCommentInfo = {
       commentId: this.selectedComment.id,
       content: this.inputComment,
@@ -213,6 +221,7 @@ decorate(CommentStore, {
   newComment: observable,
   commentPage: observable,
   initialComments: observable,
+  setCatPost: action,
   connectSocket: action,
   offUser: action,
   getCommentList: action,
