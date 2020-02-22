@@ -150,7 +150,7 @@ const CatPostInput = ({
               onPress={async () => {
                 try {
                   const validation = validateAddInput(
-                    'selectedCatInputContent',
+                    'cat', 'selectedCatInputContent',
                   );
                   if (validation) {
                     postModifyState
