@@ -91,7 +91,13 @@ class MyProfile_Elements extends React.Component {
       postMyPhoto,
       resetDefaultPhoto,
       deleteMyPhoto,
+      loading,
+      loadFont,
     } = this.props;
+    if (loading) {
+      loadFont();
+      return <View />;
+    }
     return (
       <View style={styles.container}>
         <View style={styles.logo}>
@@ -249,4 +255,6 @@ export default inject(({ auth, helper, user }) => ({
   postMyPhoto: user.postMyPhoto,
   resetDefaultPhoto: user.resetDefaultPhoto,
   deleteMyPhoto: user.deleteMyPhoto,
+  loadingFont: helper.loadingFont,
+  loadFont: helper.loadFont,
 }))(observer(withNavigation(MyProfile_Elements)));
