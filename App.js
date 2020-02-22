@@ -92,9 +92,9 @@ const MainStack = createStackNavigator(
         headerLeft: () => (
           <HeaderBackButton
             onPress={async () => {
-              await root.cat.offUser(navigation);
+              await root.comment.offUser(navigation);
               root.post.validateRefreshMode(navigation);
-              root.cat.resetCommentState();
+              root.comment.resetCommentState();
               navigation.goBack();
             }}
           />
