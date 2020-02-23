@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cutTxtT: { color: 'white', fontWeight: 'bold' },
+  cutTxtT: { color: '#ffffff', fontWeight: 'bold' },
   cutTxtF: { color: '#767577', fontWeight: 'bold' },
   submit: {
     alignItems: 'center',
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   submitTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
 });
 const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_CAT.png';
 
 const AddCatBio = ({
   navigation,

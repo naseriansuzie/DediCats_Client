@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     backgroundColor: '#6772f1',
   },
-  ellipsis: { fontSize: 24, color: 'white', paddingRight: 10 },
+  ellipsis: { fontSize: 24, color: '#ffffff', paddingRight: 10 },
   profileView: {
     flex: 1,
     flexDirection: 'row',
@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
   nickName: {
     fontSize: 25,
     fontWeight: '600',
-    color: 'white',
+    color: '#ffffff',
     marginVertical: 10,
   },
   address: {
     fontSize: 15,
-    color: 'white',
+    color: '#ffffff',
     marginBottom: 10,
   },
   btn: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 15,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   btnTxt: {
     color: '#677ef1',
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
 });
 
 const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_CAT.png';
 
 class CatProfile extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();

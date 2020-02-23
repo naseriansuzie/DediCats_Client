@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 30,
     borderColor: '#edf1f5',
-    // borderWidth: 1,
     marginBottom: 20,
+    backgroundColor: '#ffffff',
   },
   photoEdition: {
     flexDirection: 'row',
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 });
 
 class MyProfile_Elements extends React.Component {
-  state ={ loadingFont: true };
+  state = { loadingFont: true };
 
   _showActionSheet = () => this.ActionSheet.show();
 
@@ -93,7 +93,7 @@ class MyProfile_Elements extends React.Component {
   render() {
     console.disableYellowBox = 'true';
     const DEFAULT_USER_URL =
-      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+      'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
     const {
       navigation,
       userInfo,

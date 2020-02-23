@@ -5,11 +5,12 @@ import { ListItem, Left, Body, Thumbnail, Text } from 'native-base';
 const styles = StyleSheet.create({
   radius: {
     borderRadius: 15,
+    backgroundColor: '#ffffff',
   },
 });
 
 const DEFAULT_USER_URL =
-  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 const CatFollower = ({ idx, myPhoto, userNickName, catName }) => {
   if (typeof idx === 'number') {

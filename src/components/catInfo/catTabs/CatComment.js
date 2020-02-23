@@ -16,10 +16,14 @@ const styles = StyleSheet.create({
     width: '70%',
   },
   modificationView: { flexDirection: 'row' },
+  radius: {
+    borderRadius: 15,
+    backgroundColor: '#ffffff',
+  },
 });
 
 const DEFAULT_USER_URL =
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 const CatComment = ({
   navigation,
