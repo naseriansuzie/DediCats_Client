@@ -20,32 +20,38 @@ class PostStore {
 
   replyNum = null;
 
+  maxPostPage = 0;
+
   getPostList = async navigation => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
       const url = `${SERVER_URL}/post/${catId}/${this.postPage}`;
-      const post = await axios.get(url);
-      if (post) {
+      const res = await axios.get(url);
+      if (res) {
+        this.maxPostPage = res.data.maxcount;
         if (this.isRefreshingPost) {
-          this.postList = post.data;
+          this.postList = res.data.post;
           this.isRefreshingPost = false;
-          return post;
+          return res;
         }
-        this.postList = this.postList.concat(post.data);
+        this.postList = this.postList.concat(res.data.post);
         this.isLoadingPost = false;
       }
-    } catch (error) {
+    } catch (err) {
       this.root.auth.expiredTokenHandler(err, navigation);
       console.error(error);
     }
   };
 
   _handleLoadMorePosts = navigation => {
-    this.isLoadingPost = true;
-    this.postPage += 1;
-    this.getPostList(navigation);
+    console.log('maxcount :', this.maxPostPage, 'postPage :', this.postPage);
+    if (this.maxPostPage > this.postPage) {
+      this.isLoadingPost = true;
+      this.postPage += 1;
+      this.getPostList(navigation);
+    }
   };
 
   _handleRefresh = navigation => {
@@ -152,6 +158,7 @@ decorate(PostStore, {
   isRefreshingPost: observable,
   isLoadingPost: observable,
   replyNum: observable,
+  maxPostPage: observable,
   getPostList: action,
   _handleLoadMorePosts: action,
   _handleRefresh: action,
