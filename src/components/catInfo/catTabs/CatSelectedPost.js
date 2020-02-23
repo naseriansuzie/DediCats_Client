@@ -62,13 +62,12 @@ const styles = StyleSheet.create({
 });
 
 class CatSelectedPost extends React.Component {
-  _showActionSheet = () => this.ActionSheet.show();
-
   componentDidMount() {
     const { getCommentList } = this.props;
     console.log('CatSelectedPost mount');
     getCommentList(this.props.navigation);
   }
+  _showActionSheet = () => this.ActionSheet.show();
 
   _renderItem = ({ item }) => (
     <CatComment
@@ -91,10 +90,9 @@ class CatSelectedPost extends React.Component {
       convertDateTime,
     } = this.props;
 
-    const usrImgUri =
-      selectedCatPost.user.photoPath !== null
-        ? selectedCatPost.user.photoPath
-        : DEFAULT_USER_URL;
+    const usrImgUri = selectedCatPost.user.photoPath !== null
+      ? selectedCatPost.user.photoPath
+      : DEFAULT_USER_URL;
 
     return (
       <Container style={styles.container}>
@@ -138,9 +136,10 @@ class CatSelectedPost extends React.Component {
                 </TouchableOpacity>
               ) : null}
               <FlatList
+                ref={(ref) => { this.flatListRef = ref; }}
                 data={commentList}
                 renderItem={this._renderItem}
-                keyExtractor={item => `post_${item.id}`}
+                keyExtractor={(item) => `post_${item.id}`}
                 showsVerticalScrollIndicator={false}
                 inverted
               />

@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import { Provider } from 'mobx-react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
@@ -23,6 +24,20 @@ import findPW from './src/pages/findPW';
 import AuthStore from './src/stores/AuthStore';
 
 const root = new RootStore();
+
+const { height } = Dimensions.get('window');
+const styles = StyleSheet.create({
+  title: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginLeft: 10,
+  },
+  titleText: {
+    fontSize: height * 0.05,
+    color: '#677ef1',
+  },
+});
 
 const MyPageStack = createStackNavigator(
   {
@@ -99,13 +114,24 @@ const MainStack = createStackNavigator(
   {
     Main: {
       screen: Main,
-      navigationOptions: {
-        headerTitle: false,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: () => (
+          <View style={styles.title}>
+            <View>
+              <Text style={styles.titleText}>DediCats</Text>
+            </View>
+            <Image
+              source={require('./DediCatsLogo.png')}
+              style={{ height: 70, width: 70, right: 10 }}
+            />
+          </View>
+        ),
+        headerTitleAlign: 'center',
         headerStyle: {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
         },
-      },
+      }),
     },
     CatInfo: {
       screen: CatInfo,
@@ -115,6 +141,7 @@ const MainStack = createStackNavigator(
             tintColor="#ffffff"
             onPress={() => {
               root.cat.resetRainbowReport();
+              root.cat.toggleRainbowOpen();
               navigation.goBack();
             }}
           />
@@ -143,7 +170,25 @@ const MainStack = createStackNavigator(
         headerTitle: false,
       }),
     },
-    PhotoModal,
+    PhotoModal: {
+      screen: PhotoModal,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: () => (
+          <HeaderBackButton
+            tintColor="white"
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        ),
+        headerTitleStyle: { display: 'none' },
+        headerStyle: {
+          backgroundColor: '#6772f1',
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }),
+    },
   },
   {
     initialRouteName: 'Main',

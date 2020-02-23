@@ -29,21 +29,42 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     alignItems: 'center',
   },
-  keyboard: { width: '95%' },
+  keyboard: { 
+      width: '95%',
+     position:"absolute",
+     zIndex: 1,
+  },
   safeArea: {
     flex: 3,
-    width: '100%',
+    width: '95%',
     backgroundColor: '#ffffff',
     alignItems: 'center',
   },
 });
 
 class CatPostList extends React.Component {
-  state = { loadingFont: true };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      visibility: true,
+      loadingFont: true,
+    };
+  }
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
+  }
+
+  handledisappear = () => {
+    this.setState({
+      visibility: false,
+    });
+  }
+
+  handleshow = () => {
+    this.setState({
+      visibility: true,
+    });
   }
 
   loadFont = async () => {
@@ -66,14 +87,13 @@ class CatPostList extends React.Component {
     />
   );
 
-  renderFooter = () =>
-    this.props.isLoadingPost ? (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" />
-      </View>
-    ) : (
-      <View />
-    );
+  renderFooter = () => (this.props.isLoadingPost ? (
+    <View style={styles.loader}>
+      <ActivityIndicator size="large" />
+    </View>
+  ) : (
+    <View />
+  ));
 
   render() {
     const {
@@ -90,21 +110,23 @@ class CatPostList extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
-          <KeyboardAvoidingView style={styles.keyboard}>
-            <CatPostInput />
-          </KeyboardAvoidingView>
           <SafeAreaView style={styles.safeArea}>
+          <KeyboardAvoidingView style={styles.keyboard}>
+            {this.state.visibility ? <CatPostInput /> : null}
+          </KeyboardAvoidingView>
             <FlatList
               data={postList}
               renderItem={this._renderItem}
               keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
               showsVerticalScrollIndicator={false}
               onEndReached={_handleLoadMorePosts}
-              onEndReachedThreshold={0.3}
+              onEndReachedThreshold={0}
               ListFooterComponent={this.renderFooter}
               refreshing={isRefreshingPost}
               onRefresh={_handleRefresh}
               initialNumToRender={3}
+              onScrollBeginDrag={() => this.handledisappear()}
+              onMomentumScrollEnd={() => this.handleshow()}
             />
           </SafeAreaView>
         </View>
@@ -113,7 +135,9 @@ class CatPostList extends React.Component {
   }
 }
 
-export default inject(({ cat, post, helper, comment }) => ({
+export default inject(({
+  cat, post, helper, comment,
+}) => ({
   catId: cat.selectedCatBio[0].id,
   setCatPost: comment.setCatPost,
   postList: post.postList,
@@ -123,4 +147,5 @@ export default inject(({ cat, post, helper, comment }) => ({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
+  maxPostPage: post.maxPostPage,
 }))(observer(withNavigation(CatPostList)));

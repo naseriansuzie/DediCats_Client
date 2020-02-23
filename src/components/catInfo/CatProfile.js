@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   profileView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#6772F1',
+    backgroundColor: '#6772f1',
+    paddingLeft: '10%',
   },
   photoView: {
     width: '50%',
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    right: '20%',
   },
   nickName: {
     fontSize: 25,
