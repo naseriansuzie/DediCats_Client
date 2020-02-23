@@ -92,7 +92,7 @@ class MyProfile_Elements extends React.Component {
 
   render() {
     console.disableYellowBox = 'true';
-    const DEFAULT_USER_URL =
+    const DEFAULT_USER =
       'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
     const {
       navigation,
@@ -121,7 +121,7 @@ class MyProfile_Elements extends React.Component {
           <Image
             style={styles.myPhoto}
             source={{
-              uri: myUri || DEFAULT_USER_URL,
+              uri: myUri || DEFAULT_USER,
             }}
           />
           {myPhotoPath ? (
