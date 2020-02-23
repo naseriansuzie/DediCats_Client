@@ -189,7 +189,7 @@ class AuthStore {
       console.log(`A timeout happened on url ${err.config.url}`);
 
       // accessToken 요청
-      const statusCode = axios
+      const statusCode = await axios
         .post(`${AUTH_SERVER}/auth/token`, defaultCredential)
         .then(res => res.status)
         .catch(err => {
