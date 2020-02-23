@@ -46,8 +46,7 @@ const styles = StyleSheet.create({
   noPadding: { paddingLeft: 0 },
 });
 
-const DEFAULT_USER_URL =
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+_URL = 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 class CatPost extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();

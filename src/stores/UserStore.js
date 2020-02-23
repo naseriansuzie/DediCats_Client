@@ -5,7 +5,7 @@ import { SERVER_URL } from 'react-native-dotenv';
 
 const defaultCredential = { withCredentials: true };
 const DEFAULT_USER_URL =
-  'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 class UserStore {
   constructor(root) {
     this.root = root;
