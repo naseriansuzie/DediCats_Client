@@ -72,7 +72,7 @@ class AddCatMap extends React.Component {
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation
-            region={currentPosition}
+            initialRegion={currentPosition}
             style={styles.map}
             onPress={e => onMarkerChange(e)}
           >
