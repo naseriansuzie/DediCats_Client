@@ -146,13 +146,14 @@ class AuthStore {
   };
 
   signOut = async () => {
-    const { user, map } = this.root;
+    const { user, map, cat } = this.root;
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, defaultCredential)
       .then(async res => {
         await AsyncStorage.removeItem('user');
         user.resetUserObservable();
         map.hideBriefCat();
+        cat.resetRainbowReport();
         Alert.alert('로그아웃 되었습니다!');
         this.userInfo = null;
         return true;
@@ -188,7 +189,7 @@ class AuthStore {
       console.log(`A timeout happened on url ${err.config.url}`);
 
       // accessToken 요청
-      const statusCode = axios
+      const statusCode = await axios
         .post(`${AUTH_SERVER}/auth/token`, defaultCredential)
         .then(res => res.status)
         .catch(err => {

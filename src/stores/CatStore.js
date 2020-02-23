@@ -426,6 +426,16 @@ class CatStore {
         console.dir(err);
       });
   };
+
+  resetRainbowReport = () => {
+    this.selectedCatRainbowYReported = false;
+    this.selectedCatRainbowNReported = false;
+    console.log(
+      '리셋',
+      this.selectedCatRainbowYReported,
+      this.selectedCatRainbowNReported,
+    );
+  };
 }
 
 decorate(CatStore, {
@@ -471,6 +481,7 @@ decorate(CatStore, {
   getAlbums: action,
   selectPhoto: action,
   getFollowerList: action,
+  resetRainbowReport: action,
 });
 
 export default CatStore;
