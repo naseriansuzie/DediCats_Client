@@ -5,7 +5,7 @@ import { MAIL_TO } from 'react-native-dotenv';
 import * as MailComposer from 'expo-mail-composer';
 import ActionSheet from 'react-native-actionsheet';
 import * as Font from 'expo-font';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, BackHandler } from 'react-native';
 import { Button, ListItem, Content, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -71,13 +71,34 @@ const styles = StyleSheet.create({
 });
 
 class MyProfile_Elements extends React.Component {
-  state = { loadingFont: true };
+  constructor(props) {
+    super(props);
+    this.state = {
+      loadingFont: true,
+    };
+  }
+
+  componentDidMount = async () => {
+    await this.handleAndroidBackButton();
+    console.log('MyProfile_Elements mount');
+  }
 
   _showActionSheet = () => this.ActionSheet.show();
 
-  componentDidMount() {
-    console.log('MyProfile_Elements mount');
-  }
+
+  handleAndroidBackButton = async () => {
+    const { navigation, resetDefaultPhoto } = this.props;
+
+    BackHandler.addEventListener('hardwareBackPress', async () => {
+      await resetDefaultPhoto();
+      navigation.goBack();
+      return true;
+    });
+  };
+
+  removeAndroidBackButtonHandler = () => {
+    BackHandler.removeEventListener('hardwareBackPress', () => {});
+  };
 
   loadFont = async () => {
     await Font.loadAsync({
