@@ -117,7 +117,7 @@ class CatPostList extends React.Component {
               keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
               showsVerticalScrollIndicator={false}
               onEndReached={_handleLoadMorePosts}
-              onEndReachedThreshold={0.3}
+              onEndReachedThreshold={0}
               ListFooterComponent={this.renderFooter}
               refreshing={isRefreshingPost}
               onRefresh={_handleRefresh}
@@ -144,4 +144,5 @@ export default inject(({
   isLoadingPost: post.isLoadingPost,
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
+  maxPostPage: post.maxPostPage,
 }))(observer(withNavigation(CatPostList)));
