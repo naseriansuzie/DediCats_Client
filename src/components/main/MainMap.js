@@ -25,22 +25,9 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
   },
-  title: {
-    height: '10%',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    bottom: height * 0.001,
-  },
-  titleText: {
-    fontSize: height * 0.06,
-    color: '#677ef1',
-    marginLeft: 20,
-  },
   map: {
     width,
-    height: '90%',
+    height,
   },
   carousel: {
     position: 'absolute',
@@ -62,8 +49,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     position: 'absolute',
-    top: height * 0.1,
-    left: 20,
+    top: height * 0.015,
+    left: width * 0.03,
     borderRadius: 30,
     backgroundColor: '#d2d2d2',
     opacity: 0.8,
@@ -139,15 +126,6 @@ class MainMap extends React.Component {
     if (permissionState === true && currentRegion.longitude !== 0) {
       return (
         <View style={styles.container}>
-          <View style={styles.title}>
-            <View>
-              <Text style={styles.titleText}>DediCats</Text>
-            </View>
-            <Image
-              source={require('../../../DediCatsLogo.png')}
-              style={{height: 70, width: 70, right: 10, }}
-            />
-          </View>
           <MapView
             provider={PROVIDER_GOOGLE}
             ref={map => (this._map = map)}
