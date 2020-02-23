@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   profileView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   photoView: {
     width: '50%',
@@ -49,13 +49,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     paddingHorizontal: 20,
     borderRadius: 10,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   btnTxt: {
     color: '#ffffff',
     fontWeight: 'bold',
   },
-  logOut: { paddingTop: 5, color: '#677ef1' },
+  logOut: { paddingTop: 5, color: '#6772F1' },
 });
 
 const MyProfile = ({

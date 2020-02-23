@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   tab: {
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   textColor: { color: '#e0e2e8' },
   activeTab: {
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   activeText: { color: '#ffffff', fontSize: 18 },
 });

@@ -8,7 +8,7 @@ import MyCat from './MyCat';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   radiusView: {
     flex: 1,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   noCatView: {
     flex: 1,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   noCatRadiusView: {
     flex: 1,

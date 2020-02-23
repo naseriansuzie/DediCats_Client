@@ -13,13 +13,13 @@ const styles = StyleSheet.create({
   reportView: {
     width: '100%',
     alignItems: 'flex-end',
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   ellipsis: { fontSize: 24, color: '#ffffff', paddingRight: 10 },
   profileView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   photoView: {
     width: '50%',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    borderColor: '#6772f1',
+    borderColor: '#6772F1',
     borderWidth: 1,
   },
   infoView: {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   btnTxt: {
-    color: '#677ef1',
+    color: '#6772F1',
     fontWeight: 'bold',
   },
   paddingVertical5: { paddingVertical: 5 },

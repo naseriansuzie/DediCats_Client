@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftSection: { width: '10%' },
-  iconColor: { color: '#6772f1' },
+  iconColor: { color: '#6772F1' },
   rightSection: { width: '45%' },
   replyTxt: { paddingLeft: 5, paddingRight: 0 },
   addReply: { width: '45%' },

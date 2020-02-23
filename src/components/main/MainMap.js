@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: height * 0.06,
-    color: '#677ef1',
+    color: '#6772F1',
     marginLeft: 20,
   },
   map: {

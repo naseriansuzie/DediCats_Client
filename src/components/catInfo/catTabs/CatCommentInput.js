@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: '80%',
     marginHorizontal: 10,
     borderRadius: 5,
-    borderColor: '#edf1f5',
+    borderColor: '#EDF1F5',
   },
   textArea: {
     width: '100%',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 10,
   },
   submitBtnTxt: {

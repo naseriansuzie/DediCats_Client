@@ -8,7 +8,7 @@ import CatPhoto from './CatPhoto';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   noPhotoView: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   noPhotoRadiusView: {
     flex: 1,

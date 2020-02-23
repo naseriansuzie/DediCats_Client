@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    borderColor: '#edf1f5',
+    borderColor: '#EDF1F5',
     marginBottom: 20,
     backgroundColor: '#ffffff',
   },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   photoEditionTxt: {
-    color: '#677ef1',
+    color: '#6772F1',
   },
   content: { width: '95%' },
   listView: { flexDirection: 'row' },
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
   index: { color: '#444444' },
   field: { width: '70%' },
   disabledBtn: { width: '100%' },
-  editTxt: { color: '#677ef1', fontWeight: 'bold' },
-  askTxt: { color: '#677ef1' },
+  editTxt: { color: '#6772F1', fontWeight: 'bold' },
+  askTxt: { color: '#6772F1' },
   font16: {
     fontSize: 16,
   },

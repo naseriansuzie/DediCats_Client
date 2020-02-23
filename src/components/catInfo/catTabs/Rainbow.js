@@ -22,17 +22,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   subGuideMsg: {
-    color: '#f38847',
+    color: '#F38847',
     paddingLeft: 0,
   },
   height100: { height: '100%' },
   abledReportBtn: {
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
     borderRadius: 10,
     padding: 10,
   },
   disabledReportBtn: {
-    backgroundColor: '#ffece0',
+    backgroundColor: '#FFECE0',
     borderRadius: 10,
     padding: 10,
   },
@@ -115,7 +115,7 @@ const Rainbow = ({
         <MaterialCommunityIcons
           style={styles.font30}
           name="paw"
-          color="#f38847"
+          color="#F38847"
         />
       </Left>
       {rainbow.N > 0 ? (

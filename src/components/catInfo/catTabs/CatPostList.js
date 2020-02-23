@@ -16,7 +16,7 @@ import CatPostInput from './CatPostInput';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
     alignItems: 'center',
     justifyContent: 'center',
   },

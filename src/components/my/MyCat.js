@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderColor: '#677df1',
   },
   btnTxt: {
-    color: '#677ef1',
+    color: '#6772F1',
     fontWeight: 'bold',
     fontSize: 12,
   },

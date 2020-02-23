@@ -8,7 +8,7 @@ import CatFollower from './CatFollower';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   radiusView: {
     flex: 1,
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   noFollowerView: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   noFollowerRadiusView: {
     flex: 1,
