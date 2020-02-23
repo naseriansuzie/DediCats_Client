@@ -23,7 +23,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const styles = StyleSheet.create({
   logo: {
     alignItems: 'center',
-    padding: 50,
+    paddingTop: 150,
+    paddingBottom: 50,
   },
   logoTxt: {
     fontSize: 50,
@@ -70,7 +71,7 @@ const SignIn_Info = ({
   clearInput,
 }) => (
   <Container>
-    <Header />
+    <Header style={{ display: 'none' }} />
     <View style={styles.logo}>
       <Text style={styles.logoTxt}>Dedicats</Text>
     </View>

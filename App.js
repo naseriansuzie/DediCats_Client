@@ -20,6 +20,7 @@ import SelectedPost from './src/pages/SelectedPost';
 import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
 import findPW from './src/pages/findPW';
+import AuthStore from './src/stores/AuthStore';
 
 const root = new RootStore();
 
@@ -146,7 +147,6 @@ const MainStack = createStackNavigator(
   },
   {
     initialRouteName: 'Main',
-    // defaultNavigationOptions: { headerTintColor: 'white' },
   },
 );
 
@@ -219,16 +219,38 @@ const AuthStack = createStackNavigator(
   {
     'Sign In': {
       screen: Signin,
-      navigationOptions: {
+      navigationOptions: () => ({
         headerShown: false,
-      },
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }),
     },
-    'Sign Up': Signup,
-    'Email Certified': EmailCertified,
+    'Sign Up': {
+      screen: Signup,
+    },
+    'Email Certified': {
+      screen: EmailCertified,
+      navigationOptions: () => ({
+        headerTitle: false,
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }),
+    },
     findPW,
   },
   {
     initialRouteName: 'Sign In',
+    defaultNavigationOptions: {
+      headerTitle: false,
+      headerStyle: {
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      },
+    },
   },
 );
 
@@ -244,7 +266,7 @@ const RootNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(RootNavigator);
 
 export default function App() {
-  console.log('MyProfile_Elements mount');
+  console.disableYellowBox = 'true';
   return (
     <Provider {...root}>
       <AppContainer />
