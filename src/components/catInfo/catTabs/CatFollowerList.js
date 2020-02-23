@@ -8,14 +8,14 @@ import CatFollower from './CatFollower';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   radiusView: {
     flex: 1,
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   listView: {
     paddingTop: 10,
@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
   },
   noFollowerView: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   noFollowerRadiusView: {
     flex: 1,
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 50,
     alignItems: 'center',
   },

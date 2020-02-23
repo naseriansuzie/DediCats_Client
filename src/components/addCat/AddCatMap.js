@@ -28,9 +28,9 @@ class AddCatMap extends React.Component {
   // eslint-disable-next-line react/state-in-constructor
   state = {
     currentPosition: {
-      latitude: 37,
+      latitude: 37.503597,
       latitudeDelta: 0.0015,
-      longitude: 127,
+      longitude: 127.049658,
       longitudeDelta: 0.005,
     },
     markerData: {
@@ -41,7 +41,7 @@ class AddCatMap extends React.Component {
 
   componentDidMount = async () => {
     await this.getCurrentPosition();
-  }
+  };
 
   getCurrentPosition = async () => {
     navigator.geolocation.getCurrentPosition(
@@ -69,13 +69,13 @@ class AddCatMap extends React.Component {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
-  }
+  };
 
   onRegionChangeComplete = region => {
     this.setState({ currentPosition: region });
   };
 
-  onMarkerChange = (e) => {
+  onMarkerChange = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.setState({
       markerData: {
@@ -84,7 +84,7 @@ class AddCatMap extends React.Component {
       },
     });
     this.props.onMarkerChange(e);
-  }
+  };
 
   render() {
     const { currentPosition, markerData } = this.state;
@@ -98,17 +98,18 @@ class AddCatMap extends React.Component {
             region={currentPosition}
             onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
-            onPress={(e) => this.onMarkerChange(e)}
+            onPress={e => this.onMarkerChange(e)}
           >
             {this.state.markerData && (
-              <Marker coordinate={{
-                latitude: markerData.latitude,
-                longitude: markerData.longitude,
-              }}
+              <Marker
+                coordinate={{
+                  latitude: markerData.latitude,
+                  longitude: markerData.longitude,
+                }}
               >
                 <Image
                   source={require('../../../catPawMarker.png')}
-                  style={{height: 40, width: 40 }}
+                  style={{ height: 40, width: 40 }}
                 />
               </Marker>
             )}

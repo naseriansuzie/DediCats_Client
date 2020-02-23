@@ -16,14 +16,14 @@ import CatPostInput from './CatPostInput';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
     alignItems: 'center',
     justifyContent: 'center',
   },
   radiusView: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 25,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 3,
     width: '95%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
 });
@@ -50,7 +50,6 @@ class CatPostList extends React.Component {
       loadingFont: true,
     };
   }
-
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);

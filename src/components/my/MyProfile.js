@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   profileView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   photoView: {
     width: '50%',
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
+    backgroundColor: '#ffffff',
   },
   infoView: {
     width: '50%',
@@ -48,13 +49,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     paddingHorizontal: 20,
     borderRadius: 10,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
   },
   btnTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontWeight: 'bold',
   },
-  logOut: { paddingTop: 5, color: '#677ef1' },
+  logOut: { paddingTop: 5, color: '#6772F1' },
 });
 
 const MyProfile = ({
@@ -71,7 +72,7 @@ const MyProfile = ({
   }
   const { nickname, createAt } = userInfo;
   const DEFAULT_USER_URL =
-    'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+    'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
   return (
     <View style={styles.container}>

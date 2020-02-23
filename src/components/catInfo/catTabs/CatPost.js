@@ -39,15 +39,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftSection: { width: '10%' },
-  iconColor: { color: '#6772f1' },
+  iconColor: { color: '#6772F1' },
   rightSection: { width: '45%' },
   replyTxt: { paddingLeft: 5, paddingRight: 0 },
   addReply: { width: '45%' },
   noPadding: { paddingLeft: 0 },
 });
 
-const DEFAULT_USER_URL =
-  'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+_URL = 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 class CatPost extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();

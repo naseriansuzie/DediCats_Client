@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     height: 210,
     width: 345,
     paddingTop: 0,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#677ef1',
+    borderColor: '#6772F1',
     flexDirection: 'row',
   },
   content: {
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   btn: {
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     alignSelf: 'center',
     marginTop: 10,
     marginLeft: -80,

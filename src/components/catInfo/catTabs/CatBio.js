@@ -31,14 +31,14 @@ import Rainbow from './Rainbow';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6772f1',
+    backgroundColor: '#6772F1',
     alignItems: 'center',
     justifyContent: 'center',
   },
   radiusView: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingHorizontal: 25,
     paddingTop: 10,
     borderTopLeftRadius: 50,
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderColor: '#f38847',
+    backgroundColor: '#ffffff',
+    borderColor: '#F38847',
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 5,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 40,
     marginRight: 10,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 40,
     marginRight: 10,
-    backgroundColor: '#ffece0',
+    backgroundColor: '#FFECE0',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tag: {
-    backgroundColor: '#f38847',
+    backgroundColor: '#F38847',
     borderRadius: 10,
     marginRight: 10,
     marginBottom: 10,
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     margin: 0,
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 10,
   },
   submitTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 17,
   },
   flex1: { flex: 1 },
@@ -240,7 +240,7 @@ class CatBio extends React.Component {
                             ? styles.noPeanut
                             : styles.peanut
                         }
-                        underlayColor="#f38847"
+                        underlayColor="#F38847"
                         onPress={async () => {
                           if (
                             selectedCatCutClicked.Y ||
@@ -264,7 +264,7 @@ class CatBio extends React.Component {
                             ? styles.noPeanut
                             : styles.peanut
                         }
-                        underlayColor="#f38847"
+                        underlayColor="#F38847"
                         onPress={async () => {
                           if (
                             selectedCatCutClicked.Y ||
@@ -288,7 +288,7 @@ class CatBio extends React.Component {
                             ? styles.noPeanut
                             : styles.peanut
                         }
-                        underlayColor="#f38847"
+                        underlayColor="#F38847"
                         onPress={async () => {
                           if (
                             selectedCatCutClicked.Y ||

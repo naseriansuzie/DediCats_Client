@@ -16,19 +16,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#677df1',
   },
   btnTxt: {
-    color: '#677ef1',
+    color: '#6772F1',
     fontWeight: 'bold',
     fontSize: 12,
   },
 });
 
 const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_CAT.png';
 
 const MyCat = ({
   navigation,

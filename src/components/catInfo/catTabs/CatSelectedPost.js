@@ -22,7 +22,8 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const DEFAULT_USER_URL = 'https://ca.slack-edge.com/T5K7P28NN-UFMJV5U03-g8dbe796546d-512';
+const DEFAULT_USER_URL =
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 50,
     width: 50,
+    backgroundColor: '#ffffff',
   },
   image: {
     flex: 1,

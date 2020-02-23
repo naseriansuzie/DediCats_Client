@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_CAT.png';
 
 const CatPhoto = ({ navigation, path, photo, selectPhoto }) => (
   <TouchableHighlight

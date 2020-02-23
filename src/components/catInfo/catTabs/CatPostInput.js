@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   inputView: {
     width: '95%',
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     width: '100%',
     borderRadius: 5,
-    borderColor: '#edf1f5',
+    borderColor: '#EDF1F5',
     marginTop: 5,
   },
   inputBottomView: {
@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 100,
-    backgroundColor: '#f38847',
+    backgroundColor: '#F38847',
     alignSelf: 'flex-end',
     justifyContent: 'center',
   },
   removeBtnTxt: {
-    color: 'white',
+    color: '#ffffff',
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -61,15 +61,15 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#edf1f5',
+    borderColor: '#EDF1F5',
   },
   addImageBtn: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  imageIcon: { fontSize: 30, paddingLeft: 10, color: '#677ef1' },
-  addImageTxt: { fontSize: 14, color: '#677ef1', paddingLeft: 5 },
+  imageIcon: { fontSize: 30, paddingLeft: 10, color: '#6772F1' },
+  addImageTxt: { fontSize: 14, color: '#6772F1', paddingLeft: 5 },
   submitBtn: {
     justifyContent: 'center',
     alignItems: 'flex-end',
@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     marginRight: 30,
     padding: 10,
     margin: 0,
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 10,
   },
   submitBtnTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 17,
   },
   paddingTop5: {
@@ -124,7 +124,7 @@ const CatPostInput = ({
               <View>
                 <TouchableHighlight
                   style={styles.removeBtn}
-                  underlayColor="#ffece0"
+                  underlayColor="#FFECE0"
                   onPress={removePhoto}
                 >
                   <Text style={styles.removeBtnTxt}>X</Text>
@@ -150,7 +150,8 @@ const CatPostInput = ({
               onPress={async () => {
                 try {
                   const validation = validateAddInput(
-                    'cat', 'selectedCatInputContent',
+                    'cat',
+                    'selectedCatInputContent',
                   );
                   if (validation) {
                     postModifyState

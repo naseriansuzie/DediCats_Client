@@ -57,7 +57,7 @@ class CatInfo extends React.Component {
         </Container>
       );
     }
-    return <Spinner style={styles.spinner} color="#6772f1" />;
+    return <Spinner style={styles.spinner} color="#6772F1" />;
   }
 }
 export default inject(({ cat }) => ({

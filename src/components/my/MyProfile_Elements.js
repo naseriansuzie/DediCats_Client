@@ -40,9 +40,9 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    borderColor: '#edf1f5',
-    // borderWidth: 1,
+    borderColor: '#EDF1F5',
     marginBottom: 20,
+    backgroundColor: '#ffffff',
   },
   photoEdition: {
     flexDirection: 'row',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   photoEditionTxt: {
-    color: '#677ef1',
+    color: '#6772F1',
   },
   content: { width: '95%' },
   listView: { flexDirection: 'row' },
@@ -63,15 +63,15 @@ const styles = StyleSheet.create({
   index: { color: '#444444' },
   field: { width: '70%' },
   disabledBtn: { width: '100%' },
-  editTxt: { color: '#677ef1', fontWeight: 'bold' },
-  askTxt: { color: '#677ef1' },
+  editTxt: { color: '#6772F1', fontWeight: 'bold' },
+  askTxt: { color: '#6772F1' },
   font16: {
     fontSize: 16,
   },
 });
 
 class MyProfile_Elements extends React.Component {
-  state ={ loadingFont: true };
+  state = { loadingFont: true };
 
   _showActionSheet = () => this.ActionSheet.show();
 
@@ -93,7 +93,7 @@ class MyProfile_Elements extends React.Component {
   render() {
     console.disableYellowBox = 'true';
     const DEFAULT_USER_URL =
-      'https://ca.slack-edge.com/T5K7P28NN-U5NKFNELV-g3d11e3cb933-512';
+      'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
     const {
       navigation,
       userInfo,

@@ -23,7 +23,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const styles = StyleSheet.create({
   logo: {
     alignItems: 'center',
-    padding: 50,
+    paddingTop: 150,
+    paddingBottom: 50,
   },
   logoTxt: {
     fontSize: 50,
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   btn: {
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 5,
     marginTop: 20,
     marginHorizontal: 10,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   forgetPW: { textAlign: 'center' },
   forgetTxt: { color: 'blue', fontWeight: 'bold' },
   white: {
-    color: 'white',
+    color: '#ffffff',
   },
   light: {
     color: '#868e96',
@@ -70,7 +71,7 @@ const SignIn_Info = ({
   clearInput,
 }) => (
   <Container>
-    <Header />
+    <Header style={{ display: 'none' }} />
     <View style={styles.logo}>
       <Text style={styles.logoTxt}>Dedicats</Text>
     </View>

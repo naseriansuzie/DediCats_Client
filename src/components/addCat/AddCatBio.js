@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    borderColor: '#edf1f5',
+    borderColor: '#EDF1F5',
     borderWidth: 1,
   },
   uploading: { flex: 1, alignItems: 'center', marginTop: 10 },
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 40,
     marginRight: 10,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -75,22 +75,22 @@ const styles = StyleSheet.create({
     width: 50,
     height: 40,
     marginRight: 10,
-    backgroundColor: '#f38847',
+    backgroundColor: '#F38847',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cutTxtT: { color: 'white', fontWeight: 'bold' },
+  cutTxtT: { color: '#ffffff', fontWeight: 'bold' },
   cutTxtF: { color: '#767577', fontWeight: 'bold' },
   submit: {
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 14,
     marginHorizontal: 10,
   },
   submitTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
 });
 const DEFAULT_CAT =
-  'https://www.pngitem.com/pimgs/m/85-850345_dog-puppy-silhouette-svg-png-icon-free-download.png';
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_CAT.png';
 
 const AddCatBio = ({
   navigation,

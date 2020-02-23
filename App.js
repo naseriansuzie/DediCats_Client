@@ -21,6 +21,7 @@ import SelectedPost from './src/pages/SelectedPost';
 import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
 import findPW from './src/pages/findPW';
+import AuthStore from './src/stores/AuthStore';
 
 const root = new RootStore();
 
@@ -45,7 +46,7 @@ const MyPageStack = createStackNavigator(
       navigationOptions: {
         headerTitle: false,
         headerStyle: {
-          backgroundColor: '#edf1f5',
+          backgroundColor: '#EDF1F5',
           headerTintColor: '#444444',
           headerTitleStyle: { display: 'none' },
           elevation: 0, // remove shadow on Android
@@ -95,7 +96,7 @@ MyPageStack.navigationOptions = ({ navigation }) => {
     tabBarVisible,
     title: '마이페이지',
     tabBarIcon: ({ focused }) => {
-      const color = focused ? '#677ef1' : '#767577';
+      const color = focused ? '#6772F1' : '#767577';
       const size = 30;
       return (
         <MaterialCommunityIcons
@@ -105,7 +106,7 @@ MyPageStack.navigationOptions = ({ navigation }) => {
         />
       );
     },
-    tabBarOptions: { activeTintColor: '#677ef1' },
+    tabBarOptions: { activeTintColor: '#6772F1' },
   };
 };
 
@@ -137,7 +138,7 @@ const MainStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerLeft: () => (
           <HeaderBackButton
-            tintColor="white"
+            tintColor="#ffffff"
             onPress={() => {
               root.cat.resetRainbowReport();
               root.cat.toggleRainbowOpen();
@@ -147,7 +148,7 @@ const MainStack = createStackNavigator(
         ),
         headerTitleStyle: { display: 'none' },
         headerStyle: {
-          backgroundColor: '#6772f1',
+          backgroundColor: '#6772F1',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
         },
@@ -191,7 +192,6 @@ const MainStack = createStackNavigator(
   },
   {
     initialRouteName: 'Main',
-    // defaultNavigationOptions: { headerTintColor: 'white' },
   },
 );
 
@@ -205,13 +205,13 @@ MainStack.navigationOptions = ({ navigation }) => {
     tabBarVisible,
     title: 'Home',
     tabBarIcon: ({ focused }) => {
-      const color = focused ? '#677ef1' : '#767577';
+      const color = focused ? '#6772F1' : '#767577';
       const size = 30;
       return (
         <MaterialCommunityIcons size={size} name="home-outline" color={color} />
       );
     },
-    tabBarOptions: { activeTintColor: '#677ef1' },
+    tabBarOptions: { activeTintColor: '#6772F1' },
   };
 };
 
@@ -264,16 +264,38 @@ const AuthStack = createStackNavigator(
   {
     'Sign In': {
       screen: Signin,
-      navigationOptions: {
+      navigationOptions: () => ({
         headerShown: false,
-      },
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }),
     },
-    'Sign Up': Signup,
-    'Email Certified': EmailCertified,
+    'Sign Up': {
+      screen: Signup,
+    },
+    'Email Certified': {
+      screen: EmailCertified,
+      navigationOptions: () => ({
+        headerTitle: false,
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }),
+    },
     findPW,
   },
   {
     initialRouteName: 'Sign In',
+    defaultNavigationOptions: {
+      headerTitle: false,
+      headerStyle: {
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      },
+    },
   },
 );
 
@@ -289,7 +311,7 @@ const RootNavigator = createSwitchNavigator(
 const AppContainer = createAppContainer(RootNavigator);
 
 export default function App() {
-  console.log('MyProfile_Elements mount');
+  console.disableYellowBox = 'true';
   return (
     <Provider {...root}>
       <AppContainer />

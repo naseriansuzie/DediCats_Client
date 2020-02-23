@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   btn: {
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#677ef1',
+    backgroundColor: '#6772F1',
     borderRadius: 5,
     marginTop: 20,
     marginLeft: 10,
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   white: {
-    color: 'white',
+    color: '#ffffff',
   },
   font16: {
     fontSize: 16,

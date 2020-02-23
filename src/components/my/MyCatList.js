@@ -8,14 +8,14 @@ import MyCat from './MyCat';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   radiusView: {
     flex: 1,
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   listView: {
     width: '90%',
@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
   },
   noCatView: {
     flex: 1,
-    backgroundColor: '#edf1f5',
+    backgroundColor: '#EDF1F5',
   },
   noCatRadiusView: {
     flex: 1,
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 50,
     alignItems: 'center',
   },

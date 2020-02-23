@@ -31,9 +31,17 @@ class AuthStore {
   userInfo = null;
 
   // actions
+
+  validateEmail = email => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   validateSignUp = () => {
     let isValidated = false;
-    if (this.confirmPW !== this.reConfirmPW) {
+    if (!this.validateEmail(this.email)) {
+      Alert.alert('올바른 이메일 주소를 넣어주세요!(ex: hello@cat.com)');
+    } else if (this.confirmPW !== this.reConfirmPW) {
       Alert.alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요!');
     } else if (this.email && this.confirmPW && this.nickname) {
       isValidated = true;
@@ -221,6 +229,7 @@ decorate(AuthStore, {
   emailVerification: observable,
   emailCode: observable,
   userInfo: observable,
+  validateEmail: action,
   validateSignUp: action,
   emailCertified: action,
   signUp: action,
