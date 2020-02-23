@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   KeyboardAvoidingView,
@@ -16,6 +15,7 @@ import {
   Item,
   Input,
   Label,
+  Text,
 } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   font16: {
     fontSize: 16,
   },
+  paddingLeft20: { paddingLeft: 20 },
 });
 
 const SignUp_Info = ({
@@ -104,6 +105,9 @@ const SignUp_Info = ({
               value={nickname}
             />
           </Item>
+          <Text note style={styles.paddingLeft20}>
+            *닉네임은 가입 시 1회 지정 가능합니다.
+          </Text>
           <Item floatingLabel>
             <Label>
               <MaterialCommunityIcons
@@ -147,6 +151,9 @@ const SignUp_Info = ({
         >
           <Text style={styles.white}>Submit</Text>
         </TouchableOpacity>
+        <Text note style={styles.paddingLeft20}>
+          *가입 신청 후 이메일로 인증코드가 발송됩니다.
+        </Text>
       </KeyboardAvoidingView>
     </Content>
   </Container>
