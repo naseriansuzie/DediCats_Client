@@ -140,6 +140,7 @@ const MainStack = createStackNavigator(
             tintColor="white"
             onPress={() => {
               root.cat.resetRainbowReport();
+              root.cat.toggleRainbowOpen();
               navigation.goBack();
             }}
           />
