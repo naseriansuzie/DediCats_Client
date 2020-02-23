@@ -112,7 +112,7 @@ const MainStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerLeft: () => (
           <HeaderBackButton
-            tintColor="white"
+            tintColor="#ffffff"
             onPress={() => {
               root.cat.resetRainbowReport();
               navigation.goBack();

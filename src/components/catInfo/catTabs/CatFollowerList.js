@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   listView: {
     paddingTop: 10,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 50,
     alignItems: 'center',
   },

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   inputView: {
     width: '95%',
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   removeBtnTxt: {
-    color: 'white',
+    color: '#ffffff',
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   submitBtnTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 17,
   },
   paddingTop5: {
@@ -150,7 +150,8 @@ const CatPostInput = ({
               onPress={async () => {
                 try {
                   const validation = validateAddInput(
-                    'cat', 'selectedCatInputContent',
+                    'cat',
+                    'selectedCatInputContent',
                   );
                   if (validation) {
                     postModifyState

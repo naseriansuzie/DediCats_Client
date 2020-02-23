@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   radiusView: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingHorizontal: 25,
     paddingTop: 10,
     borderTopLeftRadius: 50,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 50,
     alignItems: 'center',
   },

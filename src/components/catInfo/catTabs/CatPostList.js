@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   radiusView: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingTop: 25,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
@@ -33,13 +33,13 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 3,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
 });
 
 class CatPostList extends React.Component {
-  state ={ loadingFont: true }
+  state = { loadingFont: true };
 
   componentDidMount() {
     console.log('CatPostList mount');
@@ -67,13 +67,13 @@ class CatPostList extends React.Component {
   );
 
   renderFooter = () =>
-    (this.props.isLoadingPost ? (
+    this.props.isLoadingPost ? (
       <View style={styles.loader}>
         <ActivityIndicator size="large" />
       </View>
     ) : (
       <View />
-    ));
+    );
 
   render() {
     const {

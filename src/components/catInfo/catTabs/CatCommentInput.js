@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   submitBtnTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 17,
   },
 });
@@ -64,9 +64,7 @@ const CatCommentInput = ({
             rowSpan={inputComment.length > 27 ? 3 : 2}
             placeholder="댓글을 입력해주세요."
             value={inputComment}
-            onChangeText={text =>
-              updateInput('comment', 'inputComment', text)
-            }
+            onChangeText={text => updateInput('comment', 'inputComment', text)}
           />
         </Form>
         <TouchableOpacity

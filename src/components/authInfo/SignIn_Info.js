@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   forgetPW: { textAlign: 'center' },
   forgetTxt: { color: 'blue', fontWeight: 'bold' },
   white: {
-    color: 'white',
+    color: '#ffffff',
   },
   light: {
     color: '#868e96',

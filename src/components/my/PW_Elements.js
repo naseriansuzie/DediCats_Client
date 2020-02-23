@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   white: {
-    color: 'white',
+    color: '#ffffff',
   },
   font16: {
     fontSize: 16,

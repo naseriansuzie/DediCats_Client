@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     height: 210,
     width: 345,
     paddingTop: 0,

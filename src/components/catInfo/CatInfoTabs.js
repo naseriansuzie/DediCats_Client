@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   activeTab: {
     backgroundColor: '#6772f1',
   },
-  activeText: { color: 'white', fontSize: 18 },
+  activeText: { color: '#ffffff', fontSize: 18 },
 });
 
 const CatInfoTabs = ({ selectedCatBio }) => (

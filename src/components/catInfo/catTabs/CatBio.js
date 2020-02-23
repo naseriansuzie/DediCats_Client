@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   radiusView: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     paddingHorizontal: 25,
     paddingTop: 10,
     borderTopLeftRadius: 50,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderColor: '#f38847',
     borderWidth: 1,
     borderRadius: 5,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   submitTxt: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 17,
   },
   flex1: { flex: 1 },

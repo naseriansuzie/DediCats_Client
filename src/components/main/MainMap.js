@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   title: {
     height: '10%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -145,7 +145,7 @@ class MainMap extends React.Component {
             </View>
             <Image
               source={require('../../../DediCatsLogo.png')}
-              style={{height: 70, width: 70, right: 10, }}
+              style={{ height: 70, width: 70, right: 10 }}
             />
           </View>
           <MapView
