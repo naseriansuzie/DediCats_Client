@@ -38,11 +38,30 @@ const styles = StyleSheet.create({
 });
 
 class CatPostList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visibility: true,
+    };
+  }
+
+  
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
   }
+  
+  handledisappear = () => {
+    this.setState({
+      visibility: false,
+    });
+  }
 
+  handleshow = () => {
+    this.setState({
+      visibility: true,
+    });
+  }
   _renderItem = ({ item }) => (
     <CatPost
       catId={this.props.catId}
@@ -52,14 +71,13 @@ class CatPostList extends React.Component {
     />
   );
 
-  renderFooter = () =>
-    (this.props.isLoadingPost ? (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" />
-      </View>
-    ) : (
-      <View />
-    ));
+  renderFooter = () => (this.props.isLoadingPost ? (
+    <View style={styles.loader}>
+      <ActivityIndicator size="large" />
+    </View>
+  ) : (
+    <View />
+  ));
 
   render() {
     const {
@@ -78,7 +96,7 @@ class CatPostList extends React.Component {
       <View style={styles.container}>
         <View style={styles.radiusView}>
           <KeyboardAvoidingView style={styles.keyboard}>
-            <CatPostInput />
+            {this.state.visibility ? <CatPostInput /> : null}
           </KeyboardAvoidingView>
           <SafeAreaView style={styles.safeArea}>
             <FlatList
@@ -92,6 +110,8 @@ class CatPostList extends React.Component {
               refreshing={isRefreshingPost}
               onRefresh={_handleRefresh}
               initialNumToRender={3}
+              onScrollEndDrag={() => this.handleshow()}
+              onScrollBeginDrag={() => this.handledisappear()}
             />
           </SafeAreaView>
         </View>
@@ -100,7 +120,9 @@ class CatPostList extends React.Component {
   }
 }
 
-export default inject(({ cat, post, helper, comment }) => ({
+export default inject(({
+  cat, post, helper, comment,
+}) => ({
   catId: cat.selectedCatBio[0].id,
   setCatPost: comment.setCatPost,
   postList: post.postList,

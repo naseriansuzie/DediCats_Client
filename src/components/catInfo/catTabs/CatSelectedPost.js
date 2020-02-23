@@ -65,7 +65,6 @@ class CatSelectedPost extends React.Component {
     console.log('CatSelectedPost mount');
     getCommentList(this.props.navigation);
   }
-
   _showActionSheet = () => this.ActionSheet.show();
 
   _renderItem = ({ item }) => (
