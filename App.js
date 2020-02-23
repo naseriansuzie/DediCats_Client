@@ -140,8 +140,11 @@ const MainStack = createStackNavigator(
           <HeaderBackButton
             tintColor="#ffffff"
             onPress={() => {
-              root.cat.resetRainbowReport();
-              root.cat.toggleRainbowOpen();
+              const { resetRainbowReport, selectedCatRainbowOpen, toggleRainbowOpen } = root.cat;
+              resetRainbowReport();
+              if (selectedCatRainbowOpen === true) {
+                toggleRainbowOpen();
+              }
               navigation.goBack();
             }}
           />
