@@ -62,10 +62,6 @@ class AddCatMap extends React.Component {
     );
   };
 
-  onRegionChangeComplete = region => {
-    this.setState({ currentPosition: region });
-  };
-
   render() {
     const { currentPosition } = this.state;
     const { addCatLocation, onMarkerChange } = this.props;
@@ -77,7 +73,6 @@ class AddCatMap extends React.Component {
             provider={PROVIDER_GOOGLE}
             showsUserLocation
             region={currentPosition}
-            onRegionChangeComplete={this.onRegionChangeComplete}
             style={styles.map}
             onPress={e => onMarkerChange(e)}
           >
