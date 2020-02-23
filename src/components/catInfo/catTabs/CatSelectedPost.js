@@ -22,7 +22,7 @@ import {
 } from 'native-base';
 import CatComment from './CatComment';
 
-const DEFAULT_USER_URL =
+const DEFAULT_USER =
   'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 const styles = StyleSheet.create({
@@ -90,9 +90,10 @@ class CatSelectedPost extends React.Component {
       convertDateTime,
     } = this.props;
 
-    const usrImgUri = selectedCatPost.user.photoPath !== null
-      ? selectedCatPost.user.photoPath
-      : DEFAULT_USER_URL;
+    const usrImgUri =
+      selectedCatPost.user.photoPath !== null
+        ? selectedCatPost.user.photoPath
+        : DEFAULT_USER;
 
     return (
       <Container style={styles.container}>
@@ -136,10 +137,12 @@ class CatSelectedPost extends React.Component {
                 </TouchableOpacity>
               ) : null}
               <FlatList
-                ref={(ref) => { this.flatListRef = ref; }}
+                ref={ref => {
+                  this.flatListRef = ref;
+                }}
                 data={commentList}
                 renderItem={this._renderItem}
-                keyExtractor={(item) => `post_${item.id}`}
+                keyExtractor={item => `post_${item.id}`}
                 showsVerticalScrollIndicator={false}
                 inverted
               />

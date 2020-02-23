@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
   noPadding: { paddingLeft: 0 },
 });
 
-_URL = 'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
+const DEFAULT_USER =
+  'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 class CatPost extends React.Component {
   _showActionSheet = () => this.ActionSheet.show();
@@ -66,8 +67,7 @@ class CatPost extends React.Component {
       convertDateTime,
       processPostActions,
     } = this.props;
-    const usrImgUri =
-      user.photoPath !== null ? user.photoPath : DEFAULT_USER_URL;
+    const usrImgUri = user.photoPath !== null ? user.photoPath : DEFAULT_USER;
 
     return (
       <Card style={styles.container}>

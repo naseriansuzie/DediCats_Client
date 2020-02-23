@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DEFAULT_USER_URL =
+const DEFAULT_USER =
   'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
 const CatComment = ({
@@ -46,7 +46,7 @@ const CatComment = ({
     <Left>
       <Thumbnail
         square
-        source={{ uri: myPhoto || DEFAULT_USER_URL }}
+        source={{ uri: myPhoto || DEFAULT_USER }}
         style={styles.radius}
       />
     </Left>

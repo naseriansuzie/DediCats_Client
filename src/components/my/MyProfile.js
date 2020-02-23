@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     paddingVertical: 20,
+    left: '10%',
   },
   photo: {
     width: '80%',
@@ -25,13 +26,13 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 30,
-    backgroundColor: '#ffffff',
   },
   infoView: {
     width: '50%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    right: '10%',
   },
   nickName: {
     fontSize: 20,
@@ -71,7 +72,7 @@ const MyProfile = ({
     return <View style={styles.container} />;
   }
   const { nickname, createAt } = userInfo;
-  const DEFAULT_USER_URL =
+  const DEFAULT_USER =
     'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
   return (
@@ -81,7 +82,7 @@ const MyProfile = ({
           <Image
             style={styles.photo}
             source={{
-              uri: myUri || DEFAULT_USER_URL,
+              uri: myUri || DEFAULT_USER,
             }}
           />
         </View>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { SERVER_URL } from 'react-native-dotenv';
 
 const defaultCredential = { withCredentials: true };
-const DEFAULT_USER_URL =
+const DEFAULT_USER =
   'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 class UserStore {
   constructor(root) {
@@ -172,7 +172,7 @@ class UserStore {
   };
 
   resetUserObservable = () => {
-    this.myUri = DEFAULT_USER_URL;
+    this.myUri = DEFAULT_USER;
     this.myPhotoPath = null;
     this.myCatList = null;
     this.unFollowedCat = null;
