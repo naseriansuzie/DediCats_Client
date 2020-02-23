@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, BackHandler } from 'react-native';
 import CatPhotoLarge from '../components/catInfo/catTabs/CatPhotoLarge';
 
 const styles = StyleSheet.create({
@@ -12,16 +12,36 @@ const styles = StyleSheet.create({
   },
 });
 
-const PhotoModal = ({ selectedCatPhoto }) => {
-  if (selectedCatPhoto) {
-    return (
-      <View style={styles.container}>
-        <CatPhotoLarge path={selectedCatPhoto.path} />
-      </View>
-    );
+class PhotoModal extends React.Component {
+  componentDidMount() {
+    this.handleAndroidBackButton();
   }
-  return <View />;
-};
+
+  handleAndroidBackButton = () => {
+    const { navigation } = this.props;
+
+    BackHandler.addEventListener('hardwareBackPress', async () => {
+      navigation.goBack();
+      return true;
+    });
+  };
+
+  removeAndroidBackButtonHandler = () => {
+    BackHandler.removeEventListener('hardwareBackPress', () => {});
+  };
+
+  render() {
+    const { selectedCatPhoto } = this.props;
+    if (selectedCatPhoto) {
+      return (
+        <View style={styles.container}>
+          <CatPhotoLarge path={selectedCatPhoto.path} />
+        </View>
+      );
+    }
+    return <View />;
+  }
+}
 
 export default inject(({ cat }) => ({
   selectedCatPhoto: cat.selectedCatPhoto,
