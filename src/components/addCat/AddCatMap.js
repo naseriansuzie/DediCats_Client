@@ -41,7 +41,7 @@ class AddCatMap extends React.Component {
 
   getCurrentPosition = async () => {
     navigator.geolocation.getCurrentPosition(
-      position => {
+      (position) => {
         const { coords } = position;
         const { setAddCatLocation } = this.props;
         const currentPosition = {
@@ -55,11 +55,15 @@ class AddCatMap extends React.Component {
         });
         setAddCatLocation(coords);
       },
-      error => {
+      (error) => {
         Alert.alert(error.code, error.message);
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
+  };
+
+  onRegionChangeComplete = (region) => {
+    this.setState({ currentPosition: region });
   };
 
   render() {
@@ -72,8 +76,9 @@ class AddCatMap extends React.Component {
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation
-            initialRegion={currentPosition}
+            region={{ ...currentPosition }}
             style={styles.map}
+            onRegionChangeComplete={this.onRegionChangeComplete}
             onPress={e => onMarkerChange(e)}
           >
             {addCatLocation && (
