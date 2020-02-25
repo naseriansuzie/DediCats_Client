@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   radius: {
     borderRadius: 15,
   },
-  body: { paddingRight: 40 },
+  body: { paddingRight: 20 },
   btn: {
     alignItems: 'center',
     paddingVertical: 10,
