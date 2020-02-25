@@ -29,7 +29,10 @@ class ReportStore {
   reportPost = async (postId, criminalId, navigation) => {
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
-      .then(res => true)
+      .then(res => {
+        Alert.alert('신고가 완료되었습니다.');
+        return true;
+      })
       .catch(err => this.alertFailure(err, navigation));
     return result;
   };
