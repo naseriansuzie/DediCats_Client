@@ -30,12 +30,14 @@ class CatInfo extends React.Component {
       resetRainbowReport,
       selectedCatRainbowOpen,
       toggleRainbowOpen,
+      resetCatCut,
     } = this.props;
 
     BackHandler.addEventListener('hardwareBackPress', async () => {
       resetRainbowReport();
       if (selectedCatRainbowOpen === true) {
         toggleRainbowOpen();
+        resetCatCut();
       }
       navigation.goBack();
       return true;
@@ -68,4 +70,5 @@ export default inject(({ cat }) => ({
   resetRainbowReport: cat.resetRainbowReport,
   selectedCatRainbowOpen: cat.selectedCatRainbowOpen,
   toggleRainbowOpen: cat.toggleRainbowOpen,
+  resetCatCut: cat.resetCatCut,
 }))(observer(CatInfo));

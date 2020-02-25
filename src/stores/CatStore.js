@@ -430,11 +430,10 @@ class CatStore {
   resetRainbowReport = () => {
     this.selectedCatRainbowYReported = false;
     this.selectedCatRainbowNReported = false;
-    console.log(
-      '리셋',
-      this.selectedCatRainbowYReported,
-      this.selectedCatRainbowNReported,
-    );
+  };
+
+  resetCatCut = () => {
+    this.selectedCatCutClicked = { Y: false, N: false, unknown: false };
   };
 }
 
@@ -482,6 +481,7 @@ decorate(CatStore, {
   selectPhoto: action,
   getFollowerList: action,
   resetRainbowReport: action,
+  resetCatCut: action,
 });
 
 export default CatStore;
