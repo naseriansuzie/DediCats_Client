@@ -80,13 +80,16 @@ Expo Build
 - Cat Albums, Follow function  
   <img src="https://user-images.githubusercontent.com/53066365/75259820-f8d88980-582b-11ea-8fe9-c447dc3692c1.gif"  width="30%" height="30%">
 
-- Profile change  
+- Profile change
+
   <img src="https://user-images.githubusercontent.com/53066365/75260620-3ab5ff80-582d-11ea-8728-a58bece2df2c.gif"  width="30%" height="30%">
 
 - My Page: my cat list, inquiry, sign out
+
   <img src="https://user-images.githubusercontent.com/53066365/75261144-f5de9880-582d-11ea-9e5d-13d535d63eae.gif"  width="30%" height="30%">
 
-- Find Password  
+- Find Password
+
   <img src="https://user-images.githubusercontent.com/53066365/75258418-c168dd80-5829-11ea-995a-47eb816c295f.gif"  width="30%" height="30%">
 
 ---
