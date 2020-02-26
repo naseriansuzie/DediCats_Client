@@ -58,26 +58,36 @@ Expo Build
 
 ## Service Presentation
 
-- Sign Up
-  ![signUp](https://user-images.githubusercontent.com/53066365/75255064-b65f7e80-5824-11ea-8356-6e0340d4d1a9.gif)
-- Email certification for sign up
-  ![emailCertification](https://user-images.githubusercontent.com/53066365/75255227-eeff5800-5824-11ea-821a-de4c254755b1.jpg)
-- Sign In
-  ![signIn](https://user-images.githubusercontent.com/53066365/75256388-beb8b900-5826-11ea-8994-aa144d30442e.gif)
-- Add Cat Procedure
-  ![addCat](https://user-images.githubusercontent.com/53066365/75258237-8070c900-5829-11ea-92f4-767a1c4d41e9.gif)
-- Cat Bio: today's health status update, neutering status, tag registration, missing report
-  ![catBio](https://user-images.githubusercontent.com/53066365/75258300-9aaaa700-5829-11ea-8aac-15ff11fe941f.gif)
-- Cat Posts, Comments: registration, modification, deletion
-  ![catPostsComments](https://user-images.githubusercontent.com/53066365/75259352-3983d300-582b-11ea-81ac-6b08ccac6273.gif)
-- Cat Albums, Follow function
-  ![catAlbumsFollowers](https://user-images.githubusercontent.com/53066365/75259820-f8d88980-582b-11ea-8fe9-c447dc3692c1.gif)
-- Profile change
-  ![myProfile](https://user-images.githubusercontent.com/53066365/75260620-3ab5ff80-582d-11ea-8728-a58bece2df2c.gif)
+- Sign Up  
+  <img src="https://user-images.githubusercontent.com/53066365/75255064-b65f7e80-5824-11ea-8356-6e0340d4d1a9.gif" width="30%" height="30%">
+
+- Email certification for sign up  
+  <img src="https://user-images.githubusercontent.com/53066365/75255227-eeff5800-5824-11ea-821a-de4c254755b1.jpg" width="30%" height="30%">
+
+- Sign In  
+   <img src=
+  "https://user-images.githubusercontent.com/53066365/75256388-beb8b900-5826-11ea-8994-aa144d30442e.gif" width="30%" height="30%">
+
+- Add Cat Procedure  
+  <img src="https://user-images.githubusercontent.com/53066365/75258237-8070c900-5829-11ea-92f4-767a1c4d41e9.gif" width="30%" height="30%">
+
+- Cat Bio: today's health status update, neutering status, tag registration, missing report  
+  <img src="https://user-images.githubusercontent.com/53066365/75258300-9aaaa700-5829-11ea-8aac-15ff11fe941f.gif"  width="30%" height="30%">
+
+- Cat Posts, Comments: registration, modification, deletion  
+  <img src="https://user-images.githubusercontent.com/53066365/75259352-3983d300-582b-11ea-81ac-6b08ccac6273.gif"  width="30%" height="30%">
+
+- Cat Albums, Follow function  
+  <img src="https://user-images.githubusercontent.com/53066365/75259820-f8d88980-582b-11ea-8fe9-c447dc3692c1.gif"  width="30%" height="30%">
+
+- Profile change  
+  <img src="https://user-images.githubusercontent.com/53066365/75260620-3ab5ff80-582d-11ea-8728-a58bece2df2c.gif"  width="30%" height="30%">
+
 - My Page: my cat list, inquiry, sign out
-  ![myPage](https://user-images.githubusercontent.com/53066365/75261144-f5de9880-582d-11ea-9e5d-13d535d63eae.gif)
-- Find Password
-  ![findPW](https://user-images.githubusercontent.com/53066365/75258418-c168dd80-5829-11ea-995a-47eb816c295f.gif)
+  <img src="https://user-images.githubusercontent.com/53066365/75261144-f5de9880-582d-11ea-9e5d-13d535d63eae.gif"  width="30%" height="30%">
+
+- Find Password  
+  <img src="https://user-images.githubusercontent.com/53066365/75258418-c168dd80-5829-11ea-995a-47eb816c295f.gif"  width="30%" height="30%">
 
 ---
 
