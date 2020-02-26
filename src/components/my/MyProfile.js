@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    right: '10%',
+    right: '5%',
   },
   nickName: {
     fontSize: 20,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   address: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#444444',
     marginBottom: 10,
   },
