@@ -1,3 +1,88 @@
 # DediCats-client
 
-Checkout branch to dev
+---
+
+Connect and build relationships with cats you love.
+
+Follow all the cats in your area. Share photos and information, Post freely and interact with others. Dedicate to a cat today!
+Each and every one of us have a favorite cat moment to share. Even if you do not have a cat, a coincidental, yet magical encounter with a cat in your neighborhood may have lingered in your memory all this time. Cats are endearing animals that wander around freely and we often wonder where they are in our neighborhood. We took notice of this important curiosity and started a project to better understand and follow free cats.
+
+DediCats, we support the coexistence of cats and humans everywhere.
+
+## Quickstart
+
+---
+
+For Expo simulation,
+
+> you can scan the below qr code.
+
+For Android device operation,
+
+> First, fork this repo and 'git clone' in your local storage.
+> Then,
+
+#### Install
+
+```
+$ npm(yarn) install
+```
+
+#### Start
+
+```
+$ npm(yarn) start
+```
+
+- by running this script, Expo will be rendered
+- you can choose android emulator, ios simulator or qr code scan for running the app.
+
+## Stack
+
+---
+
+'Node.js' for Server and 'React Native' for Client were used.
+
+**Client**
+
+React Native(Expo) / React Navigation / MobX / axios / Socket.io / Native Base / Map APIs(Google, Kakao)
+
+**Server**
+
+Express / Node.js / TypeORM / Typescript / Socket.io / JWT / mariaDB
+
+**Deploy**
+
+AWS - S3, EC2, RDS
+Expo Build
+
+## Service Presentation
+
+- Sign Up
+  ![signUp](https://user-images.githubusercontent.com/53066365/75255064-b65f7e80-5824-11ea-8356-6e0340d4d1a9.gif)
+- Email certification for sign up
+  ![emailCertification](https://user-images.githubusercontent.com/53066365/75255227-eeff5800-5824-11ea-821a-de4c254755b1.jpg)
+- Sign In
+  ![signIn](https://user-images.githubusercontent.com/53066365/75256388-beb8b900-5826-11ea-8994-aa144d30442e.gif)
+- Add Cat Procedure
+  ![addCat](https://user-images.githubusercontent.com/53066365/75258237-8070c900-5829-11ea-92f4-767a1c4d41e9.gif)
+- Cat Bio: today's health status update, neutering status, tag registration, missing report
+  ![catBio](https://user-images.githubusercontent.com/53066365/75258300-9aaaa700-5829-11ea-8aac-15ff11fe941f.gif)
+- Cat Posts, Comments: registration, modification, deletion
+  ![catPostsComments](https://user-images.githubusercontent.com/53066365/75259352-3983d300-582b-11ea-81ac-6b08ccac6273.gif)
+- Cat Albums, Follow function
+  ![catAlbumsFollowers](https://user-images.githubusercontent.com/53066365/75259820-f8d88980-582b-11ea-8fe9-c447dc3692c1.gif)
+- Profile change
+  ![myProfile](https://user-images.githubusercontent.com/53066365/75260620-3ab5ff80-582d-11ea-8728-a58bece2df2c.gif)
+- My Page: my cat list, inquiry, sign out
+  ![myPage](https://user-images.githubusercontent.com/53066365/75261144-f5de9880-582d-11ea-9e5d-13d535d63eae.gif)
+- Find Password
+  ![findPW](https://user-images.githubusercontent.com/53066365/75258418-c168dd80-5829-11ea-995a-47eb816c295f.gif)
+
+---
+
+## License
+
+---
+
+Copyrights by Team CodeStake. For the further use, please contact Team CodeStake via `dedicats16@gmail.com`.
