@@ -87,6 +87,7 @@ class AddCatMap extends React.Component {
                   latitude: addCatLocation.latitude,
                   longitude: addCatLocation.longitude,
                 }}
+                tracksViewChanges={false}
               >
                 <Image
                   source={require('../../../catPawMarker.png')}
