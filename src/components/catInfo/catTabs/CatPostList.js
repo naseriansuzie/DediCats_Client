@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     alignItems: 'center',
   },
-  keyboard: { 
-      width: '95%',
-     position:"absolute",
-     zIndex: 1,
+  keyboard: {
+    width: '95%',
+    position: 'absolute',
+    zIndex: 1,
   },
   safeArea: {
     flex: 3,
@@ -50,6 +50,7 @@ class CatPostList extends React.Component {
       loadingFont: true,
     };
   }
+
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
@@ -102,7 +103,7 @@ class CatPostList extends React.Component {
       isRefreshingPost,
       _handleRefresh,
     } = this.props;
-    const { loadingFont } = this.state;
+    const { loadingFont, visibility } = this.state;
     if (loadingFont) {
       this.loadFont();
       return <View />;
@@ -111,9 +112,9 @@ class CatPostList extends React.Component {
       <View style={styles.container}>
         <View style={styles.radiusView}>
           <SafeAreaView style={styles.safeArea}>
-          <KeyboardAvoidingView style={styles.keyboard}>
-            {this.state.visibility ? <CatPostInput /> : null}
-          </KeyboardAvoidingView>
+            <KeyboardAvoidingView style={styles.keyboard}>
+              {visibility ? <CatPostInput /> : null}
+            </KeyboardAvoidingView>
             <FlatList
               data={postList}
               renderItem={this._renderItem}
