@@ -80,6 +80,7 @@ class AddCatMap extends React.Component {
             style={styles.map}
             onRegionChangeComplete={this.onRegionChangeComplete}
             onPress={e => onMarkerChange(e)}
+            tracksViewChanges={false}
           >
             {addCatLocation && (
               <Marker
