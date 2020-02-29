@@ -24,6 +24,10 @@ class CatInfo extends React.Component {
     this.handleAndroidBackButton();
   }
 
+  componentWillUnmount() {
+    this.removeAndroidBackButtonHandler();
+  }
+
   handleAndroidBackButton = () => {
     const {
       navigation,
