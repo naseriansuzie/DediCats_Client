@@ -80,7 +80,6 @@ class AddCatMap extends React.Component {
             style={styles.map}
             onRegionChangeComplete={this.onRegionChangeComplete}
             onPress={e => onMarkerChange(e)}
-            tracksViewChanges={false}
           >
             {addCatLocation && (
               <Marker
@@ -88,6 +87,7 @@ class AddCatMap extends React.Component {
                   latitude: addCatLocation.latitude,
                   longitude: addCatLocation.longitude,
                 }}
+                tracksViewChanges={false}
               >
                 <Image
                   source={require('../../../catPawMarker.png')}
