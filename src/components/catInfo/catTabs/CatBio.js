@@ -208,6 +208,10 @@ class CatBio extends React.Component {
                           onValueChange={postCatToday}
                         >
                           <Picker.Item
+                            label="오늘의 건강 상태 선택하기"
+                            value="오늘의 건강 상태 선택하기"
+                          />
+                          <Picker.Item
                             label="😼기운 넘쳐요"
                             value="😼기운 넘쳐요"
                           />

@@ -337,28 +337,31 @@ class CatStore {
 
   // CatStore
   postCatToday = (value, navigation) => {
-    const catId = this.selectedCatBio[0].id;
-    this.selectedCatToday = value;
-    const todayInfo = {
-      catToday: value,
-      catId,
-    };
-    runInAction(() => {
-      axios
-        .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
-        .then(res => {
-          this.getSelectedCatInfo(catId);
-        })
-        .catch(err => {
-          if (err.response && err.response.status === 409) {
-            Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
+    if (value !== '오늘의 건강 상태 선택하기') {
+      const catId = this.selectedCatBio[0].id;
+      this.selectedCatToday = value;
+      const todayInfo = {
+        catToday: value,
+        catId,
+      };
+      runInAction(() => {
+        axios
+          .post(`${SERVER_URL}/cat/addcatToday`, todayInfo, defaultCredential)
+          .then(async res => {
+            await this.getSelectedCatInfo(catId);
             this.selectedCatToday = undefined;
-          } else {
-            this.root.auth.expiredTokenHandler(err, navigation);
-            console.dir(err);
-          }
-        });
-    });
+          })
+          .catch(err => {
+            if (err.response && err.response.status === 409) {
+              Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
+              this.selectedCatToday = undefined;
+            } else {
+              this.root.auth.expiredTokenHandler(err, navigation);
+              console.dir(err);
+            }
+          });
+      });
+    }
   };
 
   // CatStore
