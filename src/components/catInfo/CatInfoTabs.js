@@ -1,20 +1,17 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Container, Header, Tab, Tabs } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
 import CatAlbum from './catTabs/CatAlbum';
 import CatFollowerList from './catTabs/CatFollowerList';
-import CatPostInput from './catTabs/CatPostInput';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // marginBottom: -313,
-    // backgroundColor: 'black',
   },
   hide: {
     display: 'none',
@@ -64,9 +61,6 @@ const CatInfoTabs = ({ selectedCatBio }) => (
             activeTabStyle={styles.activeTab}
             activeTextStyle={styles.activeText}
           >
-            <View style={styles.input}>
-              <CatPostInput />
-            </View>
             <CatPostList />
           </Tab>
           <Tab
