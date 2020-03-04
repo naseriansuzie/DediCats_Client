@@ -7,7 +7,9 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
+import { Fab, Icon } from 'native-base';
 import * as Font from 'expo-font';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
@@ -28,9 +30,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     alignItems: 'center',
   },
-  keyboard: {
-    width: '95%',
-    backgroundColor: 'transparent',
+  modalView: {
+    flex: 1,
+    backgroundColor: '#000000aa',
   },
   safeArea: {
     flex: 3,
@@ -110,6 +112,14 @@ class CatPostList extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
+          <Modal
+            transparent
+            visible
+          >
+            <View style={styles.modalView}>
+              <CatPostInput />
+            </View>
+          </Modal>
           <SafeAreaView style={styles.safeArea}>
             <FlatList
               data={postList}
@@ -126,6 +136,16 @@ class CatPostList extends React.Component {
               // onMomentumScrollEnd={() => this.handleshow()}
             />
           </SafeAreaView>
+          <Fab
+            active={false}
+            direction="up"
+            containerStyle={{ zIndex: 1 }}
+            style={{ backgroundColor: '#6772F1' }}
+            position="bottomRight"
+            // onPress={() => this.setState({ active: !this.state.active })}
+          >
+            <Icon name="create" />
+          </Fab>
         </View>
       </View>
     );
