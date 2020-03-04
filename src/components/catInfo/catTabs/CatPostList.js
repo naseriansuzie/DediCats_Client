@@ -7,7 +7,6 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
-  KeyboardAvoidingView,
 } from 'react-native';
 import * as Font from 'expo-font';
 import CatPost from './CatPost';
@@ -31,14 +30,14 @@ const styles = StyleSheet.create({
   },
   keyboard: {
     width: '95%',
-    position: 'absolute',
-    zIndex: 1,
+    backgroundColor: 'transparent',
   },
   safeArea: {
     flex: 3,
     width: '95%',
     backgroundColor: '#ffffff',
     alignItems: 'center',
+    zIndex: 1,
   },
 });
 
@@ -50,6 +49,7 @@ class CatPostList extends React.Component {
       loadingFont: true,
     };
   }
+
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
@@ -111,9 +111,6 @@ class CatPostList extends React.Component {
       <View style={styles.container}>
         <View style={styles.radiusView}>
           <SafeAreaView style={styles.safeArea}>
-            <KeyboardAvoidingView style={styles.keyboard}>
-              {visibility ? <CatPostInput /> : null}
-            </KeyboardAvoidingView>
             <FlatList
               data={postList}
               renderItem={this._renderItem}
@@ -125,8 +122,8 @@ class CatPostList extends React.Component {
               refreshing={isRefreshingPost}
               onRefresh={_handleRefresh}
               initialNumToRender={3}
-              onScrollBeginDrag={() => this.handledisappear()}
-              onMomentumScrollEnd={() => this.handleshow()}
+              // onScrollBeginDrag={() => this.handledisappear()}
+              // onMomentumScrollEnd={() => this.handleshow()}
             />
           </SafeAreaView>
         </View>
