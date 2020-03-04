@@ -1,17 +1,20 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Tab, Tabs } from 'native-base';
 import CatBio from './catTabs/CatBio';
 import CatPostList from './catTabs/CatPostList';
 import CatAlbum from './catTabs/CatAlbum';
 import CatFollowerList from './catTabs/CatFollowerList';
+import CatPostInput from './catTabs/CatPostInput';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    // marginBottom: -313,
+    // backgroundColor: 'black',
   },
   hide: {
     display: 'none',
@@ -24,6 +27,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#6772F1',
   },
   activeText: { color: '#ffffff', fontSize: 18 },
+  input: {
+    width: '100%',
+    backgroundColor: '#6772F1',
+    alignItems: 'center',
+    marginBottom: -1,
+  },
 });
 
 const CatInfoTabs = ({ selectedCatBio }) => (
@@ -55,6 +64,9 @@ const CatInfoTabs = ({ selectedCatBio }) => (
             activeTabStyle={styles.activeTab}
             activeTextStyle={styles.activeText}
           >
+            <View style={styles.input}>
+              <CatPostInput />
+            </View>
             <CatPostList />
           </Tab>
           <Tab
@@ -83,6 +95,8 @@ const CatInfoTabs = ({ selectedCatBio }) => (
   </Container>
 );
 
-export default inject(({ cat }) => ({
+export default inject(({ cat, post }) => ({
   selectedCatBio: cat.selectedCatBio,
+  translateView: post.translateView,
+  translateInput: post.translateInput,
 }))(observer(CatInfoTabs));
