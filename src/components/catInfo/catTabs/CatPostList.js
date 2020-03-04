@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Modal,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Fab, Icon } from 'native-base';
 import * as Font from 'expo-font';
@@ -103,6 +105,9 @@ class CatPostList extends React.Component {
       _handleLoadMorePosts,
       isRefreshingPost,
       _handleRefresh,
+      modalVisible,
+      toggleModalVisible,
+      exitInputModal,
     } = this.props;
     const { loadingFont, visibility } = this.state;
     if (loadingFont) {
@@ -113,12 +118,16 @@ class CatPostList extends React.Component {
       <View style={styles.container}>
         <View style={styles.radiusView}>
           <Modal
+            animationType="fade"
             transparent
-            visible
+            visible={modalVisible}
+            onRequestClose={() => exitInputModal()}
           >
-            <View style={styles.modalView}>
-              <CatPostInput />
-            </View>
+            <TouchableWithoutFeedback onPress={() => exitInputModal()}>
+              <KeyboardAvoidingView style={styles.modalView}>
+                <CatPostInput />
+              </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
           </Modal>
           <SafeAreaView style={styles.safeArea}>
             <FlatList
@@ -142,7 +151,7 @@ class CatPostList extends React.Component {
             containerStyle={{ zIndex: 1 }}
             style={{ backgroundColor: '#6772F1' }}
             position="bottomRight"
-            // onPress={() => this.setState({ active: !this.state.active })}
+            onPress={() => toggleModalVisible()}
           >
             <Icon name="create" />
           </Fab>
@@ -165,4 +174,7 @@ export default inject(({
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
   maxPostPage: post.maxPostPage,
+  modalVisible: post.modalVisible,
+  toggleModalVisible: post.toggleModalVisible,
+  exitInputModal: post.exitInputModal,
 }))(observer(withNavigation(CatPostList)));
