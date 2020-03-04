@@ -14,10 +14,16 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    flex: 1,
+    height: '50%',
+    width: '90%',
     alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
+    marginTop: '40%',
+    marginBottom: '40%',
+    borderRadius: 25,
   },
   inputView: {
     width: '95%',
