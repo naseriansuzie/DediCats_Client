@@ -50,6 +50,7 @@ class CatPostList extends React.Component {
       loadingFont: true,
     };
   }
+
   componentDidMount() {
     console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
