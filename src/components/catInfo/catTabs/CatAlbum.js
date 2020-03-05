@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   },
   noPhotoTxt: { color: '#7f8296', fontSize: 18, paddingBottom: 15 },
 });
+
 class CatAlbum extends React.Component {
   componentDidMount() {
     console.log('CatAlbum mount');
