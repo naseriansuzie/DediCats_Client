@@ -33,15 +33,20 @@ class MapStore {
     SWlongitude: 0,
   };
 
+  // 위치 권한 허용 boolean
   permissionState = false;
 
+  // BriefCatInfo를 보여줄 boolean
   isShowingBriefCat = false;
 
+  // 화면에 렌더되는 마커들
   markers = [];
 
+  // 선택한 마커 정보
   selectedMarker = null;
 
   // actions
+  // 현재 화면 bound에 따라 렌더할 마커 정보를 갱신
   getMapInfo = async navigation => {
     const currentBound = this.currentBoundingBox;
     await axios
@@ -52,25 +57,22 @@ class MapStore {
       })
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation, this.getMapInfo);
-        console.dir(err);
       });
   };
 
+  // 위치 권한 허용 함수
   requestMapPermission = async () => {
-    try {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status === 'granted') {
-        this.permissionState = true;
-        this.getCurrentPosition();
-      } else {
-        console.log('not Granted');
-        this.permissionState = false;
-      }
-    } catch (err) {
-      console.warn(err);
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === 'granted') {
+      this.permissionState = true;
+      this.getCurrentPosition();
+    } else {
+      this.permissionState = false;
+      Alert.alert('정상적인 앱 사용을 위해 설정에서 권한을 허용해주시기 바랍니다.');
     }
   };
 
+  // 현재 position 정보
   getCurrentPosition = navigation => {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -98,6 +100,7 @@ class MapStore {
     );
   };
 
+  // region 변화(화면 드래그)에 따른 상태 변경
   onRegionChangeComplete = async (region, navigation) => {
     this.currentRegion = { ...region };
     this.currentBoundingBox = {
@@ -110,6 +113,7 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
+  // 추가하려는 고양이 좌표 저장
   setAddCatLocation = coords => {
     this.root.cat.addCatLocation = {
       latitude: coords.latitude,
@@ -117,16 +121,19 @@ class MapStore {
     };
   };
 
+  // 고양이 추가시 마커 위치 변경에 따른 좌표 변경
   onMarkerChange = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     this.root.cat.addCatLocation = { latitude, longitude };
     this.root.cat.onDragstate = true;
   };
 
+  // BriefCatInfo 숨기기
   hideBriefCat = () => {
     this.isShowingBriefCat = false;
   };
 
+  // 선택(press)한 마커 정보 저장
   setSelectedMarker = (item, callback) => {
     this.selectedMarker = item;
     this.isShowingBriefCat = true;
