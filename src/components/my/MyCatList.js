@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
 
 class MyCatList extends React.Component {
   componentDidMount() {
-    console.log('MyCatList mount');
     this.props.getMyCatList(this.props.navigation);
   }
 
