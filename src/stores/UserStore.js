@@ -12,41 +12,48 @@ class UserStore {
   }
 
   // observable
+  // 유저 프로필 이미지
   myUri = null;
 
+  // 유저 임시프로필 이미지
   tempUri = null;
 
+  // 유저 정보 변경 상태
   isEditing = false;
 
+  // 유저 프로필 이미지 path
   myPhotoPath = null;
 
+  // 내가 팔로우하는 고양이 리스트
   myCatList = null;
 
+  // 언팔로우하는 고양이
   unFollowedCat = null;
 
+  // 유저정보 사진 임시 변경
   setMyUri = photoPath => {
     this.myUri = photoPath;
     this.tempUri = photoPath;
-    console.log('myUri =', this.myUri);
   };
 
+  // 내가 팔로우하는 고양이리스트
   getMyCatList = navigation => {
     axios
       .get(`${SERVER_URL}/cat/catlist`, defaultCredential)
       .then(res => (this.myCatList = res.data))
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation, this.getMyCatList);
-        console.dir(err);
       });
   };
 
+  // 유저 정보 변경 상태
   setEditingMode = answer => {
     if (answer === 'yes') {
       this.isEditing = true;
     } else this.isEditing = false;
-    console.log('editing 중인가요? ', this.isEditing);
   };
 
+  // 유저 사진 정보 POST
   postMyPhoto = async navigation => {
     const photoPath = await axios
       .post(
@@ -61,11 +68,11 @@ class UserStore {
       })
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation, this.postMyPhoto);
-        console.dir(err);
       });
     return photoPath;
   };
 
+  // 유저 사진 제거
   deleteMyPhoto = async navigation => {
     const photoPath = await axios
       .post(`${SERVER_URL}/photo/profile/delete`, defaultCredential)
@@ -75,11 +82,11 @@ class UserStore {
       })
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation, this.deleteMyPhoto);
-        console.dir(err);
       });
     return photoPath;
   };
 
+  // 기본 사진 이미지로 변경
   resetDefaultPhoto = async () => {
     if (this.myUri !== this.tempUri && this.isEditing) {
       this.myUri = this.tempUri;
@@ -89,6 +96,7 @@ class UserStore {
     return new Promise((resolve, reject) => resolve(true));
   };
 
+  // 비밀번호 변경
   changePW = async navigation => {
     const { PW, confirmPW, reConfirmPW } = this.root.auth;
 
@@ -121,7 +129,6 @@ class UserStore {
         return false;
       })
       .catch(err => {
-        console.dir(err);
         this.root.auth.expiredTokenHandler(err, navigation, this.changePW);
         if (err.response.status === 402) {
           Alert.alert(
@@ -134,10 +141,10 @@ class UserStore {
         }
         return false;
       });
-
     return result;
   };
 
+  // 비밀번호 찾기
   findPW = async navigation => {
     const { email } = this.root.auth;
     const result = await axios
@@ -158,7 +165,6 @@ class UserStore {
         return false;
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 401) {
           Alert.alert('가입된 이메일이 아닙니다. 이메일을 확인해주세요');
         } else {
@@ -171,6 +177,7 @@ class UserStore {
     return result;
   };
 
+  // 유저 정보 초기화
   resetUserObservable = () => {
     this.myUri = DEFAULT_USER;
     this.myPhotoPath = null;
