@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   View,
+  Text,
   FlatList,
   SafeAreaView,
   ActivityIndicator,
@@ -43,6 +44,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 1,
   },
+  noPhotoView: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    paddingTop: 20,
+  },
+  noPhotoTxt: { color: '#7f8296', fontSize: 18, paddingBottom: 15 },
 });
 
 class CatPostList extends React.Component {
@@ -101,6 +109,7 @@ class CatPostList extends React.Component {
 
   render() {
     const {
+      nickname,
       postList,
       _handleLoadMorePosts,
       isRefreshingPost,
@@ -109,14 +118,38 @@ class CatPostList extends React.Component {
       toggleModalVisible,
       exitInputModal,
     } = this.props;
-    const { loadingFont, visibility } = this.state;
+    const { loadingFont } = this.state;
     if (loadingFont) {
       this.loadFont();
       return <View />;
     }
+
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
+          {postList.length !== 0 ? (
+            <SafeAreaView style={styles.safeArea}>
+              <FlatList
+                data={postList}
+                renderItem={this._renderItem}
+                keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
+                showsVerticalScrollIndicator={false}
+                onEndReached={_handleLoadMorePosts}
+                onEndReachedThreshold={0}
+                ListFooterComponent={this.renderFooter}
+                refreshing={isRefreshingPost}
+                onRefresh={_handleRefresh}
+                initialNumToRender={3}
+              />
+            </SafeAreaView>
+          ) : (
+            <View style={styles.noPhotoView}>
+              <Text style={styles.noPhotoTxt}>
+                {`There's no Post of ${nickname} now.`}
+              </Text>
+              <Text>Upload the FIRST post!</Text>
+            </View>
+          )}
           <Modal
             animationType="fade"
             transparent
@@ -129,22 +162,6 @@ class CatPostList extends React.Component {
               </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
           </Modal>
-          <SafeAreaView style={styles.safeArea}>
-            <FlatList
-              data={postList}
-              renderItem={this._renderItem}
-              keyExtractor={(item, idx) => `post_${item.id}_${idx}`}
-              showsVerticalScrollIndicator={false}
-              onEndReached={_handleLoadMorePosts}
-              onEndReachedThreshold={0}
-              ListFooterComponent={this.renderFooter}
-              refreshing={isRefreshingPost}
-              onRefresh={_handleRefresh}
-              initialNumToRender={3}
-              // onScrollBeginDrag={() => this.handledisappear()}
-              // onMomentumScrollEnd={() => this.handleshow()}
-            />
-          </SafeAreaView>
           <Fab
             active={false}
             direction="up"
@@ -165,6 +182,7 @@ export default inject(({
   cat, post, helper, comment,
 }) => ({
   catId: cat.selectedCatBio[0].id,
+  nickname: cat.selectedCatBio[0].nickname,
   setCatPost: comment.setCatPost,
   postList: post.postList,
   getPostList: post.getPostList,
