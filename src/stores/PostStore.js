@@ -161,7 +161,8 @@ class PostStore {
   exitInputModal = () => {
     const { cat, helper } = this.root;
 
-    if (!cat.selectedCatInputContent && !cat.selectedCatPhotoPath && !cat.selectedCatUri) {
+    if (!cat.selectedCatInputContent && !cat.selectedCatPhotoPath
+      && !cat.selectedCatUri && !cat.postModifyState) {
       this.toggleModalVisible();
       return;
     }
@@ -183,6 +184,7 @@ class PostStore {
               'selectedCatPhotoPath',
               'selectedCatUri',
             );
+            this.setPostModify();
             this.toggleModalVisible();
           },
         },
