@@ -23,14 +23,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
-    marginTop: '30%',
-    marginBottom: '40%',
+    marginTop: '20%',
+    marginBottom: '60%',
     borderRadius: 25,
     position: 'absolute',
     zIndex: 1,
   },
   inputView: {
     width: '95%',
+    marginTop: '5%',
   },
   inputForm: {
     borderWidth: 2,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     top: 40,
-    right: -15,
+    left: 15,
     width: 30,
     height: 30,
     borderRadius: 100,
@@ -65,14 +66,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    width: 350,
-    height: 350,
+    width: 300,
+    height: 300,
     resizeMode: 'stretch',
     overflow: 'hidden',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#EDF1F5',
     position: 'absolute',
+    left: 25,
     marginTop: 50,
   },
   addImageBtn: {
@@ -122,11 +124,12 @@ const CatPostInput = ({
   exitInputModal,
 }) => (
   <TouchableWithoutFeedback onPress={() => { }}>
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="height">
       <View style={styles.inputView}>
         <Form style={styles.inputForm}>
           <Textarea
             rowSpan={selectedCatInputContent.length > 27 ? 4 : 2}
+            maxLength={100}
             placeholder="글을 입력해주세요."
             value={selectedCatInputContent}
             onChangeText={text =>
