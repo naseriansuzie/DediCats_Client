@@ -172,18 +172,14 @@ const CatPostInput = ({
               <TouchableOpacity
                 style={styles.submitBtn}
                 onPress={async () => {
-                  try {
-                    const validation = validateAddInput(
-                      'cat',
-                      'selectedCatInputContent',
-                    );
-                    if (validation) {
-                      postModifyState
-                        ? await addPost('update', navigation)
-                        : await addPost('new', navigation);
-                    }
-                  } catch (err) {
-                    console.dir(err);
+                  const validation = validateAddInput(
+                    'cat',
+                    'selectedCatInputContent',
+                  );
+                  if (validation) {
+                    postModifyState
+                      ? await addPost('update', navigation)
+                      : await addPost('new', navigation);
                   }
                 }}
               >

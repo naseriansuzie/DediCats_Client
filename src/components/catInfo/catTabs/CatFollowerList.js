@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
 
 class CatFollowerList extends React.Component {
   componentDidMount() {
-    console.log('CatFollowerList mount');
     this.props.getFollowerList(this.props.catId, this.props.navigation);
   }
 

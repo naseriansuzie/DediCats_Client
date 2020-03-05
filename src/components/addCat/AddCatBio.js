@@ -229,7 +229,6 @@ const AddCatBio = ({
                   navigation.goBack();
                   await getMapInfo(navigation);
                 } catch (err) {
-                  console.dir(err);
                   Alert.alert(
                     '고양이를 등록할 수 없습니다. 관리자에게 문의해주세요.',
                   );

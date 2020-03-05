@@ -11,6 +11,7 @@ class ReportStore {
   }
 
   // action
+  // 고양이 정보 신고
   reportCatBio = async navigation => {
     const { cat } = this.root;
     const catId = cat.selectedCatBio[0].id;
@@ -26,6 +27,7 @@ class ReportStore {
     return result;
   };
 
+  // 포스트 신고
   reportPost = async (postId, criminalId, navigation) => {
     const result = await axios
       .post(`${SERVER_URL}/report`, { postId, criminalId }, defaultCredential)
@@ -37,6 +39,7 @@ class ReportStore {
     return result;
   };
 
+  // 댓글 신고
   reportComment = async navigation => {
     const { comment } = this.root;
     const commentId = comment.selectedComment.id;
@@ -52,15 +55,16 @@ class ReportStore {
     return result;
   };
 
+  // 등록 실패 알림
   alertFailure = (err, navigation) => {
     this.root.auth.expiredTokenHandler(err, navigation, this.reportComment);
-    console.dir(err);
     if (err.response && err.response.status === 409) {
       Alert.alert('등록이 실패되었습니다. 다시 시도해주세요.');
     }
     return false;
   };
 
+  // 포스트 수정, 삭제, 신고버튼 클릭에 따른 함수
   processPostActions = (isMyPost, idx, item, navigation) => {
     const { cat, post } = this.root;
     if (isMyPost) {

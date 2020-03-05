@@ -70,20 +70,16 @@ const CatCommentInput = ({
         <TouchableOpacity
           style={styles.submitBtn}
           onPress={async () => {
-            try {
-              const validation = validateAddInput('comment', 'inputComment');
-              if (validation) {
-                if (commentModifyState) {
-                  await addComment('update', navigation);
-                  setCommentModify();
-                  resetCommentState('update');
-                  getCommentList(navigation);
-                } else {
-                  addComment('new', navigation);
-                }
+            const validation = validateAddInput('comment', 'inputComment');
+            if (validation) {
+              if (commentModifyState) {
+                await addComment('update', navigation);
+                setCommentModify();
+                resetCommentState('update');
+                getCommentList(navigation);
+              } else {
+                addComment('new', navigation);
               }
-            } catch (err) {
-              console.dir(err);
             }
           }}
         >

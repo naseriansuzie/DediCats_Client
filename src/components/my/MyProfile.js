@@ -67,7 +67,6 @@ const MyProfile = ({
   myUri,
 }) => {
   console.disableYellowBox = 'true';
-  console.log('프로필 렌더할 때 uri', myUri);
   if (!userInfo) {
     return <View style={styles.container} />;
   }

@@ -12,6 +12,7 @@ class HelperStore {
     this.root = root;
   }
 
+  // 인풋 창 상태 update
   // cat(info) -> selectedCat, inputContent, inputComment, newTag
   // auth -> email, nickname, confirmPW, reConfirmPW, PW, emailVerification
   // cat(addCat) -> catNickname, catSpecies, catDescription
@@ -19,6 +20,7 @@ class HelperStore {
     this.root[store][variable] = text;
   };
 
+  // 인풋 창 리셋
   // auth: 'email', 'nickname', 'confirmPW', 'reConfirmPW', 'emailVerification', 'PW',
   // selectedCatNewTag, inputComment -> selectedCatInputComment
   clearInput = (store, ...variable) => {
@@ -29,6 +31,7 @@ class HelperStore {
     });
   };
 
+  // 고양이 추가 후/취소할 때 고양이 정보 리셋
   clearAddCatBio = () => {
     // From CatStore
     const { cat } = this.root;
@@ -51,6 +54,7 @@ class HelperStore {
     return false;
   };
 
+  // ImagePicker를 이용해 이미지 선택
   pickImage = async (store, type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -62,24 +66,23 @@ class HelperStore {
     if (!result.cancelled) {
       if ((store === 'user', type === 'my')) {
         this.root[store].tempUri = this.root[store].myUri;
-        console.log('tempUri =', this.root[store].tempUri);
       }
       const imageTarget = `data:image/jpeg;base64,${result.base64}`;
       this.root[store][`${type}Uri`] = result.uri;
       this.root[store][`${type}PhotoPath`] = imageTarget;
-
-      console.log('로컬 기기 이미지 주소', this.root[store][`${type}Uri`]);
     }
     return result;
   };
 
+  // 선택된 사진 제거
   removePhoto = () => {
     this.root.cat.selectedCatUri = null;
   };
 
-  // * Helper Store from CatStore
+  // 시간 string 정리하는 함수
   makeDateTime = () => moment().format('YYYY-MM-DD');
 
+  // 시간 string 정리하는 함수
   changeToDateTime = timeInfo => {
     if (timeInfo === 'today') {
       timeInfo = new Date();
@@ -88,6 +91,7 @@ class HelperStore {
     return timeInfo.slice(0, 10);
   };
 
+  // 시간 string 정리하는 함수
   // 'YYYY/MM/DD HH:MM a/pm
   convertDateTime = str => moment(str).format('YY/MM/DD h:mm a');
 }
