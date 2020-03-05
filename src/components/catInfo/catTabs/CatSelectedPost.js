@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
 class CatSelectedPost extends React.Component {
   componentDidMount() {
     const { getCommentList } = this.props;
-    console.log('CatSelectedPost mount');
     getCommentList(this.props.navigation);
   }
   _showActionSheet = () => this.ActionSheet.show();
