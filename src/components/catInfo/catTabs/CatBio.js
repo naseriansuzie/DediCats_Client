@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
 
 class CatBio extends React.Component {
   componentDidMount() {
-    console.log('CatBio mount');
     const { catId } = this.props;
     this.props.getSelectedCatInfo(catId, this.props.navigation);
     this.props.getMyInfo();
@@ -194,7 +193,7 @@ class CatBio extends React.Component {
                       <CardItem style={styles.content}>
                         <Text>{selectedCatBio.today}</Text>
                       </CardItem>
-                    ) : (
+                      ) : (
                       <Form style={styles.catTodayForm}>
                         <Picker
                           note
@@ -231,7 +230,7 @@ class CatBio extends React.Component {
                           <Picker.Item label="🙀아파요" value="🙀아파요" />
                         </Picker>
                       </Form>
-                    )}
+                      )}
                   </Body>
                 </CardItem>
                 <CardItem>
