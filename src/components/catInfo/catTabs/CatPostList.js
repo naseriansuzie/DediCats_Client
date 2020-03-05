@@ -7,8 +7,11 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
+  Modal,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import { Fab, Icon } from 'native-base';
 import * as Font from 'expo-font';
 import CatPost from './CatPost';
 import CatPostInput from './CatPostInput';
@@ -29,16 +32,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     alignItems: 'center',
   },
-  keyboard: {
-    width: '95%',
-    position: 'absolute',
-    zIndex: 1,
+  modalView: {
+    flex: 1,
+    backgroundColor: '#000000aa',
   },
   safeArea: {
     flex: 3,
     width: '95%',
     backgroundColor: '#ffffff',
     alignItems: 'center',
+    zIndex: 1,
   },
 });
 
@@ -102,6 +105,9 @@ class CatPostList extends React.Component {
       _handleLoadMorePosts,
       isRefreshingPost,
       _handleRefresh,
+      modalVisible,
+      toggleModalVisible,
+      exitInputModal,
     } = this.props;
     const { loadingFont, visibility } = this.state;
     if (loadingFont) {
@@ -111,10 +117,19 @@ class CatPostList extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.radiusView}>
+          <Modal
+            animationType="fade"
+            transparent
+            visible={modalVisible}
+            onRequestClose={() => exitInputModal()}
+          >
+            <TouchableWithoutFeedback onPress={() => exitInputModal()}>
+              <KeyboardAvoidingView style={styles.modalView}>
+                <CatPostInput />
+              </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
+          </Modal>
           <SafeAreaView style={styles.safeArea}>
-            <KeyboardAvoidingView style={styles.keyboard}>
-              {visibility ? <CatPostInput /> : null}
-            </KeyboardAvoidingView>
             <FlatList
               data={postList}
               renderItem={this._renderItem}
@@ -126,10 +141,20 @@ class CatPostList extends React.Component {
               refreshing={isRefreshingPost}
               onRefresh={_handleRefresh}
               initialNumToRender={3}
-              onScrollBeginDrag={() => this.handledisappear()}
-              onMomentumScrollEnd={() => this.handleshow()}
+              // onScrollBeginDrag={() => this.handledisappear()}
+              // onMomentumScrollEnd={() => this.handleshow()}
             />
           </SafeAreaView>
+          <Fab
+            active={false}
+            direction="up"
+            containerStyle={{ zIndex: 1 }}
+            style={{ backgroundColor: '#6772F1' }}
+            position="bottomRight"
+            onPress={() => toggleModalVisible()}
+          >
+            <Icon name="create" />
+          </Fab>
         </View>
       </View>
     );
@@ -149,4 +174,7 @@ export default inject(({
   isRefreshingPost: post.isRefreshingPost,
   convertDateTime: helper.convertDateTime,
   maxPostPage: post.maxPostPage,
+  modalVisible: post.modalVisible,
+  toggleModalVisible: post.toggleModalVisible,
+  exitInputModal: post.exitInputModal,
 }))(observer(withNavigation(CatPostList)));

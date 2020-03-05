@@ -24,6 +24,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#6772F1',
   },
   activeText: { color: '#ffffff', fontSize: 18 },
+  input: {
+    width: '100%',
+    backgroundColor: '#6772F1',
+    alignItems: 'center',
+    marginBottom: -1,
+  },
 });
 
 const CatInfoTabs = ({ selectedCatBio }) => (
@@ -83,6 +89,8 @@ const CatInfoTabs = ({ selectedCatBio }) => (
   </Container>
 );
 
-export default inject(({ cat }) => ({
+export default inject(({ cat, post }) => ({
   selectedCatBio: cat.selectedCatBio,
+  translateView: post.translateView,
+  translateInput: post.translateInput,
 }))(observer(CatInfoTabs));

@@ -69,6 +69,8 @@ class ReportStore {
         cat.postModifyState = true;
         cat.selectedCatPost = item;
         cat.selectedCatInputContent = item.content;
+        // CatPostInput이 Modal로 수정되면서 visible state 변경 함수 추가
+        post.toggleModalVisible();
         /* 사진도 수정하려면 아래 내용 포함 */
         // cat.selectedCatPhotoPath = item.photos && item.photos.length > 0 ? item.photos[0].path : null;
         // cat.selectedCatUri = photos && photos.length > 0 ? photos[0].path : null;

@@ -22,6 +22,8 @@ class PostStore {
 
   maxPostPage = 0;
 
+  modalVisible = false;
+
   getPostList = async navigation => {
     // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
@@ -73,9 +75,9 @@ class PostStore {
     const postInfo =
       mode === 'new'
         ? {
-            content: selectedCatInputContent,
-            catId: selectedCatBio[0].id,
-          }
+          content: selectedCatInputContent,
+          catId: selectedCatBio[0].id,
+        }
         : { content: selectedCatInputContent, postId: selectedCatPost.id };
     if (selectedCatPhotoPath) {
       postInfo.photoPath = selectedCatPhotoPath;
@@ -105,6 +107,7 @@ class PostStore {
           console.dir(err);
         }
       });
+    this.toggleModalVisible();
   };
 
   deletePost = (item, navigation) => {
@@ -150,6 +153,43 @@ class PostStore {
       this._handleRefresh(navigation);
     }
   };
+
+  toggleModalVisible = () => {
+    this.modalVisible = !this.modalVisible;
+  }
+
+  exitInputModal = () => {
+    const { cat, helper } = this.root;
+
+    if (!cat.selectedCatInputContent && !cat.selectedCatPhotoPath && !cat.selectedCatUri) {
+      this.toggleModalVisible();
+      return;
+    }
+
+    Alert.alert(
+      '정말 나가시겠습니까?',
+      '작성한 내용이 사라집니다. 그래도 나가시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '나가기',
+          onPress: () => {
+            helper.clearInput(
+              'cat',
+              'selectedCatInputContent',
+              'selectedCatPhotoPath',
+              'selectedCatUri',
+            );
+            this.toggleModalVisible();
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  };
 }
 
 decorate(PostStore, {
@@ -159,6 +199,7 @@ decorate(PostStore, {
   isLoadingPost: observable,
   replyNum: observable,
   maxPostPage: observable,
+  modalVisible: observable,
   getPostList: action,
   _handleLoadMorePosts: action,
   _handleRefresh: action,
@@ -168,5 +209,7 @@ decorate(PostStore, {
   resetPostState: action,
   setReplyNum: action,
   validateRefreshMode: action,
+  toggleModalVisible: action,
+  exitInputModal: action,
 });
 export default PostStore;
