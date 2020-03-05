@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
 
 class CatAlbum extends React.Component {
   componentDidMount() {
-    console.log('CatAlbum mount');
     this.props.getAlbums(this.props.navigation);
   }
 
