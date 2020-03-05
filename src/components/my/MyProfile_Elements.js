@@ -80,7 +80,6 @@ class MyProfile_Elements extends React.Component {
 
   componentDidMount = async () => {
     await this.handleAndroidBackButton();
-    console.log('MyProfile_Elements mount');
   }
 
   _showActionSheet = () => this.ActionSheet.show();
