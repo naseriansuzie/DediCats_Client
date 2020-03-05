@@ -35,7 +35,7 @@ class UserStore {
       .get(`${SERVER_URL}/cat/catlist`, defaultCredential)
       .then(res => (this.myCatList = res.data))
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.getMyCatList);
         console.dir(err);
       });
   };
@@ -60,7 +60,7 @@ class UserStore {
         return res.data.photoPath;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.postMyPhoto);
         console.dir(err);
       });
     return photoPath;
@@ -74,7 +74,7 @@ class UserStore {
         return true;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.deleteMyPhoto);
         console.dir(err);
       });
     return photoPath;
@@ -122,7 +122,7 @@ class UserStore {
       })
       .catch(err => {
         console.dir(err);
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.changePW);
         if (err.response.status === 402) {
           Alert.alert(
             '기존 비밀번호가 일치하지 않습니다. 비밀번호를 확인해주세요',
@@ -162,7 +162,7 @@ class UserStore {
         if (err.response.status === 401) {
           Alert.alert('가입된 이메일이 아닙니다. 이메일을 확인해주세요');
         } else {
-          this.root.auth.expiredTokenHandler(err, navigation);
+          this.root.auth.expiredTokenHandler(err, navigation, this.findPW);
           Alert.alert('에러가 발생하였습니다. 관리자에게 문의해주세요');
         }
         return false;

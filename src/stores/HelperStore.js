@@ -51,25 +51,6 @@ class HelperStore {
     return false;
   };
 
-  unFollowCat = (catId, navigation) => {
-    const { cat, user, map } = this.root;
-    axios
-      .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
-      .then(res => {
-        user.unFollowedCat = catId;
-        runInAction(() => {
-          cat.getSelectedCatInfo(catId, navigation);
-          cat.getFollowerList(catId, navigation);
-          map.getMapInfo(navigation);
-          user.getMyCatList(navigation);
-        });
-      })
-      .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
-        console.dir(err);
-      });
-  };
-
   pickImage = async (store, type) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -116,7 +97,6 @@ decorate(HelperStore, {
   clearInput: action,
   clearAddCatBio: action,
   validateAddInput: action,
-  unFollowCat: action,
   pickImage: action,
   removePhoto: action,
   makeDateTime: action,

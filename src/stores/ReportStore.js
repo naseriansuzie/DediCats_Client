@@ -53,7 +53,7 @@ class ReportStore {
   };
 
   alertFailure = (err, navigation) => {
-    this.root.auth.expiredTokenHandler(err, navigation);
+    this.root.auth.expiredTokenHandler(err, navigation, this.reportComment);
     console.dir(err);
     if (err.response && err.response.status === 409) {
       Alert.alert('등록이 실패되었습니다. 다시 시도해주세요.');

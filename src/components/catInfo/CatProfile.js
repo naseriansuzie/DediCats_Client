@@ -155,9 +155,9 @@ class CatProfile extends React.Component {
   }
 }
 
-export default inject(({ cat, helper, report }) => ({
+export default inject(({ cat, report }) => ({
   selectedCatBio: cat.selectedCatBio,
   followCat: cat.followCat,
-  unFollowCat: helper.unFollowCat,
+  unFollowCat: cat.unFollowCat,
   reportCatBio: report.reportCatBio,
 }))(observer(withNavigation(CatProfile)));
