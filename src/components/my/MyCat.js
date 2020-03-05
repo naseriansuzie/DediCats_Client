@@ -83,8 +83,8 @@ const MyCat = ({
   </ListItem>
 );
 
-export default inject(({ cat, helper, post }) => ({
+export default inject(({ cat, post }) => ({
   getSelectedCatInfo: cat.getSelectedCatInfo,
-  unFollowCat: helper.unFollowCat,
+  unFollowCat: cat.unFollowCat,
   resetPostState: post.resetPostState,
 }))(observer(withNavigation(MyCat)));
