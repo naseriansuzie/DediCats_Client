@@ -63,7 +63,6 @@ class CatPostList extends React.Component {
   }
 
   componentDidMount() {
-    console.log('CatPostList mount');
     this.props.getPostList(this.props.navigation);
   }
 
