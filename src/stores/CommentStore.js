@@ -37,6 +37,7 @@ class CommentStore {
   // 처음 방에 입장했을 때 댓글 수
   initialComments = 0;
 
+  // onPress한 포스트 정보 저장, 소켓 연결
   setCatPost = item => {
     this.root.cat.selectedCatPost = item;
     this.initialComments = item.comments.length;
@@ -56,13 +57,10 @@ class CommentStore {
         if (socket.connected) {
           this.socketId = sockets.id;
           this.isConnectSocket = true;
-        } else {
-          console.log('Connection Failed');
         }
       });
 
       sockets.on('drop', () => {
-        console.log('drop');
         sockets.disconnect();
         this.isConnectSocket = false;
       });
@@ -85,7 +83,6 @@ class CommentStore {
       .then(res => true)
       .catch(err => {
         this.root.auth.expiredTokenHandler(err, navigation, this.offUser);
-        console.dir(err);
       });
     return result;
   };
@@ -102,7 +99,6 @@ class CommentStore {
       return;
     } catch (error) {
       this.root.auth.expiredTokenHandler(err, navigation, this.getCommentList);
-      console.error(error);
     }
   };
 
@@ -150,7 +146,6 @@ class CommentStore {
               this.addComment,
               mode,
             );
-            console.dir(err);
           }
         });
     }
@@ -168,7 +163,7 @@ class CommentStore {
       .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('댓글 수정에 실패했습니다. 다시 한 번 등록해주세요!');
-        } else console.dir(err);
+        }
       });
   };
 
@@ -213,7 +208,6 @@ class CommentStore {
           this.deleteComment,
           comment,
         );
-        console.dir(err);
       });
     return result;
   };
