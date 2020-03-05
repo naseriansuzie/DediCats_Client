@@ -10,22 +10,29 @@ class PostStore {
     this.root = root;
   }
 
+  // 포스트들을 담은 배열
   postList = [];
 
+  // 현재 페이지의 카운트
   postPage = 0;
 
+  // 포스트들을 새로고침할 boolean
   isRefreshingPost = false;
 
+  // 포스트를 로딩할 boolean
   isLoadingPost = false;
 
+  // 댓글 수
   replyNum = null;
 
+  // 해당 고양이가 가진 최대 페이지네이션 수
   maxPostPage = 0;
 
+  // CatPostInput 모달 나타내는 boolean
   modalVisible = false;
 
+  // 탭 렌더 시 포스트를 받아오는 함수
   getPostList = async navigation => {
-    // 탭 렌더 시 포스트를 받아오는 함수
     // axios로 catPost들을 get해서 this.info.postList 업데이트
     try {
       const catId = this.root.cat.selectedCatBio[0].id;
@@ -43,12 +50,11 @@ class PostStore {
       }
     } catch (err) {
       this.root.auth.expiredTokenHandler(err, navigation, this.getPostList);
-      console.error(error);
     }
   };
 
+  // 포스트 로딩
   _handleLoadMorePosts = navigation => {
-    console.log('maxcount :', this.maxPostPage, 'postPage :', this.postPage);
     if (this.maxPostPage > this.postPage) {
       this.isLoadingPost = true;
       this.postPage += 1;
@@ -56,12 +62,14 @@ class PostStore {
     }
   };
 
+  // 포스트 새로고침
   _handleRefresh = navigation => {
     this.isRefreshingPost = true;
     this.postPage = 0;
     this.getPostList(navigation);
   };
 
+  // 포스트 등록 함수
   addPost = (mode, navigation) => {
     const url =
       mode === 'new' ? `${SERVER_URL}/post/new` : `${SERVER_URL}/post/update`;
@@ -109,12 +117,12 @@ class PostStore {
             this.addPost,
             mode,
           );
-          console.dir(err);
         }
       });
     this.toggleModalVisible();
   };
 
+  // 포스트 삭제 함수
   deletePost = (item, navigation) => {
     const { cat } = this.root;
     cat.selectedCatPost = item;
@@ -136,15 +144,16 @@ class PostStore {
           this.deletePost,
           item,
         );
-        console.dir(err);
       });
   };
 
+  // 등록/수정 상태 확인
   setPostModify = () => {
     const { cat } = this.root;
     cat.postModifyState = false;
   };
 
+  // CatInfo 종료 때 리셋 함수
   resetPostState = () => {
     this.postList = [];
     this.postPage = 0;
@@ -152,10 +161,12 @@ class PostStore {
     this.isLoadingPost = false;
   };
 
+  // 댓글수 상태 저장
   setReplyNum = comments => {
     this.replyNum = comments.length;
   };
 
+  // 새로고침 상태 확인
   validateRefreshMode = navigation => {
     const { commentList } = this.root.comment;
     const commentCount = commentList.length;
@@ -164,19 +175,20 @@ class PostStore {
     }
   };
 
+  // 모달창 toggle
   toggleModalVisible = () => {
     this.modalVisible = !this.modalVisible;
   }
 
+  // 포스트 인풋 모달창 종료 함수
   exitInputModal = () => {
     const { cat, helper } = this.root;
-
+    // 인풋창이 비어있거나 수정 중이 아닐 때
     if (!cat.selectedCatInputContent && !cat.selectedCatPhotoPath
       && !cat.selectedCatUri && !cat.postModifyState) {
       this.toggleModalVisible();
       return;
     }
-
     Alert.alert(
       '정말 나가시겠습니까?',
       '작성한 내용이 사라집니다. 그래도 나가시겠습니까?',
