@@ -111,7 +111,12 @@ class CatStore {
         return true;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.getSelectedCatInfo,
+          catId,
+        );
         console.dir(err);
         return false;
       });
@@ -130,7 +135,31 @@ class CatStore {
         user.getMyCatList(navigation);
       })
       .catch(err => {
-        auth.expiredTokenHandler(err, navigation);
+        auth.expiredTokenHandler(err, navigation, this.followCat, catId);
+        console.dir(err);
+      });
+  };
+
+  unFollowCat = (catId, navigation) => {
+    const { cat, user, map } = this.root;
+    axios
+      .post(`${SERVER_URL}/cat/unfollow`, { catId }, defaultCredential)
+      .then(res => {
+        user.unFollowedCat = catId;
+        runInAction(() => {
+          cat.getSelectedCatInfo(catId, navigation);
+          cat.getFollowerList(catId, navigation);
+          map.getMapInfo(navigation);
+          user.getMyCatList(navigation);
+        });
+      })
+      .catch(err => {
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.unFollowCat,
+          catId,
+        );
         console.dir(err);
       });
   };
@@ -264,7 +293,7 @@ class CatStore {
         if (err.response && err.response.status === 404) {
           Alert.alert('고양이를 등록할 수 없습니다');
         } else {
-          this.root.auth.expiredTokenHandler(err, navigation);
+          this.root.auth.expiredTokenHandler(err, navigation, this.addCat);
           console.dir(err);
         }
       });
@@ -296,7 +325,12 @@ class CatStore {
         return JSON.parse(res.data.rainbow);
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.reportRainbow,
+          type,
+        );
         console.dir(err);
       });
     return result;
@@ -328,7 +362,12 @@ class CatStore {
         if (err.response && err.response.status === 409) {
           Alert.alert('중성화 유무 등록에 실패했습니다.');
         } else {
-          this.root.auth.expiredTokenHandler(err, navigation);
+          this.root.auth.expiredTokenHandler(
+            err,
+            navigation,
+            this.postCut,
+            type,
+          );
           console.dir(err);
         }
       });
@@ -356,7 +395,12 @@ class CatStore {
               Alert.alert('오늘의 건강 상태 등록에 실패했습니다.');
               this.selectedCatToday = undefined;
             } else {
-              this.root.auth.expiredTokenHandler(err, navigation);
+              this.root.auth.expiredTokenHandler(
+                err,
+                navigation,
+                this.postCatToday,
+                value,
+              );
               console.dir(err);
             }
           });
@@ -393,7 +437,12 @@ class CatStore {
         });
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.postTag,
+          newTag,
+        );
         console.dir(err);
       });
   };
@@ -409,7 +458,7 @@ class CatStore {
         this.selectedCatAlbum = photos;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.getAlbums);
         console.dir(err);
       });
   };
@@ -425,7 +474,12 @@ class CatStore {
         this.selectedCatFollowerList = res.data;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.getFollowerList,
+          catId,
+        );
         console.dir(err);
       });
   };
@@ -469,6 +523,7 @@ decorate(CatStore, {
   selectedCatReportInfo: observable,
   getSelectedCatInfo: action,
   followCat: action,
+  unFollowCat: action,
   selectCut: action,
   validateAddCat: action,
   getAddress: action,

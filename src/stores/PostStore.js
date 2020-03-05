@@ -40,7 +40,7 @@ class PostStore {
         this.isLoadingPost = false;
       }
     } catch (err) {
-      this.root.auth.expiredTokenHandler(err, navigation);
+      this.root.auth.expiredTokenHandler(err, navigation, this.getPostList);
       console.error(error);
     }
   };
@@ -101,7 +101,12 @@ class PostStore {
           );
         } else {
           Alert.alert('등록에 실패했습니다. 다시 등록해주세요.');
-          this.root.auth.expiredTokenHandler(err, navigation);
+          this.root.auth.expiredTokenHandler(
+            err,
+            navigation,
+            this.addPost,
+            mode,
+          );
           console.dir(err);
         }
       });
@@ -122,7 +127,12 @@ class PostStore {
         cat.getAlbums(navigation);
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.deletePost,
+          item,
+        );
         console.dir(err);
       });
   };

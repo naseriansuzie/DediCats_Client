@@ -51,7 +51,7 @@ class MapStore {
         return true;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.getMapInfo);
         console.dir(err);
       });
   };
@@ -110,12 +110,12 @@ class MapStore {
   };
 
   // {latitude: Number, longitude: Number}
-  setAddCatLocation = (coords) => {
+  setAddCatLocation = coords => {
     this.root.cat.addCatLocation = {
       latitude: coords.latitude,
       longitude: coords.longitude,
     };
-  }
+  };
 
   onMarkerChange = e => {
     const { latitude, longitude } = e.nativeEvent.coordinate;

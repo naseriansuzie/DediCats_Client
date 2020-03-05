@@ -1,6 +1,4 @@
-import {
-  observable, action, decorate, runInAction,
-} from 'mobx';
+import { observable, action, decorate, runInAction } from 'mobx';
 import { Alert, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import { SERVER_URL, AUTH_SERVER } from 'react-native-dotenv';
@@ -34,7 +32,7 @@ class AuthStore {
 
   // actions
 
-  validateEmail = (email) => {
+  validateEmail = email => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
@@ -61,12 +59,12 @@ class AuthStore {
         { email, nickname },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         this.emailCode = res.data;
         Alert.alert(`${email}로 이메일 전송이 성공하였습니다!`);
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert('이미 가입된 이메일입니다. 로그인을 해주세요!');
         } else {
@@ -88,14 +86,14 @@ class AuthStore {
         { email, password: confirmPW, nickname },
         defaultCredential,
       )
-      .then((res) => {
+      .then(res => {
         if (res.status !== 201) return false;
 
         this.isSignUp = true;
         Alert.alert('회원가입에 성공했습니다!');
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 409) {
           Alert.alert('이미 존재하는 아이디입니다. 로그인 해주세요!');
         }
@@ -129,7 +127,7 @@ class AuthStore {
         { email, password: PW },
         defaultCredential,
       )
-      .then(async (res) => {
+      .then(async res => {
         if (res.status !== 201) return false;
 
         runInAction(() => {
@@ -146,7 +144,7 @@ class AuthStore {
         await AsyncStorage.setItem('refreshToken', refreshToken);
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.response && err.response.status === 401) {
           Alert.alert(
             '회원 정보가 일치하지 않습니다. 이메일 또는 비밀번호를 확인해주세요.',
@@ -163,7 +161,7 @@ class AuthStore {
     const refreshToken = await AsyncStorage.getItem('refreshToken');
     const result = await axios
       .post(`${AUTH_SERVER}/auth/signout`, { refreshToken }, defaultCredential)
-      .then(async (res) => {
+      .then(async res => {
         await AsyncStorage.removeItem('user');
         user.resetUserObservable();
         map.hideBriefCat();
@@ -173,9 +171,11 @@ class AuthStore {
         this.userInfo = null;
         return true;
       })
-      .catch((err) => {
+      .catch(err => {
         console.dir(err);
-        Alert.alert('로그아웃에 실패하였습니다. 다시한번 시도해보시고, 문제가 지속될경우 문의해주세요');
+        Alert.alert(
+          '로그아웃에 실패하였습니다. 다시한번 시도해보시고, 문제가 지속될경우 문의해주세요',
+        );
         return false;
       });
     return result;
@@ -195,31 +195,34 @@ class AuthStore {
     }
   };
 
-  expiredTokenHandler = async (err, navigation) => {
+  expiredTokenHandler = async (err, navigation, ...args) => {
     if (
-      (err.response && err.response.status === 401)
-      || err.code === 'ECONNABORTED'
+      (err.response && err.response.status === 401) ||
+      err.code === 'ECONNABORTED'
     ) {
       // axios timeOut 로그
-      console.log(`A timeout happened on url ${err.config.url}`);
+      if (err.code === 'ECONNABORTED') {
+        console.log(`A timeout happened on url ${err.config.url}`);
+      }
       const refreshToken = await AsyncStorage.getItem('refreshToken');
       // accessToken 요청
       const statusCode = await axios
-        .post(`${AUTH_SERVER}/auth/token`, refreshToken, defaultCredential)
-        .then((res) => {
+        .post(`${AUTH_SERVER}/auth/token`, { refreshToken }, defaultCredential)
+        .then(res => {
           const { accessToken } = res.data;
           if (!accessToken) return false;
           axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
           return res.status;
         })
-        .catch((err) => {
+        .catch(err => {
           console.dir(err);
           return err.response.status;
         });
-
       if (statusCode === 200) {
         // accessToken 정상 도착
-        Alert.alert('재시도해주십시오.');
+        const func = args[0];
+        const params = args.slice(1);
+        func(...params);
       }
       if (statusCode === 401) {
         // refreshToken이 만료된 상태

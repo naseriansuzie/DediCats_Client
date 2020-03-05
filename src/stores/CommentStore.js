@@ -84,7 +84,7 @@ class CommentStore {
       )
       .then(res => true)
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(err, navigation, this.offUser);
         console.dir(err);
       });
     return result;
@@ -101,7 +101,7 @@ class CommentStore {
       }
       return;
     } catch (error) {
-      this.root.auth.expiredTokenHandler(err, navigation);
+      this.root.auth.expiredTokenHandler(err, navigation, this.getCommentList);
       console.error(error);
     }
   };
@@ -144,7 +144,12 @@ class CommentStore {
           if (err.response && err.response.status === 409) {
             Alert.alert('댓글 업로드에 실패했습니다. 다시 한 번 등록해주세요!');
           } else {
-            this.root.auth.expiredTokenHandler(err, navigation);
+            this.root.auth.expiredTokenHandler(
+              err,
+              navigation,
+              this.addComment,
+              mode,
+            );
             console.dir(err);
           }
         });
@@ -202,7 +207,12 @@ class CommentStore {
         return true;
       })
       .catch(err => {
-        this.root.auth.expiredTokenHandler(err, navigation);
+        this.root.auth.expiredTokenHandler(
+          err,
+          navigation,
+          this.deleteComment,
+          comment,
+        );
         console.dir(err);
       });
     return result;
