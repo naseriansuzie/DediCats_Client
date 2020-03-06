@@ -180,6 +180,12 @@ class CommentStore {
     this.commentModifyState = true;
   };
 
+  // 수정 취소 시 원상태로 복귀
+  resetModifyComment = () => {
+    this.root.helper.clearInput('comment', 'inputComment');
+    this.commentModifyState = false;
+  };
+
   // 댓글 수정
   modifyComment = comment => {
     this.setCatComment(comment);
@@ -237,6 +243,7 @@ decorate(CommentStore, {
   addComment: action,
   setCatComment: action,
   setCommentModify: action,
+  resetModifyComment: action,
   modifyComment: action,
   resetModifyComment: action,
   deleteComment: action,
