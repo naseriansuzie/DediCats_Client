@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
 });
+
 class MyPage extends React.Component {
   render() {
     return (
