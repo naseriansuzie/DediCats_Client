@@ -271,6 +271,15 @@ class MyProfile_Elements extends React.Component {
                 <Text style={styles.askTxt}>문의하기</Text>
               </TouchableOpacity>
             </ListItem>
+            <ListItem>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('CreditInfoPage');
+                }}
+              >
+                <Text style={styles.askTxt}>크레딧 정보</Text>
+              </TouchableOpacity>
+            </ListItem>
           </Content>
         </View>
       </View>
