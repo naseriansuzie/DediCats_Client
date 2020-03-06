@@ -187,6 +187,7 @@ const MainStack = createStackNavigator(
               await root.comment.offUser(navigation);
               root.post.validateRefreshMode(navigation);
               root.comment.resetCommentState('back');
+              root.comment.resetModifyComment();
               navigation.goBack();
             }}
           />

@@ -37,6 +37,7 @@ const CatComment = ({
   convertDateTime,
   reportComment,
   setCatComment,
+  resetModifyComment,
   modifyComment,
   deleteComment,
   resetCommentState,
@@ -72,6 +73,7 @@ const CatComment = ({
           {userInfo.id === userId ? (
             <TouchableOpacity
               onPress={() => {
+                resetModifyComment();
                 Alert.alert('댓글 삭제', '해당 댓글을 삭제하시겠습니까?', [
                   {
                     text: '취소',
@@ -102,6 +104,7 @@ const CatComment = ({
               <Text
                 note
                 onPress={() => {
+                  resetModifyComment();
                   Alert.alert('댓글 신고', '이 댓글 내용을 신고하시겠습니까?', [
                     {
                       text: '취소',
@@ -137,6 +140,7 @@ export default inject(({ auth, helper, report, comment }) => ({
   convertDateTime: helper.convertDateTime,
   reportComment: report.reportComment,
   setCatComment: comment.setCatComment,
+  resetModifyComment: comment.resetModifyComment,
   modifyComment: comment.modifyComment,
   deleteComment: comment.deleteComment,
   resetCommentState: comment.resetCommentState,
