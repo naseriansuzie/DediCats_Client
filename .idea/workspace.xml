@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c483b422-3b95-41d7-bb19-2c5f5db1bcf7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/catInfo/CatProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/catInfo/CatProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/my/MyCat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/my/MyCat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/my/MyProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/my/MyProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CatInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CatInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/CatStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/CatStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/ReportStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/ReportStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/catInfo/catTabs/CatComment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/catInfo/catTabs/CatComment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/catInfo/catTabs/CatPostInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/catInfo/catTabs/CatPostInput.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/BriefCatInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/main/BriefCatInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/SelectedPost.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SelectedPost.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/CommentStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/CommentStore.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,9 +28,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
