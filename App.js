@@ -21,7 +21,6 @@ import SelectedPost from './src/pages/SelectedPost';
 import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
 import findPW from './src/pages/findPW';
-import AuthStore from './src/stores/AuthStore';
 
 const root = new RootStore();
 
@@ -172,6 +171,7 @@ const MainStack = createStackNavigator(
               await root.comment.offUser(navigation);
               root.post.validateRefreshMode(navigation);
               root.comment.resetCommentState('back');
+              root.comment.resetModifyComment();
               navigation.goBack();
             }}
           />
