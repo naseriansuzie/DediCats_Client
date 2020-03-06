@@ -276,7 +276,7 @@ class MyProfile_Elements extends React.Component {
                   navigation.navigate('CreditInfoPage');
                 }}
               >
-                <Text style={styles.editTxt}>크레딧 정보</Text>
+                <Text style={styles.askTxt}>크레딧 정보</Text>
               </TouchableOpacity>
             </ListItem>
           </Content>
