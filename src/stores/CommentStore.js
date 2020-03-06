@@ -182,7 +182,7 @@ class CommentStore {
 
   // 수정 상황 불린 변경
   setCommentModify = () => {
-    this.commentModifyState = !this.commentModifyState;
+    this.commentModifyState = true;
   };
 
   // 댓글 수정
@@ -190,6 +190,11 @@ class CommentStore {
     this.setCatComment(comment);
     this.setCommentModify();
     this.inputComment = comment.content;
+  };
+
+  resetModifyComment = () => {
+    this.root.helper.clearInput('comment', 'inputComment');
+    this.commentModifyState = false;
   };
 
   // 댓글 삭제
@@ -239,6 +244,7 @@ decorate(CommentStore, {
   setCatComment: action,
   setCommentModify: action,
   modifyComment: action,
+  resetModifyComment: action,
   deleteComment: action,
 });
 
