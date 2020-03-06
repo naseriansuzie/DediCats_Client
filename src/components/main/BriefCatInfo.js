@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: '#6772F1',
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: -80,
     paddingHorizontal: 10,
     paddingVertical: 10,

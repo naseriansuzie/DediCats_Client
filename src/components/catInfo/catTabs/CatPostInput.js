@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   submitBtnTxt: {
     color: '#ffffff',
-    fontSize: 17,
+    fontSize: 16,
   },
   paddingTop5: {
     paddingTop: 5,
@@ -123,7 +123,7 @@ const CatPostInput = ({
   addPost,
   exitInputModal,
 }) => (
-  <TouchableWithoutFeedback onPress={() => { }}>
+  <TouchableWithoutFeedback onPress={() => {}}>
     <KeyboardAvoidingView style={styles.container} behavior="height">
       <View style={styles.inputView}>
         <Form style={styles.inputForm}>
@@ -153,7 +153,10 @@ const CatPostInput = ({
                   >
                     <Text style={styles.removeBtnTxt}>X</Text>
                   </TouchableHighlight>
-                  <Image style={styles.image} source={{ uri: selectedCatUri }} />
+                  <Image
+                    style={styles.image}
+                    source={{ uri: selectedCatUri }}
+                  />
                 </View>
               ) : (
                 <TouchableOpacity

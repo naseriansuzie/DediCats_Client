@@ -38,6 +38,7 @@ class SelectedPost extends React.Component {
       navigation,
       offUser,
       resetCommentState,
+      resetModifyComment,
       validateRefreshMode,
     } = this.props;
 
@@ -45,6 +46,7 @@ class SelectedPost extends React.Component {
       await offUser(this.props.navigation);
       validateRefreshMode(this.props.navigation);
       resetCommentState('back');
+      resetModifyComment();
       navigation.goBack();
       return true;
     });
@@ -73,5 +75,6 @@ class SelectedPost extends React.Component {
 export default inject(({ post, comment }) => ({
   offUser: comment.offUser,
   resetCommentState: comment.resetCommentState,
+  resetModifyComment: comment.resetModifyComment,
   validateRefreshMode: post.validateRefreshMode,
 }))(observer(withNavigation(SelectedPost)));
