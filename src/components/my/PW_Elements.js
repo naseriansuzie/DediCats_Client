@@ -10,7 +10,7 @@ import {
   Input,
   Label,
 } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, BackHandler } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -47,7 +47,20 @@ const styles = StyleSheet.create({
 class ChangePW extends React.Component {
   async componentDidMount() {
     await this.props.getMyInfo();
+    await this.handleAndroidBackButton();
   }
+
+  handleAndroidBackButton = async () => {
+    const { navigation } = this.props;
+
+    BackHandler.addEventListener('hardwareBackPress', async () => {
+      navigation.goBack();
+    });
+  };
+
+  removeAndroidBackButtonHandler = () => {
+    BackHandler.removeEventListener('hardwareBackPress', () => {});
+  };
 
   render() {
     const {

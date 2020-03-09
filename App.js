@@ -21,6 +21,7 @@ import SelectedPost from './src/pages/SelectedPost';
 import PhotoModal from './src/pages/PhotoModal';
 import RootStore from './src/stores';
 import findPW from './src/pages/findPW';
+import CreditInfoPage from './src/pages/CreditInfoPage';
 
 const root = new RootStore();
 
@@ -77,6 +78,20 @@ const MyPageStack = createStackNavigator(
       screen: ChangePW,
       navigationOptions: {
         headerTitleStyle: { display: 'none' },
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      },
+    },
+    CreditInfoPage: {
+      screen: CreditInfoPage,
+      navigationOptions: {
+        headerTitleStyle: { display: 'none' },
+        headerStyle: {
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
       },
     },
   },
