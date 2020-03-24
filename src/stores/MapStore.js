@@ -128,9 +128,34 @@ class MapStore {
   };
 
   setSelectedMarker = (item, callback) => {
+    callback();
     this.selectedMarker = item;
     this.isShowingBriefCat = true;
-    callback();
+  };
+
+  setCatBioToMarker = () => {
+    const {
+      address,
+      id,
+      nickname,
+      species,
+      description,
+      location,
+    } = this.root.cat.selectedCatBio[0];
+    const { path } = this.root.cat.selectedCatBio[3];
+    const [latitude, longitude] = [Number(location.substring(6, 24)),
+      Number(location.substring(25, 43))];
+    const marker = {
+      catAddress: address,
+      catId: id,
+      catNickname: nickname,
+      catProfile: path,
+      catSpecies: species,
+      description,
+      latitude,
+      longitude,
+    };
+    return marker;
   };
 }
 
@@ -150,5 +175,6 @@ decorate(MapStore, {
   onMarkerChange: action,
   hideBriefCat: action,
   setSelectedMarker: action,
+  setCatBioToMarker: action,
 });
 export default MapStore;
