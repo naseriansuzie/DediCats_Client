@@ -10,11 +10,11 @@ const styles = StyleSheet.create({
   radius: {
     borderRadius: 15,
   },
-  body: { paddingRight: 20 },
+  body: { paddingRight: 0 },
   btn: {
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     borderRadius: 10,
     backgroundColor: '#ffffff',
     borderWidth: 1,
@@ -72,6 +72,19 @@ const MyCat = ({
         <Text note>{address}</Text>
       </Body>
     </TouchableWithoutFeedback>
+    <Right>
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={async () => {
+          const result = await getSelectedCatInfo(catId, navigation);
+          if (result) {
+            navigation.navigate('Main');
+          }
+        }}
+      >
+        <Text style={styles.btnTxt}>지도에서 보기</Text>
+      </TouchableOpacity>
+    </Right>
     <Right>
       <TouchableOpacity
         style={styles.btn}
