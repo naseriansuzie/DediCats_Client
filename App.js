@@ -129,7 +129,7 @@ const MainStack = createStackNavigator(
   {
     Main: {
       screen: Main,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         headerTitle: () => (
           <View style={styles.title}>
             <View>

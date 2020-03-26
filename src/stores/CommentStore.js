@@ -193,6 +193,11 @@ class CommentStore {
     this.inputComment = comment.content;
   };
 
+  resetModifyComment = () => {
+    this.root.helper.clearInput('comment', 'inputComment');
+    this.commentModifyState = false;
+  };
+
   // 댓글 삭제
   deleteComment = async (comment, navigation) => {
     await this.setCatComment(comment);
@@ -240,6 +245,7 @@ decorate(CommentStore, {
   setCommentModify: action,
   resetModifyComment: action,
   modifyComment: action,
+  resetModifyComment: action,
   deleteComment: action,
 });
 
