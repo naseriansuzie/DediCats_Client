@@ -88,6 +88,14 @@ class MainMap extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { selectedCatBio, setCatBioToMarker } = this.props;
+    if (selectedCatBio && prevProps.selectedCatBio !== selectedCatBio) {
+      const marker = setCatBioToMarker();
+      this.onMarkerPressed(marker);
+    }
+  }
+
   renderBriefCatInfo = () => {
     const { selectedMarker, isShowingBriefCat, hideBriefCat } = this.props;
     if (isShowingBriefCat && selectedMarker !== null) {
@@ -162,7 +170,7 @@ class MainMap extends React.Component {
   }
 }
 
-export default inject(({ map, auth }) => ({
+export default inject(({ map, auth, cat }) => ({
   getMyInfo: auth.getMyInfo,
   requestMapPermission: map.requestMapPermission,
   markers: map.markers,
@@ -174,4 +182,6 @@ export default inject(({ map, auth }) => ({
   isShowingBriefCat: map.isShowingBriefCat,
   hideBriefCat: map.hideBriefCat,
   setSelectedMarker: map.setSelectedMarker,
+  selectedCatBio: cat.selectedCatBio,
+  setCatBioToMarker: map.setCatBioToMarker,
 }))(observer(withNavigation(MainMap)));
