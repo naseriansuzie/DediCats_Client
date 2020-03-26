@@ -128,7 +128,11 @@ class CatProfile extends React.Component {
               )}
             </View>
             <View style={styles.infoView}>
-              <Text style={styles.nickName}>{selectedCatBio[0].nickname}</Text>
+              <Text style={styles.nickName}>
+                {selectedCatBio[0].nickname.length > 4
+                  ? `${selectedCatBio[0].nickname.slice(0, 4)}..`
+                  : selectedCatBio[0].nickname}
+              </Text>
               <Text style={styles.address}>{selectedCatBio[0].address}..</Text>
               {selectedCatBio[1].isFollowing ? (
                 <TouchableOpacity
