@@ -87,7 +87,11 @@ const MyProfile = ({
           />
         </View>
         <View style={styles.infoView}>
-          <Text style={styles.nickName}>{nickname}</Text>
+          <Text style={styles.nickName}>
+            {nickname.length > 4
+              ? `${nickname.slice(0, 4)}..`
+              : `${nickname}집사입니다`}
+          </Text>
           <Text style={styles.address}>
             {`가입일 : ${convertDateTime(createAt).slice(0, 8)}`}
           </Text>

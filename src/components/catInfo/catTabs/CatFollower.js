@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 const DEFAULT_USER =
   'https://dedicatsimage.s3.ap-northeast-2.amazonaws.com/DEFAULT_USER.png';
 
-const CatFollower = ({ idx, myPhoto, userNickName, catName }) => {
+const CatFollower = ({ idx, myPhoto, userNickName }) => {
   if (typeof idx === 'number') {
     return (
       <ListItem thumbnail>
@@ -25,7 +25,6 @@ const CatFollower = ({ idx, myPhoto, userNickName, catName }) => {
         </Left>
         <Body>
           <Text>{userNickName}</Text>
-          <Text note>{`${catName}의 ${idx + 1}번째 지킴이`}</Text>
         </Body>
       </ListItem>
     );

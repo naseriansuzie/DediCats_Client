@@ -101,12 +101,13 @@ const SignUp_Info = ({
               nickname
             </Label>
             <Input
+              maxLength={10}
               onChangeText={text => updateInput('auth', 'nickname', text)}
               value={nickname}
             />
           </Item>
           <Text note style={styles.paddingLeft20}>
-            *닉네임은 가입 시 1회 지정 가능합니다.
+            *닉네임은 가입 시 1회 지정 가능합니다. (10자 이하)
           </Text>
           <Item floatingLabel>
             <Label>
