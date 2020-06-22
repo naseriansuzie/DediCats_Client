@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   leftSection: { width: '10%' },
   iconColor: { color: '#6772F1' },
-  rightSection: { width: '45%' },
+  rightSection: { width: '50%' },
   replyTxt: { paddingLeft: 5, paddingRight: 0 },
   addReply: { width: '50%' },
   noPadding: { paddingLeft: 0 },
