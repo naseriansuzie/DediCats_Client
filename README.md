@@ -13,7 +13,7 @@ DediCats, we support the coexistence of cats and humans everywhere.
 
 - Project Introduction : https://www.notion.so/1-CodeStake-DediCats-38788b87b32a4c9d964105add197ad94
 
-- Server Repository: https://github.com/rlcjf0014/DediCats_Server
+- Server Repository: https://github.com/rlcjf0014/DediCats_Server (currently closed)
 
 ## Quickstart
 
